@@ -3,8 +3,7 @@ import { UserModel } from "../models/userModel";
 import { ApplicationError } from "../utils/errors/applicationError";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import type { UserRole } from "../utils/types/authTypes";
-import type { AuthenticatedRequest } from "./authenticationMiddleware";
+import type { AuthenticatedRequest, UserRole } from "../utils/types/authTypes";
 
 export const authorizeRoles = (allowedRoles: UserRole[]) => {
   return async (req: AuthenticatedRequest, _res: Response, next: NextFunction): Promise<void> => {

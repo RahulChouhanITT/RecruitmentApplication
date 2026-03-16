@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
+import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 
 class DatabaseConnectionManager {
   private static instance: DatabaseConnectionManager;
-  private isConnected = false;
+  private isConnected: boolean = CONFIGURATION_CONSTANTS.DEFAULTS.FALSE;
 
   private constructor() {}
 

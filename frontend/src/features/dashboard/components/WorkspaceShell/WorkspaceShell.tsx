@@ -1,14 +1,16 @@
-import type { PropsWithChildren, ReactNode } from "react";
+import { type PropsWithChildren, type ReactNode } from "react";
 import {
   FiCalendar,
   FiFileText,
   FiLogOut,
+  FiMenu,
   FiMessageSquare,
   FiPhone,
   FiSearch,
 } from "react-icons/fi";
 import { useAppSelector } from "../../../../app/hooks";
-import type { AuthRole } from "../../../auth/types";
+import { useWorkspaceShell } from "../../hooks/useWorkspaceShell";
+import { DASHBOARD_MESSAGES, DASHBOARD_WORKSPACE_LABELS } from "../../labels/dashboardLabels";
 import {
   AppIconButton,
   AppRail,
@@ -16,34 +18,38 @@ import {
   AppRailHeader,
   AppRailItem,
   ContentPane,
-  ContentTopBar,
-  IdentityBadge,
   IdentitySubtitle,
   IdentityTitle,
   LeftPanel,
   LeftPanelHeader,
   LeftPanelItem,
+  LeftPanelItemAvatar,
+  LeftPanelItemMeta,
+  LeftPanelItemRow,
+  LeftPanelItemRight,
+  LeftPanelItemStatus,
+  LeftPanelItemUnreadBadge,
   LeftPanelList,
   LeftPanelSearch,
+  MobileBackdrop,
   PageLayout,
-  SecondaryText,
   ShellRoot,
   WorkspaceBody,
-  WorkspaceTitle,
 } from "./WorkspaceShell.styles";
 import { AppHeader } from "../../../../shared/components/AppHeader/AppHeader";
 
 type WorkspaceShellProps = PropsWithChildren<{
-  title: string;
   onLogout: () => Promise<void> | void;
   isLoggingOut?: boolean;
-  topBarRight?: ReactNode;
+  onProfileClick?: () => void;
+  totalUnreadChats?: number;
+  leftPanelWidth?: number;
   leftPanelItems?: LeftPanelItemData[];
   appRailItems?: LeftRailItem[];
   activeLeftPanelId?: string;
   onLeftPanelChange?: (itemId: string) => void;
   activeAppRailId?: string;
-  onAppRailChange?: (itemId: string) => void;
+  onAppRailChange?: (itemId: string) => boolean | void;
 }>;
 
 export type LeftRailItem = {
@@ -57,6 +63,9 @@ export type LeftPanelItemData = {
   title: string;
   subtitle: string;
   appRailId?: string;
+  avatarText?: string;
+  presence?: "online" | "offline";
+  unreadCount?: number;
 };
 
 const LEFT_RAIL_ITEMS: LeftRailItem[] = [
@@ -73,21 +82,12 @@ const DEFAULT_LEFT_PANEL_ITEMS: LeftPanelItemData[] = [
   { id: "docs", title: "Shared Docs", subtitle: "Policies and templates" },
 ];
 
-const getRoleLabel = (role: AuthRole | undefined): string => {
-  if (role === "hr") {
-    return "HR Workspace";
-  }
-  if (role === "interviewer") {
-    return "Interviewer Workspace";
-  }
-  return "Candidate Workspace";
-};
-
 export const WorkspaceShell = ({
-  title,
   onLogout,
   isLoggingOut = false,
-  topBarRight,
+  onProfileClick,
+  totalUnreadChats = 0,
+  leftPanelWidth = 320,
   leftPanelItems = DEFAULT_LEFT_PANEL_ITEMS,
   appRailItems = LEFT_RAIL_ITEMS,
   activeLeftPanelId,
@@ -97,73 +97,140 @@ export const WorkspaceShell = ({
   children,
 }: WorkspaceShellProps) => {
   const currentUser = useAppSelector((state) => state.auth.currentUser);
+  const {
+    isSidebarOpen,
+    leftPanelSearchQuery,
+    setLeftPanelSearchQuery,
+    openSidebar,
+    closeSidebar,
+    itemsToRender,
+    shouldShowSearch,
+    isSinglePanelItem,
+    shouldCollapseLeftPanel,
+    onToggleSidebar,
+    getRoleLabel,
+  } = useWorkspaceShell(leftPanelItems, activeAppRailId);
 
   return (
     <ShellRoot>
-      <AppHeader />
+      <AppHeader onProfileClick={onProfileClick} />
 
-      <PageLayout>
+      <PageLayout $leftPanelWidth={leftPanelWidth} $isLeftPanelCollapsed={shouldCollapseLeftPanel}>
         <AppRail>
-          <AppRailHeader>RA</AppRailHeader>
+          <AppRailHeader
+            type="button"
+            onClick={onToggleSidebar}
+            aria-label={
+              shouldCollapseLeftPanel
+                ? DASHBOARD_WORKSPACE_LABELS.EXPAND_SIDEBAR
+                : DASHBOARD_WORKSPACE_LABELS.COLLAPSE_SIDEBAR
+            }
+            title={
+              shouldCollapseLeftPanel
+                ? DASHBOARD_WORKSPACE_LABELS.EXPAND_SIDEBAR
+                : DASHBOARD_WORKSPACE_LABELS.COLLAPSE_SIDEBAR
+            }
+          >
+            <FiMenu size={15} />
+          </AppRailHeader>
 
           {appRailItems.map((item, index) => (
             <AppRailItem
               key={item.id}
               $isActive={activeAppRailId ? activeAppRailId === item.id : index === 0}
-              onClick={() => onAppRailChange?.(item.id)}
+              onClick={() => {
+                const isDirectOpen = onAppRailChange?.(item.id) === true;
+                if (isDirectOpen) {
+                  closeSidebar();
+                  return;
+                }
+                openSidebar();
+              }}
             >
-              {item.icon}
+              <span className="rail-icon">{item.icon}</span>
+              {item.id === "chat" && totalUnreadChats > 0 ? (
+                <span className="rail-badge">{totalUnreadChats > 99 ? "99+" : totalUnreadChats}</span>
+              ) : null}
               <span>{item.label}</span>
             </AppRailItem>
           ))}
 
           <AppRailBottom>
-            <AppIconButton type="button" onClick={onLogout} disabled={isLoggingOut}>
+          <AppIconButton type="button" onClick={onLogout} disabled={isLoggingOut}>
               <FiLogOut size={16} />
-              <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+              <span>{isLoggingOut ? DASHBOARD_MESSAGES.LOGGING_OUT : DASHBOARD_MESSAGES.LOGOUT}</span>
             </AppIconButton>
           </AppRailBottom>
         </AppRail>
 
-        <LeftPanel>
+        <LeftPanel $isOpen={isSidebarOpen} $isCollapsed={shouldCollapseLeftPanel}>
           <LeftPanelHeader>
-            <IdentityTitle>{currentUser?.name || "Workspace User"}</IdentityTitle>
+            <IdentityTitle>{currentUser?.name || DASHBOARD_WORKSPACE_LABELS.DEFAULT_USER}</IdentityTitle>
             <IdentitySubtitle>{getRoleLabel(currentUser?.role)}</IdentitySubtitle>
           </LeftPanelHeader>
 
-          <LeftPanelSearch>
-            <FiSearch size={15} />
-            <input type="text" placeholder="Search chats and channels" aria-label="Search" />
-          </LeftPanelSearch>
+          {leftPanelItems.length > 0 ? (
+            <>
+              {shouldShowSearch ? (
+                <LeftPanelSearch>
+                  <FiSearch size={15} />
+                  <input
+                    type="text"
+                    placeholder={DASHBOARD_WORKSPACE_LABELS.SEARCH_PLACEHOLDER}
+                    aria-label={DASHBOARD_WORKSPACE_LABELS.SEARCH_PLACEHOLDER}
+                    value={leftPanelSearchQuery}
+                    onChange={(event) => setLeftPanelSearchQuery(event.target.value)}
+                  />
+                </LeftPanelSearch>
+              ) : null}
 
-          <LeftPanelList>
-            {leftPanelItems.map((item, index) => (
-              <LeftPanelItem
-                key={item.id}
-                $isActive={activeLeftPanelId ? activeLeftPanelId === item.id : index === 0}
-                onClick={() => onLeftPanelChange?.(item.id)}
-              >
-                <strong>{item.title}</strong>
-                <span>{item.subtitle}</span>
-              </LeftPanelItem>
-            ))}
-          </LeftPanelList>
+              <LeftPanelList $singleItem={isSinglePanelItem}>
+                {itemsToRender.map((item, index) => (
+                  <LeftPanelItem
+                    key={item.id}
+                    $isActive={activeLeftPanelId ? activeLeftPanelId === item.id : index === 0}
+                    $hasUnread={Boolean(item.unreadCount && item.unreadCount > 0)}
+                    onClick={() => {
+                      onLeftPanelChange?.(item.id);
+                      closeSidebar();
+                    }}
+                  >
+                    <LeftPanelItemRow>
+                      {item.avatarText ? <LeftPanelItemAvatar>{item.avatarText}</LeftPanelItemAvatar> : null}
+                      <LeftPanelItemMeta>
+                        <strong>{item.title}</strong>
+                        <span>{item.subtitle}</span>
+                      </LeftPanelItemMeta>
+                      <LeftPanelItemRight>
+                        {item.presence ? (
+                          <LeftPanelItemStatus $online={item.presence === "online"}>
+                            {item.presence === "online"
+                              ? DASHBOARD_WORKSPACE_LABELS.ONLINE
+                              : DASHBOARD_WORKSPACE_LABELS.OFFLINE}
+                          </LeftPanelItemStatus>
+                        ) : null}
+                        {item.unreadCount && item.unreadCount > 0 ? (
+                          <LeftPanelItemUnreadBadge>
+                            {item.unreadCount > 99 ? "99+" : item.unreadCount}
+                          </LeftPanelItemUnreadBadge>
+                        ) : null}
+                      </LeftPanelItemRight>
+                    </LeftPanelItemRow>
+                  </LeftPanelItem>
+                ))}
+              </LeftPanelList>
+            </>
+          ) : null}
         </LeftPanel>
 
+        <MobileBackdrop
+          type="button"
+          aria-label={DASHBOARD_WORKSPACE_LABELS.CLOSE_SIDEBAR}
+          onClick={closeSidebar}
+          $isOpen={isSidebarOpen}
+        />
+
         <ContentPane>
-          <ContentTopBar>
-            <div>
-              <WorkspaceTitle>{title}</WorkspaceTitle>
-              <SecondaryText>Common dashboard shell for all roles</SecondaryText>
-            </div>
-
-            {topBarRight ?? (
-              <IdentityBadge>
-                <span>{currentUser?.email || "user@company.com"}</span>
-              </IdentityBadge>
-            )}
-          </ContentTopBar>
-
           <WorkspaceBody>{children}</WorkspaceBody>
         </ContentPane>
       </PageLayout>

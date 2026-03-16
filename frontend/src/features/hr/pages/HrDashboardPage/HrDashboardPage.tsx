@@ -2,7 +2,7 @@ import { WorkspaceShell } from "../../../dashboard/components/WorkspaceShell/Wor
 
 export const HrDashboardPage = () => {
   return (
-    <WorkspaceShell title="HR Dashboard" onLogout={() => undefined}>
+    <WorkspaceShell onLogout={() => undefined}>
       <section>HR module placeholder</section>
     </WorkspaceShell>
   );

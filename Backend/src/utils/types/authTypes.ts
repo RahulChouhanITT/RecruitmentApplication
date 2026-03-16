@@ -1,4 +1,7 @@
-export type UserRole = "hr" | "candidate" | "interviewer";
+import type { Request } from "express";
+
+export const USER_ROLES = ["hr", "candidate", "interviewer"] as const;
+export type UserRole = (typeof USER_ROLES)[number];
 
 export interface RegisterRequestBody {
   name: string;
@@ -37,6 +40,24 @@ export interface CompleteProfileRequestBody {
   techStack?: string;
 }
 
+export interface GetOrUpdateProfileRequestBody {
+  name?: string;
+  email?: string;
+  phone?: string;
+  currentLocation?: string;
+  skills?: string;
+  experienceYears?: number;
+  resumeUrl?: string;
+  department?: string;
+  position?: string;
+  techStack?: string;
+  experienceLevel?: string;
+}
+
 export interface AuthenticatedUserPayload {
   userId: string;
+}
+
+export interface AuthenticatedRequest extends Request {
+  authenticatedUserId?: string;
 }

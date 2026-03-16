@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { Document, Model, Schema, model } from "mongoose";
-import type { UserRole } from "../utils/types/authTypes";
-
-const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+import { MODEL_DEFAULT_VALUES, USER_MODEL_CONSTANTS } from "../utils/constants/modelConstants";
+import { MODEL_MESSAGES } from "../utils/messages/modelMessages";
+import { USER_ROLES, type UserRole } from "../utils/types/authTypes";
 
 export interface IUser extends Document {
   name: string;
@@ -35,8 +35,8 @@ const userSchema = new Schema<IUser, IUserModel>(
       lowercase: true,
       trim: true,
       validate: {
-        validator: (email: string): boolean => EMAIL_REGEX.test(email),
-        message: "Please provide a valid email address",
+        validator: (email: string): boolean => USER_MODEL_CONSTANTS.EMAIL_REGEX.test(email),
+        message: MODEL_MESSAGES.USER.INVALID_EMAIL,
       },
     },
     passwordHash: {
@@ -47,20 +47,20 @@ const userSchema = new Schema<IUser, IUserModel>(
     },
     role: {
       type: String,
-      enum: ["hr", "candidate", "interviewer"],
+      enum: USER_ROLES,
       required: true,
     },
     profileCompleted: {
       type: Boolean,
-      default: false,
+      default: MODEL_DEFAULT_VALUES.FALSE,
     },
     isEmailVerified: {
       type: Boolean,
-      default: false,
+      default: MODEL_DEFAULT_VALUES.FALSE,
     },
     isApproved: {
       type: Boolean,
-      default: false,
+      default: MODEL_DEFAULT_VALUES.FALSE,
     },
   },
   {
@@ -73,7 +73,7 @@ userSchema.pre("save", async function onUserSave(): Promise<void> {
     return;
   }
 
-  this.passwordHash = await bcrypt.hash(this.passwordHash, 12);
+  this.passwordHash = await bcrypt.hash(this.passwordHash, USER_MODEL_CONSTANTS.PASSWORD_SALT_ROUNDS);
 });
 
 userSchema.methods.comparePassword = async function comparePassword(candidatePassword: string): Promise<boolean> {

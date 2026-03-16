@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { TOAST_EVENT_NAME, type ToastPayload, type ToastType } from "../../utils/toast";
+import { TOAST_EVENT_NAME, type ToastPayload, type ToastType } from "../../../utils/toast";
 import { ToastItem, ToastViewport } from "./Toast.styles";
 
 type Toast = {

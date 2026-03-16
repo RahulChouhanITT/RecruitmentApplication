@@ -2,7 +2,7 @@ import { WorkspaceShell } from "../../../dashboard/components/WorkspaceShell/Wor
 
 export const InterviewerDashboardPage = () => {
   return (
-    <WorkspaceShell title="Interviewer Dashboard" onLogout={() => undefined}>
+    <WorkspaceShell onLogout={() => undefined}>
       <section>Interviewer module placeholder</section>
     </WorkspaceShell>
   );

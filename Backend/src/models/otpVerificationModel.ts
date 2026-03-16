@@ -1,4 +1,5 @@
 import { Document, Schema, Types, model } from "mongoose";
+import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
 
 export interface IOtpVerification extends Document {
   userId: Types.ObjectId;
@@ -30,11 +31,11 @@ const otpVerificationSchema = new Schema<IOtpVerification>(
     },
     isUsed: {
       type: Boolean,
-      default: false,
+      default: MODEL_DEFAULT_VALUES.FALSE,
     },
     attemptCount: {
       type: Number,
-      default: 0,
+      default: MODEL_DEFAULT_VALUES.ZERO,
       min: 0,
     },
   },

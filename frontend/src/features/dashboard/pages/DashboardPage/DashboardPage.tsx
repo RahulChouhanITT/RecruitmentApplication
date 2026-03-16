@@ -1,192 +1,208 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../../app/hooks";
-import { showToast, TOAST_TYPES } from "../../../../shared/utils/toast";
-import { authApi, useCompleteProfileMutation, useLogoutMutation } from "../../../auth/api/authApi";
-import { clearCurrentUser, setCurrentUser } from "../../../auth/state/authSlice";
-import { DASHBOARD_MESSAGES } from "../../constants";
+import { Component, type ErrorInfo, type ReactNode } from "react";
+import { DASHBOARD_EMPTY_STATE_LABELS, DASHBOARD_MESSAGES, DASHBOARD_PROFILE_LABELS } from "../../labels/dashboardLabels";
 import { WorkspaceShell } from "../../components/WorkspaceShell/WorkspaceShell";
-import { getRolePanelItems, getRoleRailItems } from "../../config/dashboardNavigation";
+import { useDashboardPage } from "../../hooks/useDashboardPage";
 import { PendingApprovalsPanel } from "../../../hr/components/PendingApprovalsPanel/PendingApprovalsPanel";
+import { InterviewSchedulePanel } from "../../../hr/components/InterviewSchedulePanel/InterviewSchedulePanel";
+import { InterviewerInterviewsPage } from "../../../interviewer/pages/InterviewerInterviewsPage/InterviewerInterviewsPage";
 import { ChatThreadsPanel } from "../../components/ChatThreadsPanel/ChatThreadsPanel";
+import { JobsPanel } from "../../../jobs/components/JobsPanel/JobsPanel";
+import { OpenJobsPage } from "../../../jobs/pages/OpenJobsPage/OpenJobsPage";
+import { MyApplicationsPage } from "../../../jobs/pages/MyApplicationsPage/MyApplicationsPage";
+import { InterviewsPage } from "../../../jobs/pages/InterviewsPage/InterviewsPage";
+import { ProfilePanel } from "../../../profile/pages/ProfilePanel/ProfilePanel";
+import { EmptyStateCard } from "../../components/EmptyStateCard/EmptyStateCard";
+import { FiCalendar, FiLayers, FiMessageCircle } from "react-icons/fi";
 import {
   DashboardContentCard,
   DashboardDescription,
-  DashboardHeaderRow,
-  DashboardTitle,
-  LogoutButton,
 } from "./DashboardPage.styles";
 import { AuthModal } from "../../../auth/components/AuthModal/AuthModal";
 import { ProfileCompletionModal } from "../../../profile/components/ProfileCompletionModal/ProfileCompletionModal";
-import type { CompleteProfilePayload } from "../../../auth/types";
+
+type ModuleErrorBoundaryProps = {
+  children: ReactNode;
+  resetKey: string;
+};
+
+type ModuleErrorBoundaryState = {
+  hasError: boolean;
+};
+
+class ModuleErrorBoundary extends Component<ModuleErrorBoundaryProps, ModuleErrorBoundaryState> {
+  constructor(props: ModuleErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ModuleErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown, errorInfo: ErrorInfo): void {
+    console.error("Dashboard module render error", error, errorInfo);
+  }
+
+  componentDidUpdate(prevProps: ModuleErrorBoundaryProps): void {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.hasError) {
+      this.setState({ hasError: false });
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <DashboardDescription>{DASHBOARD_MESSAGES.MODULE_RENDER_ERROR}</DashboardDescription>;
+    }
+
+    return this.props.children;
+  }
+}
 
 export const DashboardPage = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const currentUser = useAppSelector((state) => state.auth.currentUser);
-  const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutMutation();
-  const [completeProfileMutation, { isLoading: isCompletingProfile }] = useCompleteProfileMutation();
-  const panelItems = useMemo(() => getRolePanelItems(currentUser?.role), [currentUser?.role]);
-  const railItems = useMemo(() => getRoleRailItems(currentUser?.role), [currentUser?.role]);
-  const [activePanelId, setActivePanelId] = useState<string>(panelItems[0]?.id ?? "");
-  const [activeAppRailId, setActiveAppRailId] = useState<string>(railItems[0]?.id ?? "");
-  const [isProfilePromptOpen, setIsProfilePromptOpen] = useState(false);
-  const [isProfileFormOpen, setIsProfileFormOpen] = useState(false);
-  const isHrUser = currentUser?.role === "hr";
-
-  useEffect(() => {
-    setActivePanelId(panelItems[0]?.id ?? "");
-    setActiveAppRailId(railItems[0]?.id ?? "");
-  }, [panelItems, railItems]);
-
-  useEffect(() => {
-    if (currentUser && !currentUser.profileCompleted) {
-      setIsProfilePromptOpen(true);
-    }
-
-    if (currentUser?.profileCompleted) {
-      setIsProfilePromptOpen(false);
-      setIsProfileFormOpen(false);
-    }
-  }, [currentUser]);
-
-  const onAppRailChange = (appRailId: string): void => {
-    setActiveAppRailId(appRailId);
-    const firstMatchedPanel = panelItems.find((item) => item.appRailId === appRailId);
-    if (firstMatchedPanel) {
-      setActivePanelId(firstMatchedPanel.id);
-    }
-  };
-
-  const onLeftPanelChange = (panelId: string): void => {
-    setActivePanelId(panelId);
-    const selectedPanel = panelItems.find((item) => item.id === panelId);
-    if (selectedPanel?.appRailId) {
-      setActiveAppRailId(selectedPanel.appRailId);
-    }
-  };
+  const {
+    currentUser,
+    isLoggingOut,
+    isCompletingProfile,
+    panelItems,
+    railItems,
+    safeActiveAppRailId,
+    safeActivePanelId,
+    filteredPanelItems,
+    totalUnreadChats,
+    isHrUser,
+    isCandidateUser,
+    isProfilePromptOpen,
+    isProfileFormOpen,
+    profilePromptMessage,
+    onAppRailChange,
+    onLeftPanelChange,
+    onOpenProfile,
+    onCancelProfilePrompt,
+    onOpenProfileForm,
+    onCancelProfileForm,
+    onSubmitProfile,
+    onLogout,
+  } = useDashboardPage();
 
   const renderModuleContent = () => {
-    if (activeAppRailId === "chat") {
-      return <ChatThreadsPanel />;
+    if (safeActiveAppRailId === "chat") {
+      return <ChatThreadsPanel hideConversationList forcedConversationId={safeActivePanelId} />;
     }
 
-    if (isHrUser && activeAppRailId === "pending-request") {
+    switch (safeActivePanelId) {
+      case "hr-pending":
+        return <PendingApprovalsPanel isActive />;
+      case "hr-jobs-manage":
+      case "hr-jobs-applications":
+        return <JobsPanel role={currentUser?.role} activePanelId={safeActivePanelId} />;
+      case "can-open-jobs":
+        return <OpenJobsPage />;
+      case "can-my-applications":
+        return <MyApplicationsPage />;
+      case "can-my-interviews":
+        return <InterviewsPage initialView="both" />;
+      case "hr-schedule":
+        return <InterviewSchedulePanel />;
+      case "int-my-interviews":
+        return <InterviewerInterviewsPage initialView="both" />;
+      case "hr-profile":
+      case "int-profile":
+      case "can-profile":
+        return <ProfilePanel />;
+      default:
+        break;
+    }
+
+    if (safeActiveAppRailId === "profile") {
+      return <ProfilePanel />;
+    }
+
+    if (isHrUser && safeActiveAppRailId === "pending-request") {
       return <PendingApprovalsPanel isActive />;
     }
 
-    if (activeAppRailId === "jobs") {
-      return <DashboardDescription>Jobs module UI will be shown here.</DashboardDescription>;
-    }
-
-    if (activeAppRailId === "schedule-interview" || activeAppRailId === "schedule") {
-      return <DashboardDescription>Schedule interview module UI will be shown here.</DashboardDescription>;
-    }
-
-    if (activeAppRailId === "applications") {
-      return <DashboardDescription>Applications module UI will be shown here.</DashboardDescription>;
-    }
-
-    if (activeAppRailId === "assigned" || activeAppRailId === "feedback") {
-      return <DashboardDescription>Interviewer module UI will be shown here.</DashboardDescription>;
-    }
-
-    return <DashboardDescription>Select a module from the left menu.</DashboardDescription>;
-  };
-
-  const onCancelProfilePrompt = (): void => {
-    setIsProfilePromptOpen(false);
-  };
-
-  const onOpenProfileForm = (): void => {
-    setIsProfilePromptOpen(false);
-    setIsProfileFormOpen(true);
-  };
-
-  const onCancelProfileForm = (): void => {
-    setIsProfileFormOpen(false);
-  };
-
-  const onSubmitProfile = async (payload: CompleteProfilePayload): Promise<void> => {
-    try {
-      const response = await completeProfileMutation(payload).unwrap();
-      if (response.data) {
-        dispatch(setCurrentUser(response.data));
+    if (safeActiveAppRailId === "jobs") {
+      if (isCandidateUser) {
+        return <OpenJobsPage />;
       }
-      showToast({
-        type: TOAST_TYPES.SUCCESS,
-        message: response.message || "Profile completed successfully",
-      });
-      setIsProfileFormOpen(false);
-      setIsProfilePromptOpen(false);
-    } catch (error) {
-      const message =
-        typeof error === "object" && error !== null && "message" in error
-          ? String((error as { message: unknown }).message)
-          : "Failed to complete profile";
-      showToast({
-        type: TOAST_TYPES.ERROR,
-        message,
-      });
+      return <JobsPanel role={currentUser?.role} activePanelId={safeActivePanelId} />;
     }
-  };
 
-  const onLogout = async (): Promise<void> => {
-    try {
-
-      const response = await logoutMutation().unwrap();
-      dispatch(clearCurrentUser());
-      dispatch(authApi.util.resetApiState());
-      showToast({
-        type: TOAST_TYPES.SUCCESS,
-        message: response.message || DASHBOARD_MESSAGES.LOGOUT_SUCCESS,
-      });
-      navigate("/auth/login", { replace: true });
-    } catch (error) {
-      const message =
-        typeof error === "object" && error !== null && "message" in error
-          ? String((error as { message: unknown }).message)
-          : DASHBOARD_MESSAGES.LOGOUT_FAILED;
-      showToast({
-        type: TOAST_TYPES.ERROR,
-        message,
-      });
+    if (safeActiveAppRailId === "interviews") {
+      if (isCandidateUser) {
+        return <InterviewsPage initialView="both" />;
+      }
+      return (
+        <EmptyStateCard
+          icon={FiCalendar}
+          title={DASHBOARD_EMPTY_STATE_LABELS.NO_INTERVIEWS_TITLE}
+          description={DASHBOARD_EMPTY_STATE_LABELS.NO_INTERVIEWS_DESCRIPTION}
+        />
+      );
     }
+
+    if (safeActiveAppRailId === "schedule-interview" || safeActiveAppRailId === "schedule") {
+      if (isHrUser) {
+        return <InterviewSchedulePanel />;
+      }
+      if (currentUser?.role === "interviewer") {
+        return <InterviewerInterviewsPage initialView="both" />;
+      }
+      return (
+        <EmptyStateCard
+          icon={FiCalendar}
+          title={DASHBOARD_EMPTY_STATE_LABELS.NO_SCHEDULED_INTERVIEWS_TITLE}
+          description={DASHBOARD_EMPTY_STATE_LABELS.NO_SCHEDULED_INTERVIEWS_DESCRIPTION}
+        />
+      );
+    }
+
+    if (safeActiveAppRailId === "assigned" || safeActiveAppRailId === "feedback") {
+      return (
+        <EmptyStateCard
+          icon={FiLayers}
+          title={DASHBOARD_EMPTY_STATE_LABELS.NO_DATA_TITLE}
+          description={DASHBOARD_EMPTY_STATE_LABELS.NO_DATA_DESCRIPTION}
+        />
+      );
+    }
+
+    return (
+      <EmptyStateCard
+        icon={FiMessageCircle}
+        title={DASHBOARD_EMPTY_STATE_LABELS.SELECT_SECTION_TITLE}
+        description={DASHBOARD_EMPTY_STATE_LABELS.SELECT_SECTION_DESCRIPTION}
+      />
+    );
   };
 
   return (
     <WorkspaceShell
-      title="Dashboard"
       onLogout={onLogout}
       isLoggingOut={isLoggingOut}
-      leftPanelItems={panelItems}
+      totalUnreadChats={totalUnreadChats}
+      leftPanelWidth={340}
+      leftPanelItems={filteredPanelItems}
       appRailItems={railItems}
-      activeLeftPanelId={activePanelId}
+      activeLeftPanelId={safeActivePanelId}
       onLeftPanelChange={onLeftPanelChange}
-      activeAppRailId={activeAppRailId}
+      activeAppRailId={safeActiveAppRailId}
       onAppRailChange={onAppRailChange}
+      onProfileClick={onOpenProfile}
     >
       <DashboardContentCard>
-        <DashboardHeaderRow>
-          <DashboardTitle>{DASHBOARD_MESSAGES.TITLE}</DashboardTitle>
-          <LogoutButton type="button" onClick={onLogout} disabled={isLoggingOut}>
-            {isLoggingOut ? DASHBOARD_MESSAGES.LOGGING_OUT : DASHBOARD_MESSAGES.LOGOUT}
-          </LogoutButton>
-        </DashboardHeaderRow>
-        <DashboardDescription>
-          This is the common dashboard layout foundation. We can now plug role-specific modules for
-          HR, Interviewer, and Candidate without changing the shell structure.
-        </DashboardDescription>
-        {renderModuleContent()}
+        <ModuleErrorBoundary resetKey={`${safeActiveAppRailId}-${safeActivePanelId}`}>
+          {renderModuleContent()}
+        </ModuleErrorBoundary>
       </DashboardContentCard>
 
       <AuthModal
         isOpen={isProfilePromptOpen}
-        title="Complete Your Profile"
-        message="Please complete your profile before continuing."
-        closeLabel="Cancel"
+        title={DASHBOARD_PROFILE_LABELS.COMPLETE_PROFILE_TITLE}
+        message={profilePromptMessage}
+        closeLabel={DASHBOARD_PROFILE_LABELS.COMPLETE_PROFILE_CLOSE}
         onClose={onCancelProfilePrompt}
-        primaryLabel="Complete Profile"
+        primaryLabel={DASHBOARD_PROFILE_LABELS.COMPLETE_PROFILE_PRIMARY}
         onPrimaryAction={onOpenProfileForm}
       />
 

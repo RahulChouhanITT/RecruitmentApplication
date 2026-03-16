@@ -1,11 +1,17 @@
 import styled from "styled-components";
 
 export const DashboardContentCard = styled.section`
-  background: #ffffff;
-  border: 1px solid #dce3ec;
-  border-radius: 0.9rem;
-  padding: 1rem;
-  box-shadow: 0 8px 22px rgba(18, 29, 56, 0.06);
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  padding: 0 1rem 1.25rem;
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+
+  @media (max-width: 900px) {
+    width: 100%;
+    padding: 0 0.35rem 1rem;
+  }
 `;
 
 export const DashboardTitle = styled.h1`
@@ -23,17 +29,24 @@ export const DashboardHeaderRow = styled.div`
 `;
 
 export const LogoutButton = styled.button`
-  border: 1px solid #dbe3ee;
-  background: #ffffff;
-  color: #0f172a;
+  border: 1px solid #171b30;
+  background: #171b30;
+  color: #ffffff;
   border-radius: 0.5rem;
   padding: 0.45rem 0.8rem;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+
+  &:hover:not(:disabled) {
+    background: #ffffff;
+    color: #171b30;
+    border-color: #171b30;
+  }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.55;
     cursor: not-allowed;
   }
 `;

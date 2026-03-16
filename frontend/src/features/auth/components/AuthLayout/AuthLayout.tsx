@@ -1,11 +1,6 @@
-import type { PropsWithChildren } from "react";
 import { AppHeader } from "../../../../shared/components/AppHeader/AppHeader";
+import type { AuthLayoutProps } from "../../types/authTypes";
 import { AuthCard, AuthWrapper, BodyWrapper, PageSubtitle, PageTitle } from "./AuthLayout.styles";
-
-type AuthLayoutProps = PropsWithChildren<{
-  title: string;
-  subtitle: string;
-}>;
 
 export const AuthLayout = ({ title, subtitle, children }: AuthLayoutProps) => {
   return (

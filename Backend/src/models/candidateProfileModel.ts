@@ -1,9 +1,11 @@
 import { Document, Schema, Types, model } from "mongoose";
+import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
 
 export interface ICandidateProfile extends Document {
   userId: Types.ObjectId;
   phone: string;
   resumeUrl: string;
+  resumePublicId: string;
   skills: string;
   experienceYears: number;
   currentLocation: string;
@@ -21,27 +23,32 @@ const candidateProfileSchema = new Schema<ICandidateProfile>(
     },
     phone: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     resumeUrl: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
+      trim: true,
+    },
+    resumePublicId: {
+      type: String,
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     skills: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     experienceYears: {
       type: Number,
-      default: 0,
+      default: MODEL_DEFAULT_VALUES.ZERO,
       min: 0,
     },
     currentLocation: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
   },

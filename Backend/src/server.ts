@@ -1,17 +1,23 @@
 import dotenv from "dotenv";
+import http from "http";
 import path from "path";
-import app from "./app";
 import { databaseConnectionManager } from "./configuration/databaseConnection";
+import { initializeSocketServer } from "./configuration/socketConfiguration";
+import { CONFIGURATION_CONSTANTS } from "./utils/constants/configurationConstants";
 
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, CONFIGURATION_CONSTANTS.SERVER.ENV_PATH) });
 
-const port = Number(process.env.APPLICATION_PORT) || 5000;
+const port = Number(process.env.APPLICATION_PORT);
 
 const startServer = async (): Promise<void> => {
+  const { default: app } = await import("./app");
+  await import("./configuration/cloudinaryConfiguration");
   await databaseConnectionManager.establishDatabaseConnection();
+  const server = http.createServer(app);
+  initializeSocketServer(server);
 
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  server.listen(port, () => {
+    console.log(`${CONFIGURATION_CONSTANTS.SERVER.START_MESSAGE_PREFIX}${port}`);
   });
 };
 

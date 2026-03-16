@@ -2,14 +2,15 @@ import styled from "styled-components";
 
 export const HeaderRoot = styled.header`
   width: 100%;
-  border-bottom: 1px solid #dbe3f0;
-  background: #ffffff;
+  border-bottom: 1px solid #e4ebf7;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
 `;
 
 export const HeaderInner = styled.div`
   width: 100%;
   min-height: 4rem;
-  padding: 0 1.25rem;
+  padding: 0 1.3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -28,10 +29,11 @@ export const BrandLogo = styled.span`
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border-radius: 0.5rem;
-  background: #2f6fd6;
+  border-radius: 0.6rem;
+  background: linear-gradient(140deg, #3564df 0%, #4d7def 100%);
   color: #ffffff;
   flex-shrink: 0;
+  box-shadow: 0 8px 16px rgba(53, 100, 223, 0.28);
 `;
 
 export const BrandName = styled.span`
@@ -49,6 +51,13 @@ export const UserRow = styled.div`
   gap: 0.5rem;
   color: #243b67;
   line-height: 1;
+  cursor: pointer;
+  transition: color 140ms ease, transform 140ms ease;
+
+  &:hover {
+    color: #1d4fa8;
+    transform: translateY(-1px);
+  }
 `;
 
 export const UserName = styled.span`

@@ -1,0 +1,93 @@
+export const HR_INTERVIEW_FILTER_OPTIONS = {
+  INTERVIEW_STATUS: [
+    { value: "all", label: "All Interviews" },
+    { value: "scheduled", label: "Scheduled" },
+    { value: "completed", label: "Completed" },
+    { value: "cancelled", label: "Cancelled" },
+  ],
+  FEEDBACK_STATUS: [
+    { value: "all", label: "All Feedback" },
+    { value: "pending", label: "Pending" },
+    { value: "needs_review", label: "Needs Review" },
+    { value: "reviewed", label: "Reviewed" },
+  ],
+} as const;
+
+export const HR_INTERVIEW_DEFAULT_MESSAGES = {
+  LOADING: "Loading interviews...",
+  NO_INTERVIEWS_TITLE: "No Scheduled Interviews",
+  NO_INTERVIEWS_DESCRIPTION: "No interview schedules to show yet.",
+  NO_FEEDBACK: "Feedback not available yet.",
+  LOADING_FEEDBACK: "Loading feedback...",
+  FEEDBACK_MISSING_APPLICATION: "Application not found for this interview",
+  UPDATE_STATUS_FAILED: "Failed to update application status",
+  RESCHEDULE_FAILED: "Failed to reschedule interview",
+  CANCEL_INTERVIEW_FAILED: "Failed to cancel interview",
+  SUBMITTED_ON_FALLBACK: "-",
+  PENDING_APPROVALS_LOADING: "Loading requests...",
+  PENDING_APPROVALS_EMPTY_TITLE: "No Pending Requests",
+  PENDING_APPROVALS_EMPTY_DESCRIPTION: "No verified pending users found at the moment.",
+  APPROVAL_SUCCESS: "User approved successfully",
+  APPROVAL_FAILED: "Failed to approve user",
+} as const;
+
+export const HR_INTERVIEW_SUCCESS_MESSAGES = {
+  RESCHEDULED: "Interview rescheduled successfully",
+  CANCELLED: "Interview cancelled successfully",
+  HIRED: "Application marked as Hired",
+  REJECTED: "Application marked as Rejected",
+} as const;
+
+export const HR_INTERVIEW_UI_TEXT = {
+  TITLE: "Interviews",
+  SEARCH_PLACEHOLDER: "Search by candidate, role",
+  FILTER_INTERVIEW_STATUS_ARIA: "Filter by interview status",
+  FILTER_FEEDBACK_STATUS_ARIA: "Filter by feedback status",
+  CANDIDATE: "Candidate",
+  JOB_TITLE: "Job Title",
+  DATE: "Date",
+  TIME: "Time",
+  INTERVIEWER: "Interviewer",
+  MEETING_LINK: "Meeting Link",
+  STATUS: "Status",
+  FEEDBACK_STATUS: "Feedback Status",
+  ACTIONS: "Actions",
+  JOIN_MEET: "Join Meet",
+  INTERVIEW_FEEDBACK: "Interview Feedback",
+  RATING: "Rating",
+  RECOMMENDATION: "Recommendation",
+  COMMENTS: "Comments",
+  APPLICATION_DECISION: "Application decision",
+  DECISION_RESTRICTION:
+    "You can update to Hired/Rejected only when application status is INTERVIEW_SCHEDULED.",
+  SUBMITTED_ON: "Submitted on",
+  MARK_HIRED: "Mark Hired",
+  MARK_REJECTED: "Mark Rejected",
+  CLOSE: "Close",
+  OPEN_INTERVIEW_ACTIONS_ARIA: "Open interview actions",
+  RESCHEDULE: "Reschedule",
+  CANCEL_INTERVIEW: "Cancel Interview",
+  RESCHEDULE_INTERVIEW: "Reschedule Interview",
+  SCHEDULE_DATE_TIME: "Interview date & time",
+  DURATION: "Duration",
+  AVAILABLE_INTERVIEWERS: "Available Interviewers",
+  SELECT_INTERVIEWER: "Select interviewer",
+  NOTES: "Notes",
+  NOTES_PLACEHOLDER: "Optional interview notes",
+  CANCEL: "Cancel",
+  SCHEDULING: "Scheduling...",
+  RESCHEDULE_ACTION: "Reschedule Interview",
+  SCHEDULED: "Scheduled",
+  COMPLETED: "Completed",
+  CANCELLED: "Cancelled",
+  TIME_LABEL: "Time",
+  PENDING_REQUESTS_TITLE: "Pending Requests",
+  APPROVE: "Approve",
+  ROLE_PREFIX: "Role:",
+  REQUESTS_SUFFIX: "Requests",
+} as const;
+
+export const HR_INTERVIEW_VALIDATION_MESSAGES = {
+  PICK_DATE_TIME: "Pick a date and time slot",
+  INTERVIEWER_REQUIRED: "Interviewer is required",
+} as const;

@@ -2,6 +2,18 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg-app: #f4f7ff;
+  --bg-surface: #ffffff;
+  --bg-surface-soft: #f8faff;
+  --border-soft: #d8e2f2;
+  --text-strong: #15233b;
+  --text-muted: #5c6f8d;
+  --primary: #3f63df;
+  --primary-soft: #eaf0ff;
+  --shadow-soft: 0 10px 24px rgba(16, 32, 58, 0.08);
+}
+
 html,
 body,
 #root {
@@ -13,4 +25,9 @@ body,
 
 body {
   min-height: 100vh;
+  background: var(--bg-app);
+  color: var(--text-strong);
+  font-family: "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }

@@ -13,9 +13,10 @@ import {
 type AppHeaderProps = {
   brandName?: string;
   showUserName?: boolean;
+  onProfileClick?: () => void;
 };
 
-export const AppHeader = ({ brandName = "JOB Portal ", showUserName = true }: AppHeaderProps) => {
+export const AppHeader = ({ brandName = "JOB Portal ", showUserName = true, onProfileClick }: AppHeaderProps) => {
   const currentUser = useAppSelector((state) => state.auth.currentUser);
 
   return (
@@ -29,7 +30,12 @@ export const AppHeader = ({ brandName = "JOB Portal ", showUserName = true }: Ap
         </BrandRow>
 
         {showUserName && currentUser ? (
-          <UserRow>
+          <UserRow role="button" tabIndex={0} onClick={onProfileClick} onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onProfileClick?.();
+            }
+          }}>
             <UserName>{currentUser.name}</UserName>
             <FaUserCircle size={25} />
           </UserRow>

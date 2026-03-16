@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import type { ToastType } from "../../utils/toast";
+import type { ToastType } from "../../../utils/toast";
 
 const slideIn = keyframes`
   from {

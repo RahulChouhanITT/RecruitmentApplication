@@ -1,4 +1,4 @@
-import type { ModalProps } from "./AuthModal.types";
+import type { AuthModalProps } from "../../types/authTypes";
 import {
   ModalActions,
   ModalButton,
@@ -17,7 +17,7 @@ export const AuthModal = ({
   closeLabel = "Cancel",
   primaryLabel,
   onPrimaryAction,
-}: ModalProps) => {
+}: AuthModalProps) => {
   if (!isOpen) {
     return null;
   }

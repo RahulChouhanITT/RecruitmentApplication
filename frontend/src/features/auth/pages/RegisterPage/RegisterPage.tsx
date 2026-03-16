@@ -1,50 +1,31 @@
-import { useNavigate } from "react-router-dom";
 import { AuthLayout } from "../../components/AuthLayout/AuthLayout";
 import { RegisterForm } from "../../components/RegisterForm/RegisterForm";
-import { useRegisterCandidateMutation } from "../../api/authApi";
-import type { RegisterPayload } from "../../types";
+import { AUTH_ROUTE_PATHS } from "../../constants/authConstants";
+import { AUTH_UI_TEXT } from "../../labels/authLabels";
+import { useRegister } from "../../hooks/useRegister";
+import { useRegisterForm } from "../../hooks/useRegisterForm";
 import { AuthSwitchLink, AuthSwitchText, PageContent } from "./RegisterPage.styles";
-import { showToast, TOAST_TYPES } from "../../../../shared/utils/toast";
-
-const getErrorMessage = (error: unknown, fallback: string): string => {
-  if (typeof error === "object" && error !== null && "message" in error) {
-    return String((error as { message: unknown }).message);
-  }
-  return fallback;
-};
 
 export const RegisterPage = () => {
-  const navigate = useNavigate();
-  const [registerCandidateMutation, { isLoading: isRegisterLoading }] = useRegisterCandidateMutation();
-
-  const onRegisterSubmit = async (values: RegisterPayload): Promise<void> => {
-    try {
-      const response = await registerCandidateMutation(values).unwrap();
-      showToast({
-        type: TOAST_TYPES.SUCCESS,
-        message: response.message || "Registration successful",
-      });
-      navigate("/auth/verify-email", {
-        state: {
-          email: values.email,
-          autoSendOtp: false,
-          startCooldown: true,
-        },
-      });
-    } catch (error) {
-      showToast({
-        type: TOAST_TYPES.ERROR,
-        message: getErrorMessage(error, "Registration failed"),
-      });
-    }
-  };
+  const { isSubmitting, submitRegister } = useRegister();
+  const { formValues, errors, onChangeRole, onChangeName, onChangeEmail, onChangePassword, onFormSubmit } =
+    useRegisterForm(submitRegister);
 
   return (
     <PageContent>
-      <AuthLayout title="Register" subtitle="Register and continue to email verification">
-        <RegisterForm onSubmit={onRegisterSubmit} isSubmitting={isRegisterLoading} />
+      <AuthLayout title={AUTH_UI_TEXT.REGISTER_TITLE} subtitle={AUTH_UI_TEXT.REGISTER_SUBTITLE}>
+        <RegisterForm
+          formValues={formValues}
+          errors={errors}
+          onChangeRole={onChangeRole}
+          onChangeName={onChangeName}
+          onChangeEmail={onChangeEmail}
+          onChangePassword={onChangePassword}
+          onSubmit={onFormSubmit}
+          isSubmitting={isSubmitting}
+        />
         <AuthSwitchText>
-          Already have an account? <AuthSwitchLink to="/auth/login">Login</AuthSwitchLink>
+          {AUTH_UI_TEXT.REGISTER_SWITCH_TEXT} <AuthSwitchLink to={AUTH_ROUTE_PATHS.LOGIN}>{AUTH_UI_TEXT.REGISTER_SWITCH_LINK}</AuthSwitchLink>
         </AuthSwitchText>
       </AuthLayout>
     </PageContent>

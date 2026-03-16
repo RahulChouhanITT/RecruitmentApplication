@@ -1,4 +1,5 @@
 import { Document, Schema, Types, model } from "mongoose";
+import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
 
 export interface IHrProfile extends Document {
   userId: Types.ObjectId;
@@ -19,17 +20,17 @@ const hrProfileSchema = new Schema<IHrProfile>(
     },
     position: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     experienceLevel: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     department: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
   },

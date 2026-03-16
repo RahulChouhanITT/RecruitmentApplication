@@ -1,7 +1,8 @@
 import { type PropsWithChildren, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import { APP_ROUTE_PATHS } from "../utils/constants/routeConstants";
 import { useGetCurrentUserQuery } from "../features/auth/api/authApi";
-import { AUTH_LOADER_MESSAGES } from "../features/auth/constants";
+import { AUTH_LOADER_MESSAGES } from "../features/auth/labels/authLabels";
 import { setCurrentUser } from "../features/auth/state/authSlice";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { AuthLoader } from "../features/auth/components/AuthLoader/AuthLoader";
@@ -27,11 +28,11 @@ export const ProtectedRoute = ({ children }: PropsWithChildren) => {
   }
 
   if (isError || !user) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to={APP_ROUTE_PATHS.AUTH_LOGIN} replace />;
   }
 
   if (!user.isApproved || !user.isEmailVerified ) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to={APP_ROUTE_PATHS.AUTH_LOGIN} replace />;
   }
 
   return <>{children}</>;

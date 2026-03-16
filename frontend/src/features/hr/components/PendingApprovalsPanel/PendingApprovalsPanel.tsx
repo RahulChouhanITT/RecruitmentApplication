@@ -1,85 +1,70 @@
-import { useMemo } from "react";
-import { useGetPendingApprovalsQuery, useUpdateApprovalStatusMutation } from "../../../auth/api/authApi";
-import { showToast, TOAST_TYPES } from "../../../../shared/utils/toast";
 import { DashboardDescription } from "../../../dashboard/pages/DashboardPage/DashboardPage.styles";
+import { EmptyStateCard } from "../../../dashboard/components/EmptyStateCard/EmptyStateCard";
+import { FiClock } from "react-icons/fi";
+import { usePendingApprovals } from "../../hooks/usePendingApprovals";
+import { HR_INTERVIEW_DEFAULT_MESSAGES, HR_INTERVIEW_UI_TEXT } from "../../labels/hrLabels";
+import type { PendingApprovalsPanelProps } from "../../types/hrTypes";
 import {
   ApproveButton,
   PendingRequestActions,
   PendingRequestCard,
+  PendingRequestsCount,
   PendingRequestInfo,
   PendingRequestsGrid,
+  PendingRequestsHeader,
+  PendingRequestsSection,
+  PendingRequestsTitle,
 } from "./PendingApprovalsPanel.styles";
 
-type PendingApprovalsPanelProps = {
-  isActive: boolean;
-};
-
 export const PendingApprovalsPanel = ({ isActive }: PendingApprovalsPanelProps) => {
-  const [updateApprovalStatus, { isLoading: isUpdatingApproval }] = useUpdateApprovalStatusMutation();
-
-  const {
-    data: pendingApprovalsResponse,
-    isLoading: isPendingApprovalsLoading,
-    refetch: refetchPendingApprovals,
-  } = useGetPendingApprovalsQuery(undefined, {
-    skip: !isActive,
-  });
-
-  const pendingUsers = useMemo(
-    () => pendingApprovalsResponse?.data ?? [],
-    [pendingApprovalsResponse?.data]
-  );
-
-  const onApprove = async (userId: string): Promise<void> => {
-    try {
-      const response = await updateApprovalStatus({ userId, isApproved: true }).unwrap();
-      showToast({
-        type: TOAST_TYPES.SUCCESS,
-        message: response.message || "User approved successfully",
-      });
-      await refetchPendingApprovals();
-    } catch (error) {
-      const message =
-        typeof error === "object" && error !== null && "message" in error
-          ? String((error as { message: unknown }).message)
-          : "Failed to approve user";
-
-      showToast({
-        type: TOAST_TYPES.ERROR,
-        message,
-      });
-    }
-  };
+  const { pendingUsers, isUpdatingApproval, isPendingApprovalsLoading, onApprove } = usePendingApprovals(isActive);
 
   if (!isActive) {
     return null;
   }
 
   if (isPendingApprovalsLoading) {
-    return <DashboardDescription>Loading requests...</DashboardDescription>;
+    return <DashboardDescription>{HR_INTERVIEW_DEFAULT_MESSAGES.PENDING_APPROVALS_LOADING}</DashboardDescription>;
   }
 
   if (pendingUsers.length === 0) {
-    return <DashboardDescription>No verified pending users found.</DashboardDescription>;
+    return (
+      <EmptyStateCard
+        icon={FiClock}
+        title={HR_INTERVIEW_DEFAULT_MESSAGES.PENDING_APPROVALS_EMPTY_TITLE}
+        description={HR_INTERVIEW_DEFAULT_MESSAGES.PENDING_APPROVALS_EMPTY_DESCRIPTION}
+      />
+    );
   }
 
   return (
-    <PendingRequestsGrid>
-      {pendingUsers.map((user) => (
-        <PendingRequestCard key={user._id}>
-          <PendingRequestInfo>
-            <strong>{user.name}</strong>
-            <span>{user.email}</span>
-            <span>Role: {user.role}</span>
-          </PendingRequestInfo>
+    <PendingRequestsSection>
+      <PendingRequestsHeader>
+        <PendingRequestsTitle>{HR_INTERVIEW_UI_TEXT.PENDING_REQUESTS_TITLE}</PendingRequestsTitle>
+        <PendingRequestsCount>
+          {pendingUsers.length} {HR_INTERVIEW_UI_TEXT.REQUESTS_SUFFIX}
+        </PendingRequestsCount>
+      </PendingRequestsHeader>
 
-          <PendingRequestActions>
-            <ApproveButton type="button" disabled={isUpdatingApproval} onClick={() => onApprove(user._id)}>
-              Approve
-            </ApproveButton>
-          </PendingRequestActions>
-        </PendingRequestCard>
-      ))}
-    </PendingRequestsGrid>
+      <PendingRequestsGrid>
+        {pendingUsers.map((user) => (
+          <PendingRequestCard key={user._id}>
+            <PendingRequestInfo>
+              <strong>{user.name}</strong>
+              <span>{user.email}</span>
+              <span>
+                {HR_INTERVIEW_UI_TEXT.ROLE_PREFIX} {user.role}
+              </span>
+            </PendingRequestInfo>
+
+            <PendingRequestActions>
+              <ApproveButton type="button" disabled={isUpdatingApproval} onClick={() => onApprove(user._id)}>
+                {HR_INTERVIEW_UI_TEXT.APPROVE}
+              </ApproveButton>
+            </PendingRequestActions>
+          </PendingRequestCard>
+        ))}
+      </PendingRequestsGrid>
+    </PendingRequestsSection>
   );
 };

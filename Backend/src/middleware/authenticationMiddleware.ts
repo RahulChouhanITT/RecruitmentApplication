@@ -2,11 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { ApplicationError } from "../utils/errors/applicationError";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
-import { verifyAuthenticationToken } from "../utils/tokenUtility";
-
-export interface AuthenticatedRequest extends Request {
-  authenticatedUserId?: string;
-}
+import { verifyAuthenticationToken } from "../utils/helpers/tokenHelper";
+import type { AuthenticatedRequest } from "../utils/types/authTypes";
 
 export const authenticationMiddleware = (
   req: AuthenticatedRequest,

@@ -1,4 +1,4 @@
-import type { LoaderProps } from "./AuthLoader.types";
+import type { AuthLoaderProps } from "../../types/authTypes";
 import {
   LoaderCard,
   LoaderWrapper,
@@ -7,7 +7,7 @@ import {
   SkeletonRow,
 } from "./AuthLoader.styles";
 
-export const AuthLoader = ({ message = "Loading application..." }: LoaderProps) => {
+export const AuthLoader = ({ message = "Loading application..." }: AuthLoaderProps) => {
   return (
     <LoaderWrapper aria-live="polite" aria-busy="true" aria-label={message}>
       <LoaderCard>

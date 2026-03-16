@@ -1,4 +1,5 @@
 import { Document, Schema, Types, model } from "mongoose";
+import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
 
 export interface IInterviewerProfile extends Document {
   userId: Types.ObjectId;
@@ -19,17 +20,17 @@ const interviewerProfileSchema = new Schema<IInterviewerProfile>(
     },
     position: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     techStack: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
     experienceLevel: {
       type: String,
-      default: "",
+      default: MODEL_DEFAULT_VALUES.EMPTY_STRING,
       trim: true,
     },
   },
