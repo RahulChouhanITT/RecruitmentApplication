@@ -15,6 +15,7 @@ import { useUploadResumeMutation } from "../../../candidate/api/candidateApi";
 import type { AuthRole, CompleteProfilePayload } from "../../../auth/types";
 import { ERROR_MESSAGES } from "../../../../utils/constants/messages/errorMessages";
 import { VALIDATION_MESSAGES } from "../../../../utils/constants/messages/validationMessages";
+import { ModalPortal } from "../../../../shared/components/ModalPortal/ModalPortal";
 import {
   PROFILE_INITIAL_VALUES,
   PROFILE_FORM_LIMITS,
@@ -278,8 +279,9 @@ export const ProfileCompletionModal = ({
   }
 
   return (
-    <Overlay>
-      <Card>
+    <ModalPortal isOpen={isOpen}>
+      <Overlay>
+        <Card>
         <Title>{title}</Title>
         {isCandidate ? (
           <Description>{PROFILE_UI_TEXT.COMPLETE_PROFILE_DESCRIPTION}</Description>
@@ -494,7 +496,8 @@ export const ProfileCompletionModal = ({
             {isSubmitting ? PROFILE_UI_TEXT.SAVING : isUploadingResume ? PROFILE_UI_TEXT.UPLOADING : PROFILE_UI_TEXT.SAVE_PROFILE}
           </PrimaryButton>
         </Actions>
-      </Card>
-    </Overlay>
+        </Card>
+      </Overlay>
+    </ModalPortal>
   );
 };

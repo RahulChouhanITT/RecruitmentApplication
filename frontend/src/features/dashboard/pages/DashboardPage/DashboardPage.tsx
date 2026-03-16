@@ -1,16 +1,7 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, lazy, Suspense, type ErrorInfo, type ReactNode } from "react";
 import { DASHBOARD_EMPTY_STATE_LABELS, DASHBOARD_MESSAGES, DASHBOARD_PROFILE_LABELS } from "../../labels/dashboardLabels";
 import { WorkspaceShell } from "../../components/WorkspaceShell/WorkspaceShell";
 import { useDashboardPage } from "../../hooks/useDashboardPage";
-import { PendingApprovalsPanel } from "../../../hr/components/PendingApprovalsPanel/PendingApprovalsPanel";
-import { InterviewSchedulePanel } from "../../../hr/components/InterviewSchedulePanel/InterviewSchedulePanel";
-import { InterviewerInterviewsPage } from "../../../interviewer/pages/InterviewerInterviewsPage/InterviewerInterviewsPage";
-import { ChatThreadsPanel } from "../../components/ChatThreadsPanel/ChatThreadsPanel";
-import { JobsPanel } from "../../../jobs/components/JobsPanel/JobsPanel";
-import { OpenJobsPage } from "../../../jobs/pages/OpenJobsPage/OpenJobsPage";
-import { MyApplicationsPage } from "../../../jobs/pages/MyApplicationsPage/MyApplicationsPage";
-import { InterviewsPage } from "../../../jobs/pages/InterviewsPage/InterviewsPage";
-import { ProfilePanel } from "../../../profile/pages/ProfilePanel/ProfilePanel";
 import { EmptyStateCard } from "../../components/EmptyStateCard/EmptyStateCard";
 import { FiCalendar, FiLayers, FiMessageCircle } from "react-icons/fi";
 import {
@@ -18,7 +9,56 @@ import {
   DashboardDescription,
 } from "./DashboardPage.styles";
 import { AuthModal } from "../../../auth/components/AuthModal/AuthModal";
-import { ProfileCompletionModal } from "../../../profile/components/ProfileCompletionModal/ProfileCompletionModal";
+
+const PendingApprovalsPanel = lazy(async () => {
+  const module = await import("../../../hr/components/PendingApprovalsPanel/PendingApprovalsPanel");
+  return { default: module.PendingApprovalsPanel };
+});
+
+const InterviewSchedulePanel = lazy(async () => {
+  const module = await import("../../../hr/components/InterviewSchedulePanel/InterviewSchedulePanel");
+  return { default: module.InterviewSchedulePanel };
+});
+
+const InterviewerInterviewsPage = lazy(async () => {
+  const module = await import("../../../interviewer/pages/InterviewerInterviewsPage/InterviewerInterviewsPage");
+  return { default: module.InterviewerInterviewsPage };
+});
+
+const ChatThreadsPanel = lazy(async () => {
+  const module = await import("../../components/ChatThreadsPanel/ChatThreadsPanel");
+  return { default: module.ChatThreadsPanel };
+});
+
+const JobsPanel = lazy(async () => {
+  const module = await import("../../../jobs/components/JobsPanel/JobsPanel");
+  return { default: module.JobsPanel };
+});
+
+const OpenJobsPage = lazy(async () => {
+  const module = await import("../../../jobs/pages/OpenJobsPage/OpenJobsPage");
+  return { default: module.OpenJobsPage };
+});
+
+const MyApplicationsPage = lazy(async () => {
+  const module = await import("../../../jobs/pages/MyApplicationsPage/MyApplicationsPage");
+  return { default: module.MyApplicationsPage };
+});
+
+const InterviewsPage = lazy(async () => {
+  const module = await import("../../../jobs/pages/InterviewsPage/InterviewsPage");
+  return { default: module.InterviewsPage };
+});
+
+const ProfilePanel = lazy(async () => {
+  const module = await import("../../../profile/pages/ProfilePanel/ProfilePanel");
+  return { default: module.ProfilePanel };
+});
+
+const ProfileCompletionModal = lazy(async () => {
+  const module = await import("../../../profile/components/ProfileCompletionModal/ProfileCompletionModal");
+  return { default: module.ProfileCompletionModal };
+});
 
 type ModuleErrorBoundaryProps = {
   children: ReactNode;
@@ -84,53 +124,59 @@ export const DashboardPage = () => {
     onLogout,
   } = useDashboardPage();
 
+  const renderLazyModule = (node: ReactNode) => (
+    <Suspense fallback={<DashboardDescription>{DASHBOARD_MESSAGES.LOADING_MODULE}</DashboardDescription>}>
+      {node}
+    </Suspense>
+  );
+
   const renderModuleContent = () => {
     if (safeActiveAppRailId === "chat") {
-      return <ChatThreadsPanel hideConversationList forcedConversationId={safeActivePanelId} />;
+      return renderLazyModule(<ChatThreadsPanel hideConversationList forcedConversationId={safeActivePanelId} />);
     }
 
     switch (safeActivePanelId) {
       case "hr-pending":
-        return <PendingApprovalsPanel isActive />;
+        return renderLazyModule(<PendingApprovalsPanel isActive />);
       case "hr-jobs-manage":
       case "hr-jobs-applications":
-        return <JobsPanel role={currentUser?.role} activePanelId={safeActivePanelId} />;
+        return renderLazyModule(<JobsPanel role={currentUser?.role} activePanelId={safeActivePanelId} />);
       case "can-open-jobs":
-        return <OpenJobsPage />;
+        return renderLazyModule(<OpenJobsPage />);
       case "can-my-applications":
-        return <MyApplicationsPage />;
+        return renderLazyModule(<MyApplicationsPage />);
       case "can-my-interviews":
-        return <InterviewsPage initialView="both" />;
+        return renderLazyModule(<InterviewsPage initialView="both" />);
       case "hr-schedule":
-        return <InterviewSchedulePanel />;
+        return renderLazyModule(<InterviewSchedulePanel />);
       case "int-my-interviews":
-        return <InterviewerInterviewsPage initialView="both" />;
+        return renderLazyModule(<InterviewerInterviewsPage initialView="both" />);
       case "hr-profile":
       case "int-profile":
       case "can-profile":
-        return <ProfilePanel />;
+        return renderLazyModule(<ProfilePanel />);
       default:
         break;
     }
 
     if (safeActiveAppRailId === "profile") {
-      return <ProfilePanel />;
+      return renderLazyModule(<ProfilePanel />);
     }
 
     if (isHrUser && safeActiveAppRailId === "pending-request") {
-      return <PendingApprovalsPanel isActive />;
+      return renderLazyModule(<PendingApprovalsPanel isActive />);
     }
 
     if (safeActiveAppRailId === "jobs") {
       if (isCandidateUser) {
-        return <OpenJobsPage />;
+        return renderLazyModule(<OpenJobsPage />);
       }
-      return <JobsPanel role={currentUser?.role} activePanelId={safeActivePanelId} />;
+      return renderLazyModule(<JobsPanel role={currentUser?.role} activePanelId={safeActivePanelId} />);
     }
 
     if (safeActiveAppRailId === "interviews") {
       if (isCandidateUser) {
-        return <InterviewsPage initialView="both" />;
+        return renderLazyModule(<InterviewsPage initialView="both" />);
       }
       return (
         <EmptyStateCard
@@ -143,10 +189,10 @@ export const DashboardPage = () => {
 
     if (safeActiveAppRailId === "schedule-interview" || safeActiveAppRailId === "schedule") {
       if (isHrUser) {
-        return <InterviewSchedulePanel />;
+        return renderLazyModule(<InterviewSchedulePanel />);
       }
       if (currentUser?.role === "interviewer") {
-        return <InterviewerInterviewsPage initialView="both" />;
+        return renderLazyModule(<InterviewerInterviewsPage initialView="both" />);
       }
       return (
         <EmptyStateCard
@@ -206,13 +252,15 @@ export const DashboardPage = () => {
         onPrimaryAction={onOpenProfileForm}
       />
 
-      <ProfileCompletionModal
-        isOpen={isProfileFormOpen}
-        role={currentUser?.role}
-        isSubmitting={isCompletingProfile}
-        onCancel={onCancelProfileForm}
-        onSubmit={onSubmitProfile}
-      />
+      <Suspense fallback={null}>
+        <ProfileCompletionModal
+          isOpen={isProfileFormOpen}
+          role={currentUser?.role}
+          isSubmitting={isCompletingProfile}
+          onCancel={onCancelProfileForm}
+          onSubmit={onSubmitProfile}
+        />
+      </Suspense>
     </WorkspaceShell>
   );
 };

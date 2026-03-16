@@ -2,6 +2,7 @@ export const DASHBOARD_MESSAGES = {
   TITLE: "Dashboard",
   LOGOUT: "Logout",
   LOGGING_OUT: "Logging out...",
+  LOADING_MODULE: "Loading section...",
   LOGOUT_SUCCESS: "Logged out successfully",
   LOGOUT_FAILED: "Logout failed",
   MODULE_RENDER_ERROR: "Something went wrong while rendering this section.",

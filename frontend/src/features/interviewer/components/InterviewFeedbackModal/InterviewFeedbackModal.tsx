@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { ModalPortal } from "../../../../shared/components/ModalPortal/ModalPortal";
 import { INTERVIEWER_INITIAL_VALUES, INTERVIEWER_STATUS_VALUES } from "../../constants/interviewerConstants";
 import {
   INTERVIEWER_UI_TEXT,
@@ -76,65 +77,67 @@ export const InterviewFeedbackModal = ({
   };
 
   return (
-    <Overlay>
-      <Card>
-        <Title>{INTERVIEWER_UI_TEXT.FEEDBACK_MODAL_TITLE}</Title>
-        <Grid>
-          <Label>
-            {INTERVIEWER_UI_TEXT.RATING_LABEL}
-            <Select
-              value={rating}
-              onChange={(event) => {
-                setRating(event.target.value);
-                setErrors((prev) => ({ ...prev, rating: INTERVIEWER_INITIAL_VALUES.EMPTY_STRING }));
-              }}
-            >
-              <option value={INTERVIEWER_INITIAL_VALUES.EMPTY_STRING}>{INTERVIEWER_UI_TEXT.RATING_PLACEHOLDER}</option>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </Select>
-            <ErrorText>{errors.rating || INTERVIEWER_UI_TEXT.FIELD_ERROR_PLACEHOLDER}</ErrorText>
-          </Label>
+    <ModalPortal isOpen={isOpen}>
+      <Overlay>
+        <Card>
+          <Title>{INTERVIEWER_UI_TEXT.FEEDBACK_MODAL_TITLE}</Title>
+          <Grid>
+            <Label>
+              {INTERVIEWER_UI_TEXT.RATING_LABEL}
+              <Select
+                value={rating}
+                onChange={(event) => {
+                  setRating(event.target.value);
+                  setErrors((prev) => ({ ...prev, rating: INTERVIEWER_INITIAL_VALUES.EMPTY_STRING }));
+                }}
+              >
+                <option value={INTERVIEWER_INITIAL_VALUES.EMPTY_STRING}>{INTERVIEWER_UI_TEXT.RATING_PLACEHOLDER}</option>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </Select>
+              <ErrorText>{errors.rating || INTERVIEWER_UI_TEXT.FIELD_ERROR_PLACEHOLDER}</ErrorText>
+            </Label>
 
-          <Label>
-            {INTERVIEWER_UI_TEXT.RECOMMENDATION_LABEL}
-            <Select
-              value={recommendation}
-              onChange={(event) => {
-                setRecommendation(event.target.value as "" | "HIRED" | "REJECTED");
-                setErrors((prev) => ({ ...prev, recommendation: INTERVIEWER_INITIAL_VALUES.EMPTY_STRING }));
-              }}
-            >
-              <option value={INTERVIEWER_INITIAL_VALUES.EMPTY_STRING}>{INTERVIEWER_UI_TEXT.RECOMMENDATION_PLACEHOLDER}</option>
-              <option value={INTERVIEWER_STATUS_VALUES.HIRED}>{INTERVIEWER_UI_TEXT.RECOMMENDATION_HIRED}</option>
-              <option value={INTERVIEWER_STATUS_VALUES.REJECTED}>{INTERVIEWER_UI_TEXT.RECOMMENDATION_REJECTED}</option>
-            </Select>
-            <ErrorText>{errors.recommendation || INTERVIEWER_UI_TEXT.FIELD_ERROR_PLACEHOLDER}</ErrorText>
-          </Label>
+            <Label>
+              {INTERVIEWER_UI_TEXT.RECOMMENDATION_LABEL}
+              <Select
+                value={recommendation}
+                onChange={(event) => {
+                  setRecommendation(event.target.value as "" | "HIRED" | "REJECTED");
+                  setErrors((prev) => ({ ...prev, recommendation: INTERVIEWER_INITIAL_VALUES.EMPTY_STRING }));
+                }}
+              >
+                <option value={INTERVIEWER_INITIAL_VALUES.EMPTY_STRING}>{INTERVIEWER_UI_TEXT.RECOMMENDATION_PLACEHOLDER}</option>
+                <option value={INTERVIEWER_STATUS_VALUES.HIRED}>{INTERVIEWER_UI_TEXT.RECOMMENDATION_HIRED}</option>
+                <option value={INTERVIEWER_STATUS_VALUES.REJECTED}>{INTERVIEWER_UI_TEXT.RECOMMENDATION_REJECTED}</option>
+              </Select>
+              <ErrorText>{errors.recommendation || INTERVIEWER_UI_TEXT.FIELD_ERROR_PLACEHOLDER}</ErrorText>
+            </Label>
 
-          <Label>
-            {INTERVIEWER_UI_TEXT.COMMENTS_LABEL}
-            <Textarea
-              placeholder={INTERVIEWER_UI_TEXT.COMMENTS_PLACEHOLDER}
-              value={comments}
-              onChange={(event) => setComments(event.target.value)}
-            />
-            <ErrorText>{INTERVIEWER_UI_TEXT.FIELD_ERROR_PLACEHOLDER}</ErrorText>
-          </Label>
-        </Grid>
+            <Label>
+              {INTERVIEWER_UI_TEXT.COMMENTS_LABEL}
+              <Textarea
+                placeholder={INTERVIEWER_UI_TEXT.COMMENTS_PLACEHOLDER}
+                value={comments}
+                onChange={(event) => setComments(event.target.value)}
+              />
+              <ErrorText>{INTERVIEWER_UI_TEXT.FIELD_ERROR_PLACEHOLDER}</ErrorText>
+            </Label>
+          </Grid>
 
-        <Actions>
-          <GhostButton type="button" onClick={onClose}>
-            {INTERVIEWER_UI_TEXT.CANCEL}
-          </GhostButton>
-          <PrimaryButton type="button" disabled={isSubmitting} onClick={() => void handleSubmit()}>
-            {isSubmitting ? INTERVIEWER_UI_TEXT.SUBMITTING : INTERVIEWER_UI_TEXT.FEEDBACK_MODAL_TITLE}
-          </PrimaryButton>
-        </Actions>
-      </Card>
-    </Overlay>
+          <Actions>
+            <GhostButton type="button" onClick={onClose}>
+              {INTERVIEWER_UI_TEXT.CANCEL}
+            </GhostButton>
+            <PrimaryButton type="button" disabled={isSubmitting} onClick={() => void handleSubmit()}>
+              {isSubmitting ? INTERVIEWER_UI_TEXT.SUBMITTING : INTERVIEWER_UI_TEXT.FEEDBACK_MODAL_TITLE}
+            </PrimaryButton>
+          </Actions>
+        </Card>
+      </Overlay>
+    </ModalPortal>
   );
 };
