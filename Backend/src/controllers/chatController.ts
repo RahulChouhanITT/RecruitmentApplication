@@ -8,7 +8,7 @@ import {
   sendMessageToConversation,
 } from "../services/chatService";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import { sendSuccessResponse } from "../utils/helpers";
+import { sendSuccessResponse } from "../utils";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 import type { AuthenticatedRequest } from "../utils/types/authTypes";
 import type { DirectConversationRequest, SendMessageRequest } from "../utils/types/chatTypes";

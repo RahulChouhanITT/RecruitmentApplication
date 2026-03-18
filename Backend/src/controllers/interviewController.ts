@@ -6,10 +6,10 @@ import {
   getHrInterviews,
   getInterviewerInterviews,
   getInterviewerAvailabilityForDate,
-  scheduleInterviewByHr,
+  scheduleApplicationInterview,
 } from "../services/applicationService";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import { sendSuccessResponse } from "../utils/helpers";
+import { sendSuccessResponse } from "../utils";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 import type { ScheduleInterviewByHrBody } from "../utils/types/applicationTypes";
 import type { AuthenticatedRequest } from "../utils/types/authTypes";
@@ -32,12 +32,15 @@ export const scheduleInterviewHandler = async (
   res: Response
 ): Promise<void> => {
   const requestBody = req.body as ScheduleInterviewByHrBody;
-  const interview = await scheduleInterviewByHr(req.authenticatedUserId as string, requestBody);
+  await scheduleApplicationInterview(
+    requestBody.applicationId,
+    req.authenticatedUserId as string,
+    requestBody
+  );
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.CREATED,
     message: APPLICATION_MESSAGES.INTERVIEW.SCHEDULED_SUCCESS,
-    data: interview,
   });
 };
 
@@ -46,12 +49,11 @@ export const cancelInterviewHandler = async (
   res: Response
 ): Promise<void> => {
   const { interviewId } = req.params as { interviewId: string };
-  const interview = await cancelInterviewByHr(interviewId, req.authenticatedUserId as string);
+  await cancelInterviewByHr(interviewId, req.authenticatedUserId as string);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.INTERVIEW.CANCELLED_SUCCESS,
-    data: interview,
   });
 };
 

@@ -12,20 +12,7 @@ import {
   type PopulatedChatConversationLean,
   type PopulatedChatMessageLean,
 } from "../utils/types";
-
-const toObjectId = (value: string): Types.ObjectId => new Types.ObjectId(value);
-
-const toParticipantResponse = (user: UserLite) => ({
-  _id: user._id.toString(),
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  isOnline: isUserOnline(user._id.toString()),
-});
-
-const normalizeParticipants = (participantIds: string[]): string[] => {
-  return [...new Set(participantIds)].filter(Boolean).sort();
-};
+import { normalizeParticipants, toObjectId, toParticipantResponse } from "../utils";
 
 const findUsersByIds = async (userIds: string[]): Promise<UserLite[]> => {
   const users = await UserModel.find({ _id: { $in: userIds } }).select("_id name email role").lean<UserLite[]>();

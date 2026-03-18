@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { io } from "socket.io-client";
 import { useAppSelector } from "../../../app/hooks";
+import { useSocket } from "../../../app/socket/useSocket";
 import {
   useGetConversationsQuery,
   useGetMessagesQuery,
@@ -9,13 +9,14 @@ import {
   useStartCandidateHrConversationMutation,
 } from "../api/chatApi";
 import type { ChatThreadsPanelProps, ChatMessageItem } from "../types/dashboardTypes";
-import { API_BASE_URL, formatMessageDateLabel, getMessageDateKey } from "../utils/chatThreadHelpers";
+import { formatMessageDateLabel, getMessageDateKey } from "../utils/chatThreadHelpers";
 
 export const useChatThreadsPanel = ({
   hideConversationList = false,
   forcedConversationId,
 }: ChatThreadsPanelProps) => {
   const currentUser = useAppSelector((state) => state.auth.currentUser);
+  const { socket } = useSocket();
   const currentUserId = currentUser?._id ?? "";
   const [activeConversationId, setActiveConversationId] = useState("");
   const [isConversationPickerOpen, setIsConversationPickerOpen] = useState(!hideConversationList);
@@ -32,6 +33,10 @@ export const useChatThreadsPanel = ({
     { skip: !activeConversationId }
   );
   const messages = messagesResponse?.data ?? [];
+  const activeConversationIdRef = useRef(activeConversationId);
+  const currentUserIdRef = useRef(currentUserId);
+  const refetchMessagesRef = useRef(refetchMessages);
+  const markSeenRef = useRef(markSeen);
 
   const messageItems = useMemo<ChatMessageItem[]>(() => {
     const items: ChatMessageItem[] = [];
@@ -101,35 +106,57 @@ export const useChatThreadsPanel = ({
   }, [activeConversationId, messages.length]);
 
   useEffect(() => {
-    const socket = io(API_BASE_URL, {
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-    });
+    activeConversationIdRef.current = activeConversationId;
+  }, [activeConversationId]);
 
-    socket.on("chat:message", (payload: { conversationId?: string; sender?: { _id?: string } }) => {
-      if (activeConversationId) {
-        void refetchMessages();
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId;
+  }, [currentUserId]);
+
+  useEffect(() => {
+    refetchMessagesRef.current = refetchMessages;
+  }, [refetchMessages]);
+
+  useEffect(() => {
+    markSeenRef.current = markSeen;
+  }, [markSeen]);
+
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    const onChatMessage = (payload: { conversationId?: string; sender?: { _id?: string } }) => {
+      const conversationId = activeConversationIdRef.current;
+      const userId = currentUserIdRef.current;
+
+      if (conversationId) {
+        void refetchMessagesRef.current();
       }
       if (
         payload?.conversationId &&
-        payload.conversationId === activeConversationId &&
+        payload.conversationId === conversationId &&
         payload.sender?._id &&
-        payload.sender._id !== currentUserId
+        payload.sender._id !== userId
       ) {
-        void markSeen({ conversationId: activeConversationId });
+        void markSeenRef.current({ conversationId });
       }
-    });
+    };
 
-    socket.on("chat:conversation_updated", (payload: { conversationId?: string }) => {
-      if (payload?.conversationId && payload.conversationId === activeConversationId) {
-        void refetchMessages();
+    const onConversationUpdated = (payload: { conversationId?: string }) => {
+      if (payload?.conversationId && payload.conversationId === activeConversationIdRef.current) {
+        void refetchMessagesRef.current();
       }
-    });
+    };
+
+    socket.on("chat:message", onChatMessage);
+    socket.on("chat:conversation_updated", onConversationUpdated);
 
     return () => {
-      socket.disconnect();
+      socket.off("chat:message", onChatMessage);
+      socket.off("chat:conversation_updated", onConversationUpdated);
     };
-  }, [activeConversationId, currentUserId, markSeen, refetchMessages]);
+  }, [socket]);
 
   const onStartCandidateChat = async (): Promise<void> => {
     const response = await startCandidateHrConversation().unwrap();

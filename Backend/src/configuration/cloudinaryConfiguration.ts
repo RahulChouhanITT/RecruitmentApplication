@@ -1,5 +1,10 @@
+import dotenv from "dotenv";
+import path from "path";
 import { v2 as cloudinary } from "cloudinary";
+import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
 import { CONFIGURATION_MESSAGES } from "../utils/messages/configurationMessages";
+
+dotenv.config({ path: path.resolve(__dirname, CONFIGURATION_CONSTANTS.SERVER.ENV_PATH) });
 
 const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
 const apiKey = process.env.CLOUDINARY_API_KEY;

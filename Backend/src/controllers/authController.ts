@@ -1,9 +1,10 @@
 import type { Request, Response } from "express";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
 import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
-import { isBooleanValue, sendSuccessResponse } from "../utils/helpers";
+import { isBooleanValue, sendSuccessResponse } from "../utils";
+import { clearAuthenticationCookie, setAuthenticationCookie } from "../utils/auth/cookieHelper";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
-import { generateAuthenticationToken } from "../utils/helpers/tokenHelper";
+import { generateAuthenticationToken } from "../utils/auth/tokenHelper";
 import {
   completeUserProfile,
   getPendingApprovalUsers,
@@ -29,23 +30,6 @@ import type {
 } from "../utils/types/authTypes";
 import { ApplicationError } from "../utils/errors/applicationError";
 
-const setAuthenticationCookie = (res: Response, token: string): void => {
-  res.cookie(APPLICATION_CONSTANTS.TOKEN_COOKIE_NAME, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === CONFIGURATION_CONSTANTS.ENVIRONMENTS.PRODUCTION,
-    maxAge: APPLICATION_CONSTANTS.COOKIE_MAX_AGE_MS,
-  });
-};
-
-const clearAuthenticationCookie = (res: Response): void => {
-  res.clearCookie(APPLICATION_CONSTANTS.TOKEN_COOKIE_NAME, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === CONFIGURATION_CONSTANTS.ENVIRONMENTS.PRODUCTION,
-  });
-};
-
 export const register = async (
   req: Request<unknown, unknown, RegisterRequestBody>,
   res: Response
@@ -64,10 +48,7 @@ export const login = async (
 ): Promise<void> => {
   const user = await loginUser(req.body);
   const token = generateAuthenticationToken(user!._id.toString());
-  
-
   setAuthenticationCookie(res, token);
-
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.AUTH.LOGIN_SUCCESS,
@@ -78,12 +59,10 @@ export const verifyEmail = async (
   req: Request<unknown, unknown, VerifyEmailRequestBody>,
   res: Response
 ): Promise<void> => {
-  const user = await verifyEmailOtp(req.body);
-
-  sendSuccessResponse(res, {
+   await verifyEmailOtp(req.body);
+   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
-    message: APPLICATION_MESSAGES.AUTH.VERIFY_EMAIL_SUCCESS,
-    data: user,
+    message: APPLICATION_MESSAGES.AUTH.VERIFY_EMAIL_SUCCESS
   });
 };
 
@@ -91,12 +70,11 @@ export const resendOtp = async (
   req: Request<unknown, unknown, ResendOtpRequestBody>,
   res: Response
 ): Promise<void> => {
-  const { otpCode } = await resendEmailOtp(req.body);
+   await resendEmailOtp(req.body);
 
   res.status(APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK).json({
     success: true,
-    message: APPLICATION_MESSAGES.AUTH.OTP_RESENT,
-    ...(process.env.NODE_ENV !== CONFIGURATION_CONSTANTS.ENVIRONMENTS.PRODUCTION ? { otpCode } : {}),
+    message: APPLICATION_MESSAGES.AUTH.OTP_RESENT
   });
 };
 
@@ -143,12 +121,12 @@ export const updateApprovalStatus = async (
     );
   }
 
-  const updatedUser = await updateApprovalStatusForUser(userId, requestBody.isApproved);
+  await updateApprovalStatusForUser(userId, requestBody.isApproved);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.AUTH.APPROVAL_STATUS_UPDATED,
-    data: updatedUser,
+    
   });
 };
 
@@ -156,12 +134,11 @@ export const completeProfile = async (
   req: AuthenticatedRequest & Request<unknown, unknown, CompleteProfileRequestBody>,
   res: Response
 ): Promise<void> => {
-  const updatedUser = await completeUserProfile(req.authenticatedUserId as string, req.body);
+   await completeUserProfile(req.authenticatedUserId as string, req.body);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.AUTH.PROFILE_COMPLETED,
-    data: updatedUser,
   });
 };
 
@@ -179,12 +156,11 @@ export const updateProfile = async (
   req: AuthenticatedRequest & Request<unknown, unknown, GetOrUpdateProfileRequestBody>,
   res: Response
 ): Promise<void> => {
-  const updatedUser = await updateUserProfile(req.authenticatedUserId as string, req.body);
+  await updateUserProfile(req.authenticatedUserId as string, req.body);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
-    message: APPLICATION_MESSAGES.AUTH.PROFILE_UPDATED,
-    data: updatedUser,
+    message: APPLICATION_MESSAGES.AUTH.PROFILE_UPDATED
   });
 };
 

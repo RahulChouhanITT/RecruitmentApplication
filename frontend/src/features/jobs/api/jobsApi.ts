@@ -20,7 +20,7 @@ import { JOBS_DEFAULT_MESSAGES } from "../labels/jobLabels";
 import { createAxiosBaseQuery } from "../../../utils/api/axiosBaseQuery";
 import type { ApiQueryError } from "../../../types/apiTypes";
 
-const axiosBaseQuery = createAxiosBaseQuery<AuthApiResponse>(JOBS_DEFAULT_MESSAGES.API_REQUEST_FAILED);
+const axiosBaseQuery = createAxiosBaseQuery(JOBS_DEFAULT_MESSAGES.API_REQUEST_FAILED);
 
 export const jobsApi = createApi({
   reducerPath: "jobsApi",
@@ -30,26 +30,26 @@ export const jobsApi = createApi({
   refetchOnMountOrArgChange: false,
   endpoints: (builder) => ({
     getHrJobs: builder.query<AuthApiResponse<Job[]>, void>({
-      queryFn: () => axiosBaseQuery<Job[]>({ url: JOBS_API_ROUTES.HR_JOBS, method: "GET" }),
+      queryFn: () => axiosBaseQuery<AuthApiResponse<Job[]>>({ url: JOBS_API_ROUTES.HR_JOBS, method: "GET" }),
       providesTags: (result) => [
         { type: "Jobs", id: "HR_LIST" },
-        ...(result?.data ?? []).map((job) => ({ type: "Jobs" as const, id: job._id })),
+        ...(result?.data?.data ?? []).map((job) => ({ type: "Jobs" as const, id: job._id })),
       ],
     }),
     getCandidateJobs: builder.query<AuthApiResponse<Job[]>, void>({
-      queryFn: () => axiosBaseQuery<Job[]>({ url: JOBS_API_ROUTES.CANDIDATE_JOBS, method: "GET" }),
+      queryFn: () => axiosBaseQuery<AuthApiResponse<Job[]>>({ url: JOBS_API_ROUTES.CANDIDATE_JOBS, method: "GET" }),
       providesTags: (result) => [
         { type: "Jobs", id: "CANDIDATE_LIST" },
-        ...(result?.data ?? []).map((job) => ({ type: "Jobs" as const, id: job._id })),
+        ...(result?.data?.data ?? []).map((job) => ({ type: "Jobs" as const, id: job._id })),
       ],
     }),
     createJob: builder.mutation<AuthApiResponse<Job>, CreateJobPayload>({
-      queryFn: (payload) => axiosBaseQuery<Job>({ url: JOBS_API_ROUTES.JOBS, method: "POST", data: payload }),
+      queryFn: (payload) => axiosBaseQuery<AuthApiResponse<Job>>({ url: JOBS_API_ROUTES.JOBS, method: "POST", data: payload }),
       invalidatesTags: [{ type: "Jobs", id: "HR_LIST" }, { type: "Jobs", id: "CANDIDATE_LIST" }],
     }),
     updateJob: builder.mutation<AuthApiResponse<Job>, { jobId: string; payload: UpdateJobPayload }>({
       queryFn: ({ jobId, payload }) =>
-        axiosBaseQuery<Job>({
+        axiosBaseQuery<AuthApiResponse<Job>>({
           url: `/api/jobs/${jobId}`,
           method: "PUT",
           data: payload,
@@ -62,7 +62,7 @@ export const jobsApi = createApi({
     }),
     closeJob: builder.mutation<AuthApiResponse<Job>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<Job>({
+        axiosBaseQuery<AuthApiResponse<Job>>({
           url: `/api/jobs/${jobId}/close`,
           method: "PATCH",
         }),
@@ -74,7 +74,7 @@ export const jobsApi = createApi({
     }),
     activateJob: builder.mutation<AuthApiResponse<Job>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<Job>({
+        axiosBaseQuery<AuthApiResponse<Job>>({
           url: `/api/jobs/${jobId}/activate`,
           method: "PATCH",
         }),
@@ -86,7 +86,7 @@ export const jobsApi = createApi({
     }),
     applyForJob: builder.mutation<AuthApiResponse<JobApplication>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<JobApplication>({
+        axiosBaseQuery<AuthApiResponse<JobApplication>>({
           url: `/api/jobs/${jobId}/apply`,
           method: "POST",
         }),
@@ -97,18 +97,18 @@ export const jobsApi = createApi({
     }),
     getAppliedJobs: builder.query<AuthApiResponse<JobApplication[]>, void>({
       queryFn: () =>
-        axiosBaseQuery<JobApplication[]>({
+        axiosBaseQuery<AuthApiResponse<JobApplication[]>>({
           url: "/api/jobs/applied/me",
           method: "GET",
         }),
       providesTags: (result) => [
         { type: "AppliedJobs", id: "LIST" },
-        ...(result?.data ?? []).map((application) => ({ type: "AppliedJobs" as const, id: application._id })),
+        ...(result?.data?.data ?? []).map((application) => ({ type: "AppliedJobs" as const, id: application._id })),
       ],
     }),
     getJobApplications: builder.query<AuthApiResponse<HrJobApplication[]>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<HrJobApplication[]>({
+        axiosBaseQuery<AuthApiResponse<HrJobApplication[]>>({
           url: `/api/jobs/${jobId}/applications`,
           method: "GET",
         }),
@@ -119,7 +119,7 @@ export const jobsApi = createApi({
       { applicationId: string; status: ApplicationStatus }
     >({
       queryFn: ({ applicationId, status }) =>
-        axiosBaseQuery<JobApplication>({
+        axiosBaseQuery<AuthApiResponse<JobApplication>>({
           url: `/api/applications/${applicationId}/status`,
           method: "PATCH",
           data: { status },
@@ -139,7 +139,7 @@ export const jobsApi = createApi({
       }
     >({
       queryFn: ({ applicationId, payload }) =>
-        axiosBaseQuery<HrInterview>({
+        axiosBaseQuery<AuthApiResponse<HrInterview>>({
           url: JOBS_API_ROUTES.INTERVIEW_SCHEDULE,
           method: "POST",
           data: { applicationId, ...payload },
@@ -148,7 +148,7 @@ export const jobsApi = createApi({
     }),
     cancelInterview: builder.mutation<AuthApiResponse<HrInterview>, { interviewId: string }>({
       queryFn: ({ interviewId }) =>
-        axiosBaseQuery<HrInterview>({
+        axiosBaseQuery<AuthApiResponse<HrInterview>>({
           url: `${JOBS_API_ROUTES.INTERVIEW_CANCEL}/${interviewId}/cancel`,
           method: "PATCH",
         }),
@@ -159,14 +159,14 @@ export const jobsApi = createApi({
       { interviewerId: string; date: string }
     >({
       queryFn: ({ interviewerId, date }) =>
-        axiosBaseQuery<InterviewTimeSlot[]>({
+        axiosBaseQuery<AuthApiResponse<InterviewTimeSlot[]>>({
           url: `/api/interviews/availability?interviewerId=${encodeURIComponent(interviewerId)}&date=${encodeURIComponent(date)}`,
           method: "GET",
         }),
     }),
     getHrInterviews: builder.query<AuthApiResponse<HrInterview[]>, void>({
       queryFn: () =>
-        axiosBaseQuery<HrInterview[]>({
+        axiosBaseQuery<AuthApiResponse<HrInterview[]>>({
           url: JOBS_API_ROUTES.HR_INTERVIEWS,
           method: "GET",
         }),
@@ -174,7 +174,7 @@ export const jobsApi = createApi({
     }),
     getCandidateInterviews: builder.query<AuthApiResponse<CandidateInterview[]>, void>({
       queryFn: () =>
-        axiosBaseQuery<CandidateInterview[]>({
+        axiosBaseQuery<AuthApiResponse<CandidateInterview[]>>({
           url: JOBS_API_ROUTES.CANDIDATE_INTERVIEWS,
           method: "GET",
         }),
@@ -182,7 +182,7 @@ export const jobsApi = createApi({
     }),
     getInterviewerInterviews: builder.query<AuthApiResponse<InterviewerInterview[]>, void>({
       queryFn: () =>
-        axiosBaseQuery<InterviewerInterview[]>({
+        axiosBaseQuery<AuthApiResponse<InterviewerInterview[]>>({
           url: JOBS_API_ROUTES.INTERVIEWER_INTERVIEWS,
           method: "GET",
         }),
@@ -193,7 +193,7 @@ export const jobsApi = createApi({
       { interviewId: string; rating: number; comments?: string; recommendation: "HIRED" | "REJECTED" }
     >({
       queryFn: (payload) =>
-        axiosBaseQuery<InterviewFeedback>({
+        axiosBaseQuery<AuthApiResponse<InterviewFeedback>>({
           url: "/api/feedback",
           method: "POST",
           data: payload,
@@ -202,7 +202,7 @@ export const jobsApi = createApi({
     }),
     getHrInterviewFeedback: builder.query<AuthApiResponse<InterviewFeedback>, { interviewId: string }>({
       queryFn: ({ interviewId }) =>
-        axiosBaseQuery<InterviewFeedback>({
+        axiosBaseQuery<AuthApiResponse<InterviewFeedback>>({
           url: `/api/feedback/interview/${interviewId}`,
           method: "GET",
         }),

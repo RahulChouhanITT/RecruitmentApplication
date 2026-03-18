@@ -103,7 +103,6 @@ export const DashboardPage = () => {
     currentUser,
     isLoggingOut,
     isCompletingProfile,
-    panelItems,
     railItems,
     safeActiveAppRailId,
     safeActivePanelId,
@@ -113,6 +112,7 @@ export const DashboardPage = () => {
     isCandidateUser,
     isProfilePromptOpen,
     isProfileFormOpen,
+    isLogoutConfirmOpen,
     profilePromptMessage,
     onAppRailChange,
     onLeftPanelChange,
@@ -121,7 +121,9 @@ export const DashboardPage = () => {
     onOpenProfileForm,
     onCancelProfileForm,
     onSubmitProfile,
-    onLogout,
+    onRequestLogout,
+    onCancelLogout,
+    onConfirmLogout,
   } = useDashboardPage();
 
   const renderLazyModule = (node: ReactNode) => (
@@ -224,7 +226,7 @@ export const DashboardPage = () => {
 
   return (
     <WorkspaceShell
-      onLogout={onLogout}
+      onLogout={onRequestLogout}
       isLoggingOut={isLoggingOut}
       totalUnreadChats={totalUnreadChats}
       leftPanelWidth={340}
@@ -241,6 +243,16 @@ export const DashboardPage = () => {
           {renderModuleContent()}
         </ModuleErrorBoundary>
       </DashboardContentCard>
+
+      <AuthModal
+        isOpen={isLogoutConfirmOpen}
+        title={DASHBOARD_MESSAGES.LOGOUT_CONFIRM_TITLE}
+        message={DASHBOARD_MESSAGES.LOGOUT_CONFIRM_MESSAGE}
+        closeLabel={DASHBOARD_MESSAGES.LOGOUT_CANCEL_ACTION}
+        onClose={onCancelLogout}
+        primaryLabel={isLoggingOut ? DASHBOARD_MESSAGES.LOGGING_OUT : DASHBOARD_MESSAGES.LOGOUT_CONFIRM_ACTION}
+        onPrimaryAction={onConfirmLogout}
+      />
 
       <AuthModal
         isOpen={isProfilePromptOpen}

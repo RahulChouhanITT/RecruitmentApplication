@@ -7,8 +7,8 @@ import { ApplicationError, APPLICATION_CONSTANTS, APPLICATION_MESSAGES } from ".
 import {
   assertEntityExists,
   trimValue,
-} from "../utils/helpers";
-import { sendJobAppliedSuccessEmail } from "../utils/helpers/emailHelper";
+} from "../utils";
+import { sendJobAppliedSuccessEmail } from "../utils/auth/emailHelper";
 import {
   JOB_EXPERIENCE_LEVELS,
   APPLICATION_STATUSES,

@@ -11,7 +11,7 @@ import {
   updateJob,
 } from "../services/jobService";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import { sendSuccessResponse } from "../utils/helpers";
+import { sendSuccessResponse } from "../utils";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 import type { AuthenticatedRequest } from "../utils/types/authTypes";
 import type { CreateJobRequestBody, JobListQuery, UpdateJobRequestBody } from "../utils/types/jobTypes";
@@ -20,12 +20,11 @@ export const createJobHandler = async (
   req: AuthenticatedRequest & Request<unknown, unknown, CreateJobRequestBody>,
   res: Response
 ): Promise<void> => {
-  const job = await createJob(req.body, req.authenticatedUserId as string);
+  await createJob(req.body, req.authenticatedUserId as string);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.CREATED,
     message: APPLICATION_MESSAGES.JOB.CREATED_SUCCESS,
-    data: job,
   });
 };
 
@@ -35,12 +34,11 @@ export const updateJobHandler = async (
 ): Promise<void> => {
   const { jobId } = req.params as { jobId: string };
   const requestBody = req.body as UpdateJobRequestBody;
-  const job = await updateJob(jobId, requestBody, req.authenticatedUserId as string);
+  await updateJob(jobId, requestBody, req.authenticatedUserId as string);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.JOB.UPDATED_SUCCESS,
-    data: job,
   });
 };
 
@@ -49,12 +47,11 @@ export const closeJobHandler = async (
   res: Response
 ): Promise<void> => {
   const { jobId } = req.params as { jobId: string };
-  const job = await closeJob(jobId, req.authenticatedUserId as string);
+  await closeJob(jobId, req.authenticatedUserId as string);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.JOB.CLOSED_SUCCESS,
-    data: job,
   });
 };
 
@@ -63,12 +60,11 @@ export const activateJobHandler = async (
   res: Response
 ): Promise<void> => {
   const { jobId } = req.params as { jobId: string };
-  const job = await activateJob(jobId, req.authenticatedUserId as string);
+  await activateJob(jobId, req.authenticatedUserId as string);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.JOB.ACTIVATED_SUCCESS,
-    data: job,
   });
 };
 
@@ -100,11 +96,10 @@ export const applyForJobHandler = async (
   res: Response
 ): Promise<void> => {
   const { jobId } = req.params as { jobId: string };
-  const application = await applyForJob(jobId, req.authenticatedUserId as string);
+  await applyForJob(jobId, req.authenticatedUserId as string);
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.CREATED,
     message: APPLICATION_MESSAGES.JOB.APPLIED_SUCCESS,
-    data: application,
   });
 };
 

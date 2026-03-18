@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { getHrInterviewFeedback, submitInterviewFeedback } from "../services/feedbackService";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import { sendSuccessResponse } from "../utils/helpers";
+import { sendSuccessResponse } from "../utils";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 import type { AuthenticatedRequest } from "../utils/types/authTypes";
 import type { SubmitFeedbackInput } from "../utils/types/feedbackTypes";
@@ -11,12 +11,11 @@ export const submitInterviewFeedbackHandler = async (
   res: Response
 ): Promise<void> => {
   const requestBody = req.body as SubmitFeedbackInput;
-  const feedback = await submitInterviewFeedback(req.authenticatedUserId as string, requestBody);
+  await submitInterviewFeedback(req.authenticatedUserId as string, requestBody);
 
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.CREATED,
     message: APPLICATION_MESSAGES.FEEDBACK.SUBMITTED_SUCCESS,
-    data: feedback,
   });
 };
 

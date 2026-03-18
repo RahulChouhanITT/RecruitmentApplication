@@ -8,6 +8,7 @@ export const CONFIGURATION_CONSTANTS = {
   },
   TYPE_NAMES: {
     STRING: "string",
+    BOOLEAN: "boolean",
   },
   ENVIRONMENTS: {
     PRODUCTION: "production",
@@ -23,7 +24,7 @@ export const CONFIGURATION_CONSTANTS = {
     },
   },
   SERVER: {
-    ENV_PATH: "../.env",
+    ENV_PATH: "../../.env",
     START_MESSAGE_PREFIX: "Server is running on port ",
   },
   EMAIL: {

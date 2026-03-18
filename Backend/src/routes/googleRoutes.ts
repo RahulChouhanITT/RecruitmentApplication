@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { asyncHandler } from "../utils/helpers/asyncHandler";
+import { asyncHandler } from "../utils/http/asyncHandler";
 import { getGoogleOAuthUrl, googleOAuthCallback } from "../controllers/googleOAuthController";
 import { GOOGLE_ROUTES } from "../utils/constants/routeConstants";
 

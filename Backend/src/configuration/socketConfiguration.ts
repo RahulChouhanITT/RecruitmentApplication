@@ -2,9 +2,9 @@ import type { Server as HttpServer } from "http";
 import { Server } from "socket.io";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
 import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
-import { getSocketHandshakeAuthToken } from "../utils/helpers";
+import { getSocketHandshakeAuthToken } from "../utils";
 import type { AuthedSocket } from "../utils/types/configurationTypes";
-import { verifyAuthenticationToken } from "../utils/helpers/tokenHelper";
+import { verifyAuthenticationToken } from "../utils/auth/tokenHelper";
 
 let ioInstance: Server | null = CONFIGURATION_CONSTANTS.DEFAULTS.NULL;
 const onlineUsers = new Set<string>();

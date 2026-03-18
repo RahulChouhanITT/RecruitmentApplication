@@ -13,8 +13,8 @@ import {
   toIdString,
   trimOrEmpty,
   trimValue,
-} from "../utils/helpers";
-import { sendApplicationStatusEmail, sendInterviewInviteEmails } from "../utils/helpers/emailHelper";
+} from "../utils";
+import { sendApplicationStatusEmail, sendInterviewInviteEmails } from "../utils/auth/emailHelper";
 import {
   APPLICATION_STATUSES,
   type ApplicationStatus,
@@ -43,13 +43,13 @@ const normalizeStatus = (status: string): ApplicationStatus => {
 };
 
 const getHrAccessibleApplication = async (applicationId: string, _hrUserId: string) => {
-  const application = await ApplicationModel.findById(applicationId);
-  assertEntityExists(application, APPLICATION_MESSAGES.APPLICATION.NOT_FOUND);
+  const applicationEntity = await ApplicationModel.findById(applicationId);
+  assertEntityExists(applicationEntity, APPLICATION_MESSAGES.APPLICATION.NOT_FOUND);
 
-  const job = await JobModel.findById(application.jobId);
-  assertEntityExists(job, APPLICATION_MESSAGES.JOB.NOT_FOUND);
+  const jobEntity = await JobModel.findById(applicationEntity.jobId);
+  assertEntityExists(jobEntity, APPLICATION_MESSAGES.JOB.NOT_FOUND);
 
-  return { application, job };
+  return { applicationEntity, jobEntity };
 };
 
 const toInterviewDateTimeIso = (interviewDate: string, interviewTime: string): { startDateTime: string; endDateTime: string } => {
@@ -71,9 +71,9 @@ export const updateApplicationStatus = async (
   status: string
 ) => {
   const normalizedStatus = normalizeStatus(status);
-  const { application, job } = await getHrAccessibleApplication(applicationId, hrUserId);
+  const { applicationEntity, jobEntity } = await getHrAccessibleApplication(applicationId, hrUserId);
   const activeScheduledInterview = await InterviewModel.findOne({
-    applicationId: application._id,
+    applicationId: applicationEntity._id,
     status: INTERVIEW_STATUSES[0],
   });
 
@@ -84,19 +84,19 @@ export const updateApplicationStatus = async (
     );
   }
 
-  if (application.status === APPLICATION_STATUSES[3] && normalizedStatus !== APPLICATION_STATUSES[3]) {
+  if (applicationEntity.status === APPLICATION_STATUSES[3] && normalizedStatus !== APPLICATION_STATUSES[3]) {
     throw new ApplicationError(APPLICATION_MESSAGES.APPLICATION.HIRED_STATUS_LOCKED, APPLICATION_CONSTANTS.HTTP_STATUS_CODES.BAD_REQUEST);
   }
 
-  if (application.status === APPLICATION_STATUSES[4] && normalizedStatus !== APPLICATION_STATUSES[4]) {
+  if (applicationEntity.status === APPLICATION_STATUSES[4] && normalizedStatus !== APPLICATION_STATUSES[4]) {
     throw new ApplicationError(APPLICATION_MESSAGES.APPLICATION.REJECTED_STATUS_LOCKED, APPLICATION_CONSTANTS.HTTP_STATUS_CODES.BAD_REQUEST);
   }
 
-  const candidate = await UserModel.findById(application.candidateId).select("name email");
+  const candidate = await UserModel.findById(applicationEntity.candidateId).select("name email");
   assertEntityExists(candidate, APPLICATION_MESSAGES.AUTH.USER_NOT_FOUND);
 
   if (normalizedStatus === APPLICATION_STATUSES[3] || normalizedStatus === APPLICATION_STATUSES[4]) {
-    const interview = await InterviewModel.findOne({ applicationId: application._id });
+    const interview = await InterviewModel.findOne({ applicationId: applicationEntity._id });
     assertEntityExists(interview, APPLICATION_MESSAGES.INTERVIEW.NOT_FOUND_FOR_APPLICATION);
 
     const feedback = await FeedbackModel.findOne({ interviewId: interview._id });
@@ -112,8 +112,8 @@ export const updateApplicationStatus = async (
     await interview.save();
   }
 
-  application.status = normalizedStatus;
-  await application.save();
+  applicationEntity.status = normalizedStatus;
+  await applicationEntity.save();
 
   if (
     normalizedStatus === APPLICATION_STATUSES[1] ||
@@ -123,13 +123,13 @@ export const updateApplicationStatus = async (
   ) {
     try {
       if (candidate.email) {
-        await sendApplicationStatusEmail(candidate.email, candidate.name, job.title, normalizedStatus);
+        await sendApplicationStatusEmail(candidate.email, candidate.name, jobEntity.title, normalizedStatus);
       }
     } catch (_error) {
     }
   }
 
-  return application;
+  return applicationEntity;
 };
 
 export const scheduleApplicationInterview = async (
@@ -146,8 +146,8 @@ export const scheduleApplicationInterview = async (
     APPLICATION_MESSAGES.INTERVIEW.DATE_TIME_REQUIRED
   );
 
-  const { application, job } = await getHrAccessibleApplication(applicationId, hrUserId);
-  const candidate = await UserModel.findById(application.candidateId).select("name email");
+  const { applicationEntity, jobEntity } = await getHrAccessibleApplication(applicationId, hrUserId);
+  const candidate = await UserModel.findById(applicationEntity.candidateId).select("name email");
   assertEntityExists(candidate, APPLICATION_MESSAGES.AUTH.USER_NOT_FOUND);
 
   let interviewer: InterviewerUser | null = null;
@@ -182,17 +182,17 @@ export const scheduleApplicationInterview = async (
 
   const { startDateTime, endDateTime } = toInterviewDateTimeIso(interviewDate, interviewTime);
   const meetingLink = await createGoogleMeetEvent({
-    summary: `Interview - ${job.title}`,
+    summary: `Interview - ${jobEntity.title}`,
     description: trimValue(payload.notes) || APPLICATION_CONSTANTS.INTERVIEW.DEFAULT_DESCRIPTION,
     startDateTime,
     endDateTime,
   });
 
   const interview = await InterviewModel.findOneAndUpdate(
-    { applicationId: application._id as Types.ObjectId },
+    { applicationId: applicationEntity._id as Types.ObjectId },
     {
-      applicationId: application._id,
-      jobId: job._id,
+      applicationId: applicationEntity._id,
+      jobId: jobEntity._id,
       candidateId: candidate._id,
       interviewerId: interviewer._id,
       interviewerName: interviewer.name,
@@ -207,8 +207,8 @@ export const scheduleApplicationInterview = async (
     { upsert: true, new: true, setDefaultsOnInsert: true }
   );
 
-  application.status = APPLICATION_STATUSES[2];
-  await application.save();
+  applicationEntity.status = APPLICATION_STATUSES[2];
+  await applicationEntity.save();
   await ensureCandidateInterviewerConversation(toIdString(candidate._id), toIdString(interviewer._id));
 
   try {
@@ -218,7 +218,7 @@ export const scheduleApplicationInterview = async (
         candidateName: candidate.name,
         interviewerEmail: interviewer.email,
         interviewerName: interviewer.name,
-        jobTitle: job.title,
+        jobTitle: jobEntity.title,
         interviewDate: interview.interviewDate,
         interviewTime: interview.interviewTime,
         meetingLink: interview.meetingLink,
@@ -231,10 +231,6 @@ export const scheduleApplicationInterview = async (
   }
 
   return interview;
-};
-
-export const scheduleInterviewByHr = async (hrUserId: string, payload: ScheduleInterviewInput & { applicationId: string }) => {
-  return scheduleApplicationInterview(payload.applicationId, hrUserId, payload);
 };
 
 export const cancelInterviewByHr = async (interviewId: string, _hrUserId: string) => {
@@ -251,12 +247,12 @@ export const cancelInterviewByHr = async (interviewId: string, _hrUserId: string
   interview.status = INTERVIEW_STATUSES[2];
   await interview.save();
 
-  const application = await ApplicationModel.findById(interview.applicationId);
-  assertEntityExists(application, APPLICATION_MESSAGES.APPLICATION.NOT_FOUND);
+  const applicationEntity = await ApplicationModel.findById(interview.applicationId);
+  assertEntityExists(applicationEntity, APPLICATION_MESSAGES.APPLICATION.NOT_FOUND);
 
-  if (application.status === APPLICATION_STATUSES[2]) {
-    application.status = APPLICATION_STATUSES[1];
-    await application.save();
+  if (applicationEntity.status === APPLICATION_STATUSES[2]) {
+    applicationEntity.status = APPLICATION_STATUSES[1];
+    await applicationEntity.save();
   }
 
   return interview;

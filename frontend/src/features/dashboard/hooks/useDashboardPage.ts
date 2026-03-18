@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { io } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { useSocket } from "../../../app/socket/useSocket";
 import { showToast, TOAST_TYPES } from "../../../utils/toast";
 import { authApi, useCompleteProfileMutation, useLogoutMutation } from "../../auth/api/authApi";
 import { candidateApi } from "../../candidate/api/candidateApi";
@@ -27,16 +27,17 @@ import {
   updateConversationCache,
   updateConversationPresence,
 } from "../utils/dashboardHelpers";
-import { API_BASE_URL } from "../utils/chatThreadHelpers";
 
 export const useDashboardPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { socket } = useSocket();
   const currentUser = useAppSelector((state) => state.auth.currentUser);
   const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutMutation();
   const [completeProfileMutation, { isLoading: isCompletingProfile }] = useCompleteProfileMutation();
   const [isProfileFormOpen, setIsProfileFormOpen] = useState(false);
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false);
   const [dismissedProfilePromptForUserId, setDismissedProfilePromptForUserId] = useState<string | null>(null);
 
   const panelItems = useMemo(() => getRolePanelItems(currentUser?.role), [currentUser?.role]);
@@ -112,14 +113,9 @@ export const useDashboardPage = () => {
     dismissedProfilePromptForUserId !== (currentUser?._id ?? null);
 
   useEffect(() => {
-    if (!currentUser?._id) {
+    if (!currentUser?._id || !socket) {
       return;
     }
-
-    const socket = io(API_BASE_URL, {
-      withCredentials: true,
-      transports: ["websocket", "polling"],
-    });
 
     const onConversationUpdated = (payload: {
       conversationId?: string;
@@ -154,9 +150,8 @@ export const useDashboardPage = () => {
       socket.off("chat:conversation_updated", onConversationUpdated);
       socket.off("chat:conversation_created", onConversationCreated);
       socket.off("presence:changed", onPresenceChanged);
-      socket.disconnect();
     };
-  }, [currentUser?._id, dispatch, refetchChatConversations]);
+  }, [currentUser?._id, dispatch, refetchChatConversations, socket]);
 
   useEffect(() => {
     if (!currentUser?.role || (location.pathname !== "/dashboard" && location.pathname !== "/dashboard/")) {
@@ -200,6 +195,23 @@ export const useDashboardPage = () => {
     pathSelection.panelId,
     safeActiveAppRailId,
   ]);
+
+  useEffect(() => {
+    if (
+      safeActiveAppRailId !== "chat" ||
+      location.pathname !== "/dashboard/chats" ||
+      !chatConversationsResponse
+    ) {
+      return;
+    }
+
+    const firstConversationId = chatConversationsResponse.data?.[0]?._id;
+    if (!firstConversationId) {
+      return;
+    }
+
+    navigate(`/dashboard/chats/${firstConversationId}`, { replace: true });
+  }, [chatConversationsResponse, location.pathname, navigate, safeActiveAppRailId]);
 
   const onAppRailChange = (appRailId: string): boolean => {
     const matchedPanels = panelItems.filter((item) => item.appRailId === appRailId);
@@ -258,7 +270,19 @@ export const useDashboardPage = () => {
     }
   };
 
-  const onLogout = async (): Promise<void> => {
+  const onRequestLogout = (): void => {
+    setIsLogoutConfirmOpen(true);
+  };
+
+  const onCancelLogout = (): void => {
+    if (isLoggingOut) {
+      return;
+    }
+
+    setIsLogoutConfirmOpen(false);
+  };
+
+  const onConfirmLogout = async (): Promise<void> => {
     try {
       const response = await logoutMutation().unwrap();
       dispatch(clearCurrentUser());
@@ -270,6 +294,7 @@ export const useDashboardPage = () => {
         type: TOAST_TYPES.SUCCESS,
         message: response.message || DASHBOARD_MESSAGES.LOGOUT_SUCCESS,
       });
+      setIsLogoutConfirmOpen(false);
       navigate("/auth/login", { replace: true });
     } catch (error) {
       showToast({
@@ -293,6 +318,7 @@ export const useDashboardPage = () => {
     isCandidateUser,
     isProfilePromptOpen,
     isProfileFormOpen,
+    isLogoutConfirmOpen,
     profilePromptMessage,
     onAppRailChange,
     onLeftPanelChange,
@@ -301,6 +327,8 @@ export const useDashboardPage = () => {
     onOpenProfileForm,
     onCancelProfileForm,
     onSubmitProfile,
-    onLogout,
+    onRequestLogout,
+    onCancelLogout,
+    onConfirmLogout,
   };
 };

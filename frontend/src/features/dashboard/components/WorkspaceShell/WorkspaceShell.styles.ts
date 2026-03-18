@@ -313,7 +313,7 @@ export const LeftPanelSearch = styled.label`
 `;
 
 export const LeftPanelList = styled.div<{ $singleItem?: boolean }>`
-  padding: ${({ $singleItem }) => ($singleItem ? "0.85rem 0.6rem 1rem" : "0 0.6rem 1rem")};
+  padding: ${({ $singleItem }) => ($singleItem ? "0.85rem 0.6rem 1rem" : "0.35rem 0.6rem 1rem")};
   overflow-y: auto;
   scrollbar-gutter: stable;
   display: grid;
@@ -321,6 +321,7 @@ export const LeftPanelList = styled.div<{ $singleItem?: boolean }>`
 `;
 
 export const LeftPanelItem = styled.button<{ $isActive: boolean; $hasUnread?: boolean }>`
+  position: relative;
   border: 1px solid
     ${({ $isActive, $hasUnread }) =>
       $isActive ? "#d1d5db" : $hasUnread ? "rgba(255, 106, 0, 0.35)" : "transparent"};
@@ -339,6 +340,7 @@ export const LeftPanelItem = styled.button<{ $isActive: boolean; $hasUnread?: bo
   &:hover {
     background: ${({ $isActive }) => ($isActive ? "#f3f4f6" : "#f9fafb")};
     transform: translateY(-1px);
+    z-index: 1;
   }
 
 `;

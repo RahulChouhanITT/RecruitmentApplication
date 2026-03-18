@@ -2,8 +2,8 @@ import { Router } from "express";
 import multer from "multer";
 import { deleteResumeHandler, uploadResumeHandler } from "../controllers/candidateController";
 import { CANDIDATE_ROUTES, ROUTE_FIELD_NAMES, ROUTE_ROLE_GROUPS } from "../utils/constants/routeConstants";
-import { asyncHandler } from "../utils/helpers/asyncHandler";
-import { withAuthorizedRoles } from "../utils/helpers";
+import { asyncHandler } from "../utils/http/asyncHandler";
+import { withAuthorizedRoles } from "../utils";
 
 const candidateRouter = Router();
 const upload = multer({

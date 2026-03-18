@@ -53,11 +53,10 @@ export const JOB_ROUTES = {
 
 export const APPLICATION_ROUTES = {
   UPDATE_STATUS: "/:applicationId/status",
-  SCHEDULE_INTERVIEW: "/:applicationId/schedule",
 } as const;
 
 export const INTERVIEW_ROUTES = {
-  HR_INTERVIEWS: "/hr",
+  HR_INTERVIEWS: "/all",
   SCHEDULE: "/schedule",
   CANCEL: "/:interviewId/cancel",
   AVAILABILITY: "/availability",

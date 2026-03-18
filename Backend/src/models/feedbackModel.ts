@@ -46,6 +46,4 @@ const feedbackSchema = new Schema<IFeedback>(
   { timestamps: true }
 );
 
-feedbackSchema.index({ interviewId: 1 }, { unique: true });
-
 export const FeedbackModel = model<IFeedback>("Feedback", feedbackSchema);

@@ -2,7 +2,7 @@ import type { ErrorRequestHandler } from "express";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
 import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
 import { ApplicationError } from "../utils/errors/applicationError";
-import { sendErrorResponse } from "../utils/helpers";
+import { sendErrorResponse } from "../utils";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 
 export const globalErrorMiddleware: ErrorRequestHandler = (error, _req, res, _next) => {

@@ -3,7 +3,7 @@ import { google } from "googleapis";
 import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
 import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
 import { ApplicationError } from "../utils/errors/applicationError";
-import { isNonEmptyString, sendSuccessResponse } from "../utils/helpers";
+import { isNonEmptyString, sendSuccessResponse } from "../utils";
 import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
 import type { GoogleOAuthCodeQuery } from "../utils/types/googleOAuthTypes";
 

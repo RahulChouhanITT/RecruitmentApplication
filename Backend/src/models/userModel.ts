@@ -8,6 +8,9 @@ export interface IUser extends Document {
   name: string;
   email: string;
   passwordHash: string;
+  otpCodeHash?: string;
+  otpExpiryTime?: Date | null;
+  otpAttemptCount?: number;
   role: UserRole;
   profileCompleted: boolean;
   isEmailVerified: boolean;
@@ -43,6 +46,21 @@ const userSchema = new Schema<IUser, IUserModel>(
       type: String,
       required: true,
       minlength: 8,
+      select: false,
+    },
+    otpCodeHash: {
+      type: String,
+      select: false,
+    },
+    otpExpiryTime: {
+      type: Date,
+      default: MODEL_DEFAULT_VALUES.NULL,
+      select: false,
+    },
+    otpAttemptCount: {
+      type: Number,
+      default: MODEL_DEFAULT_VALUES.ZERO,
+      min: 0,
       select: false,
     },
     role: {

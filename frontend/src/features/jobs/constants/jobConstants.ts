@@ -8,7 +8,7 @@ export const JOBS_API_ROUTES = {
   INTERVIEW_SCHEDULE: "/api/interviews/schedule",
   INTERVIEW_CANCEL: "/api/interviews",
   INTERVIEW_AVAILABILITY: "/api/interviews/availability",
-  HR_INTERVIEWS: "/api/interviews/hr",
+  HR_INTERVIEWS: "/api/interviews/all",
   CANDIDATE_INTERVIEWS: "/api/interviews/candidate",
   INTERVIEWER_INTERVIEWS: "/api/interviews/interviewer",
   FEEDBACK: "/api/feedback",

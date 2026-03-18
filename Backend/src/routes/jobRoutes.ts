@@ -11,8 +11,8 @@ import {
   updateJobHandler,
 } from "../controllers/jobController";
 import { JOB_ROUTES, ROUTE_ROLE_GROUPS } from "../utils/constants/routeConstants";
-import { asyncHandler } from "../utils/helpers/asyncHandler";
-import { withAuthorizedRoles } from "../utils/helpers";
+import { asyncHandler } from "../utils/http/asyncHandler";
+import { withAuthorizedRoles } from "../utils";
 
 const jobRouter = Router();
 
