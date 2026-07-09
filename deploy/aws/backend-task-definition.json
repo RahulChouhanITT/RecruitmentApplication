@@ -1,0 +1,115 @@
+{
+  "family": "recruitmentapp-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::386785029718:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::386785029718:role/recruitmentapp-task-role",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "386785029718.dkr.ecr.us-east-1.amazonaws.com/recruitmentapp-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5000,
+          "hostPort": 5000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "APPLICATION_PORT",
+          "value": "5000"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "MONGO_DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/MONGO_DATABASE_URL"
+        },
+        {
+          "name": "FRONTEND_ORIGIN",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/FRONTEND_ORIGIN"
+        },
+        {
+          "name": "JWT_SECRET_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/JWT_SECRET_KEY"
+        },
+        {
+          "name": "GOOGLE_CLIENT_ID",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/GOOGLE_CLIENT_ID"
+        },
+        {
+          "name": "GOOGLE_CLIENT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/GOOGLE_CLIENT_SECRET"
+        },
+        {
+          "name": "GOOGLE_REDIRECT_URI",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/GOOGLE_REDIRECT_URI"
+        },
+        {
+          "name": "GOOGLE_AUTH_REDIRECT_URI",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/GOOGLE_AUTH_REDIRECT_URI"
+        },
+        {
+          "name": "GOOGLE_REFRESH_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/GOOGLE_REFRESH_TOKEN"
+        },
+        {
+          "name": "GOOGLE_CALENDAR_ID",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/GOOGLE_CALENDAR_ID"
+        },
+        {
+          "name": "SMTP_HOST",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/SMTP_HOST"
+        },
+        {
+          "name": "SMTP_PORT",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/SMTP_PORT"
+        },
+        {
+          "name": "SMTP_USER",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/SMTP_USER"
+        },
+        {
+          "name": "SMTP_PASS",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/SMTP_PASS"
+        },
+        {
+          "name": "SMTP_FROM_NAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/SMTP_FROM_NAME"
+        },
+        {
+          "name": "SMTP_FROM_EMAIL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/SMTP_FROM_EMAIL"
+        },
+        {
+          "name": "CLOUDINARY_CLOUD_NAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/CLOUDINARY_CLOUD_NAME"
+        },
+        {
+          "name": "CLOUDINARY_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/CLOUDINARY_API_KEY"
+        },
+        {
+          "name": "CLOUDINARY_API_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:386785029718:secret:recruitmentapp/prod/CLOUDINARY_API_SECRET"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/recruitmentapp-backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+﻿src/features/dashboard/api/chatApi.ts(6,45): error TS2558: Expected 0 type arguments, but got 1.
+src/features/dashboard/api/chatApi.ts(17,9): error TS2322: Type 'Promise<QueryReturnValue<ChatConversation[], ApiQueryError, {} | undefined>>' is not assignable to type 'MaybePromise<QueryReturnValue<ChatApiResponse<ChatConversation[]>, ApiQueryError, {} | undefined>>'.
+  Type 'Promise<QueryReturnValue<ChatConversation[], ApiQueryError, {} | undefined>>' is not assignable to type 'PromiseLike<QueryReturnValue<ChatApiResponse<ChatConversation[]>, ApiQueryError, {} | undefined>>'.
+    Types of property 'then' are incompatible.
+      Type '<TResult1 = QueryReturnValue<ChatConversation[], ApiQueryError, {} | undefined>, TResult2 = never>(onfulfilled?: ((value: QueryReturnValue<ChatConversation[], ApiQueryError, {} | undefined>) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ....' is not assignable to type '<TResult1 = QueryReturnValue<ChatApiResponse<ChatConversation[]>, ApiQueryError, {} | undefined>, TResult2 = never>(onfulfilled?: ((value: QueryReturnValue<...>) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => PromiseLik...'.
+        Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'QueryReturnValue<ChatConversation[], ApiQueryError, {} | undefined>' is not assignable to type 'QueryReturnValue<ChatApiResponse<ChatConversation[]>, ApiQueryError, {} | undefined>'.
+              Type '{ error?: undefined; data: ChatConversation[]; meta?: {} | undefined; }' is not assignable to type 'QueryReturnValue<ChatApiResponse<ChatConversation[]>, ApiQueryError, {} | undefined>'.
+                Type '{ error?: undefined; data: ChatConversation[]; meta?: {} | undefined; }' is not assignable to type '{ error?: undefined; data: ChatApiResponse<ChatConversation[]>; meta?: {} | undefined; }'.
+                  Types of property 'data' are incompatible.
+                    Type 'ChatConversation[]' has no properties in common with type 'ChatApiResponse<ChatConversation[]>'.
+src/features/dashboard/api/chatApi.ts(17,24): error TS2559: Type 'ChatConversation[]' has no properties in common with type '{ message?: string | undefined; }'.
+src/features/dashboard/api/chatApi.ts(28,9): error TS2322: Type 'Promise<QueryReturnValue<ChatMessage[], ApiQueryError, {} | undefined>>' is not assignable to type 'MaybePromise<QueryReturnValue<ChatApiResponse<ChatMessage[]>, ApiQueryError, {} | undefined>>'.
+  Type 'Promise<QueryReturnValue<ChatMessage[], ApiQueryError, {} | undefined>>' is not assignable to type 'PromiseLike<QueryReturnValue<ChatApiResponse<ChatMessage[]>, ApiQueryError, {} | undefined>>'.
+    Types of property 'then' are incompatible.
+      Type '<TResult1 = QueryReturnValue<ChatMessage[], ApiQueryError, {} | undefined>, TResult2 = never>(onfulfilled?: ((value: QueryReturnValue<ChatMessage[], ApiQueryError, {} | undefined>) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undef...' is not assignable to type '<TResult1 = QueryReturnValue<ChatApiResponse<ChatMessage[]>, ApiQueryError, {} | undefined>, TResult2 = never>(onfulfilled?: ((value: QueryReturnValue<ChatApiResponse<ChatMessage[]>, ApiQueryError, {} | undefined>) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseL...'.
+        Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'QueryReturnValue<ChatMessage[], ApiQueryError, {} | undefined>' is not assignable to type 'QueryReturnValue<ChatApiResponse<ChatMessage[]>, ApiQueryError, {} | undefined>'.
+              Type '{ error?: undefined; data: ChatMessage[]; meta?: {} | undefined; }' is not assignable to type 'QueryReturnValue<ChatApiResponse<ChatMessage[]>, ApiQueryError, {} | undefined>'.
+                Type '{ error?: undefined; data: ChatMessage[]; meta?: {} | undefined; }' is not assignable to type '{ error?: undefined; data: ChatApiResponse<ChatMessage[]>; meta?: {} | undefined; }'.
+                  Types of property 'data' are incompatible.
+                    Type 'ChatMessage[]' has no properties in common with type 'ChatApiResponse<ChatMessage[]>'.
+src/features/dashboard/api/chatApi.ts(28,24): error TS2559: Type 'ChatMessage[]' has no properties in common with type '{ message?: string | undefined; }'.
+src/features/dashboard/api/chatApi.ts(111,9): error TS2322: Type 'Promise<QueryReturnValue<ChatConversation, ApiQueryError, {} | undefined>>' is not assignable to type 'MaybePromise<QueryReturnValue<ChatApiResponse<ChatConversation>, ApiQueryError, {} | undefined>>'.
+  Type 'Promise<QueryReturnValue<ChatConversation, ApiQueryError, {} | undefined>>' is not assignable to type 'PromiseLike<QueryReturnValue<ChatApiResponse<ChatConversation>, ApiQueryError, {} | undefined>>'.
+    Types of property 'then' are incompatible.
+      Type '<TResult1 = QueryReturnValue<ChatConversation, ApiQueryError, {} | undefined>, TResult2 = never>(onfulfilled?: ((value: QueryReturnValue<ChatConversation, ApiQueryError, {} | undefined>) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... |...' is not assignable to type '<TResult1 = QueryReturnValue<ChatApiResponse<ChatConversation>, ApiQueryError, {} | undefined>, TResult2 = never>(onfulfilled?: ((value: QueryReturnValue<...>) => TResult1 | PromiseLike<...>) | null | undefined, onrejected?: ((reason: any) => TResult2 | PromiseLike<...>) | ... 1 more ... | undefined) => PromiseLike<...'.
+        Types of parameters 'onfulfilled' and 'onfulfilled' are incompatible.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'QueryReturnValue<ChatConversation, ApiQueryError, {} | undefined>' is not assignable to type 'QueryReturnValue<ChatApiResponse<ChatConversation>, ApiQueryError, {} | undefined>'.
+              Type '{ error?: undefined; data: ChatConversation; meta?: {} | undefined; }' is not assignable to type 'QueryReturnValue<ChatApiResponse<ChatConversation>, ApiQueryError, {} | undefined>'.
+                Type '{ error?: undefined; data: ChatConversation; meta?: {} | undefined; }' is not assignable to type '{ error?: undefined; data: ChatApiResponse<ChatConversation>; meta?: {} | undefined; }'.
+                  Types of property 'data' are incompatible.
+                    Type 'ChatConversation' has no properties in common with type 'ChatApiResponse<ChatConversation>'.
+src/features/dashboard/api/chatApi.ts(111,24): error TS2559: Type 'ChatConversation' has no properties in common with type '{ message?: string | undefined; }'.
+src/features/hr/components/InterviewSchedulePanel/index.tsx(131,32): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/features/hr/components/InterviewSchedulePanel/index.tsx(350,49): error TS2345: Argument of type 'string' is not assignable to parameter of type 'SetStateAction<"">'.
+src/features/hr/components/InterviewSchedulePanel/index.tsx(437,48): error TS2345: Argument of type 'string' is not assignable to parameter of type 'SetStateAction<"">'.
+src/features/hr/hooks/useInterviewSchedulePanel.ts(10,40): error TS2307: Cannot find module '../../auth/types' or its corresponding type declarations.
+src/features/hr/hooks/useInterviewSchedulePanel.ts(11,34): error TS2307: Cannot find module '../../jobs/types' or its corresponding type declarations.
+src/features/hr/types.ts(1,34): error TS2307: Cannot find module '../jobs/types' or its corresponding type declarations.
+src/features/interviewer/pages/InterviewerInterviewsPage/InterviewerInterviewsPage.tsx(175,51): error TS2345: Argument of type 'string' is not assignable to parameter of type 'SetStateAction<"">'.
+src/features/jobs/api/jobsApi.ts(35,27): error TS2339: Property 'data' does not exist on type 'Job[]'.
+src/features/jobs/api/jobsApi.ts(35,44): error TS7006: Parameter 'job' implicitly has an 'any' type.
+src/features/jobs/api/jobsApi.ts(46,27): error TS2339: Property 'data' does not exist on type 'Job[]'.
+src/features/jobs/api/jobsApi.ts(46,44): error TS7006: Parameter 'job' implicitly has an 'any' type.
+src/features/jobs/api/jobsApi.ts(119,27): error TS2339: Property 'data' does not exist on type 'JobApplication[]'.
+src/features/jobs/api/jobsApi.ts(119,44): error TS7006: Parameter 'application' implicitly has an 'any' type.
+src/features/jobs/components/ApplicationCard/index.tsx(3,15): error TS2305: Module '"../../types/jobTypes"' has no exported member 'ApplicationCardProps'.
+src/features/jobs/components/CandidateJobsWorkspace/index.tsx(5,15): error TS2305: Module '"../../types/jobTypes"' has no exported member 'CandidateJobsWorkspaceProps'.
+src/features/jobs/components/InterviewCard/index.tsx(3,15): error TS2305: Module '"../../types/jobTypes"' has no exported member 'InterviewCardProps'.
+src/features/jobs/components/JobCard/index.tsx(3,15): error TS2305: Module '"../../types/jobTypes"' has no exported member 'JobCardProps'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(15,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'JobTitleBlock'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(20,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'SkillTags'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(21,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'SkillTag'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(43,40): error TS2339: Property 'SEARCH_CANDIDATE' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(45,11): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type 'ChangeEventHandler<HTMLInputElement, HTMLInputElement>'.
+  Types of parameters 'value' and 'event' are incompatible.
+    Type 'ChangeEvent<HTMLInputElement, HTMLInputElement>' is not assignable to type 'SetStateAction<string>'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(49,30): error TS2339: Property 'FILTER_ALL' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(52,30): error TS2339: Property 'FILTER_ACTIVE' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(55,30): error TS2339: Property 'FILTER_CLOSED' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(63,30): error TS2339: Property 'LOADING' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(76,50): error TS2551: Property 'ACTIVE' does not exist on type '{ readonly OPEN_JOBS_TITLE: "Open Jobs"; readonly MY_APPLICATIONS_TITLE: "My Applications"; readonly MY_INTERVIEWS_TITLE: "My Interviews"; readonly SEARCH_JOBS_PLACEHOLDER: "Search by title, required skills"; ... 77 more ...; readonly SELECTED_JOB: "Selected Job"; }'. Did you mean 'ACTIVATE'?
+src/features/jobs/components/JobsPanel/CandidateJobsBoard.tsx(76,72): error TS2551: Property 'CLOSED' does not exist on type '{ readonly OPEN_JOBS_TITLE: "Open Jobs"; readonly MY_APPLICATIONS_TITLE: "My Applications"; readonly MY_INTERVIEWS_TITLE: "My Interviews"; readonly SEARCH_JOBS_PLACEHOLDER: "Search by title, required skills"; ... 77 more ...; readonly SELECTED_JOB: "Selected Job"; }'. Did you mean 'CLOSE'?
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(69,83): error TS2339: Property 'BACK_TO_JOBS' does not exist on type '{ readonly OPEN_JOBS_TITLE: "Open Jobs"; readonly MY_APPLICATIONS_TITLE: "My Applications"; readonly MY_INTERVIEWS_TITLE: "My Interviews"; readonly SEARCH_JOBS_PLACEHOLDER: "Search by title, required skills"; ... 77 more ...; readonly SELECTED_JOB: "Selected Job"; }'.
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(75,37): error TS2551: Property 'APPLICATIONS_FOR_JOB' does not exist on type '{ readonly OPEN_JOBS_TITLE: "Open Jobs"; readonly MY_APPLICATIONS_TITLE: "My Applications"; readonly MY_INTERVIEWS_TITLE: "My Interviews"; readonly SEARCH_JOBS_PLACEHOLDER: "Search by title, required skills"; ... 77 more ...; readonly SELECTED_JOB: "Selected Job"; }'. Did you mean 'APPLICATIONS_FOR'?
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(80,40): error TS2339: Property 'SEARCH_APPLICANT' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(82,11): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type 'ChangeEventHandler<HTMLInputElement, HTMLInputElement>'.
+  Types of parameters 'value' and 'event' are incompatible.
+    Type 'ChangeEvent<HTMLInputElement, HTMLInputElement>' is not assignable to type 'SetStateAction<string>'.
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(89,50): error TS2339: Property 'ALL_STATUSES' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(114,36): error TS2339: Property 'LOADING' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobApplicationsPanel.tsx(120,36): error TS2339: Property 'NO_APPLICATIONS' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(20,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'JobTitleBlock'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(25,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'SkillTags'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(26,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'SkillTag'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(31,3): error TS2305: Module '"./JobsPanel.styles"' has no exported member 'ModalHeader'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(94,40): error TS2339: Property 'SEARCH_HR_MANAGE' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(96,11): error TS2322: Type 'Dispatch<SetStateAction<string>>' is not assignable to type 'ChangeEventHandler<HTMLInputElement, HTMLInputElement>'.
+  Types of parameters 'value' and 'event' are incompatible.
+    Type 'ChangeEvent<HTMLInputElement, HTMLInputElement>' is not assignable to type 'SetStateAction<string>'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(100,30): error TS2339: Property 'FILTER_ALL' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(103,30): error TS2339: Property 'FILTER_ACTIVE' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(106,30): error TS2339: Property 'FILTER_CLOSED' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(114,30): error TS2339: Property 'LOADING' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(127,50): error TS2551: Property 'ACTIVE' does not exist on type '{ readonly OPEN_JOBS_TITLE: "Open Jobs"; readonly MY_APPLICATIONS_TITLE: "My Applications"; readonly MY_INTERVIEWS_TITLE: "My Interviews"; readonly SEARCH_JOBS_PLACEHOLDER: "Search by title, required skills"; ... 77 more ...; readonly SELECTED_JOB: "Selected Job"; }'. Did you mean 'ACTIVATE'?
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(127,72): error TS2551: Property 'CLOSED' does not exist on type '{ readonly OPEN_JOBS_TITLE: "Open Jobs"; readonly MY_APPLICATIONS_TITLE: "My Applications"; readonly MY_INTERVIEWS_TITLE: "My Interviews"; readonly SEARCH_JOBS_PLACEHOLDER: "Search by title, required skills"; ... 77 more ...; readonly SELECTED_JOB: "Selected Job"; }'. Did you mean 'CLOSE'?
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(191,10): error TS2741: Property 'isOpen' is missing in type '{ children: Element; }' but required in type '{ isOpen: boolean; }'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(196,37): error TS2339: Property 'CONFIRM_CLOSE_JOB' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(197,37): error TS2339: Property 'CONFIRM_ACTIVATE_JOB' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(202,35): error TS2339: Property 'CLOSE_JOB_WARNING' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/HrJobsManagementPanel.tsx(203,35): error TS2339: Property 'ACTIVATE_JOB_MESSAGE' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(62,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(66,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(67,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(83,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(84,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(85,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(94,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(95,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(118,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(120,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(135,53): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(137,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(143,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(144,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(159,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(167,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(183,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(276,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(292,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(300,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(312,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(407,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(423,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(425,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(434,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(436,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(470,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(472,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(475,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(479,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(490,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(491,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(501,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(522,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(523,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(524,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(535,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(539,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(540,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(560,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(585,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(586,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(662,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(663,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(684,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(698,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(711,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(745,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(767,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(768,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(779,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(781,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(814,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(890,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/JobsPanel/JobsPanel.styles.ts(901,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/features/jobs/components/modals/ChangeApplicationStatusModal.tsx(7,10): error TS2305: Module '"../../../../shared/components/Toast"' has no exported member 'showToast'.
+src/features/jobs/components/modals/ChangeApplicationStatusModal.tsx(7,21): error TS2305: Module '"../../../../shared/components/Toast"' has no exported member 'TOAST_TYPES'.
+src/features/jobs/components/modals/ChangeApplicationStatusModal.tsx(12,3): error TS2305: Module '"../JobsPanel/JobsPanel.styles"' has no exported member 'ModalHeader'.
+src/features/jobs/components/modals/ChangeApplicationStatusModal.tsx(82,6): error TS2741: Property 'isOpen' is missing in type '{ children: Element; }' but required in type '{ isOpen: boolean; }'.
+src/features/jobs/components/modals/ChangeApplicationStatusModal.tsx(89,30): error TS2339: Property 'CONFIRM_STATUS_CHANGE_FROM' does not exist on type '{ readonly REQUIRED_SKILLS_TOOLTIP: "Comma-separated, e.g. React, TypeScript, Redux."; readonly JOB_DESCRIPTION_TOOLTIP: (words: number, chars: number) => string; readonly JOB_TITLE_PLACEHOLDER: "e.g. Senior Frontend Developer"; ... 7 more ...; readonly CANCEL_INTERVIEW_BEFORE_STATUS_CHANGE: "Cancel the scheduled in...'.
+src/features/jobs/components/modals/CreateJobModal.tsx(7,10): error TS2305: Module '"../../../../shared/components/Toast"' has no exported member 'showToast'.
+src/features/jobs/components/modals/CreateJobModal.tsx(7,21): error TS2305: Module '"../../../../shared/components/Toast"' has no exported member 'TOAST_TYPES'.
+src/features/jobs/components/modals/CreateJobModal.tsx(12,3): error TS2305: Module '"../JobsPanel/JobsPanel.styles"' has no exported member 'ModalHeader'.
+src/features/jobs/components/modals/CreateJobModal.tsx(103,6): error TS2741: Property 'isOpen' is missing in type '{ children: Element; }' but required in type '{ isOpen: boolean; }'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(11,10): error TS2305: Module '"../../../../shared/components/Toast"' has no exported member 'showToast'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(11,21): error TS2305: Module '"../../../../shared/components/Toast"' has no exported member 'TOAST_TYPES'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(16,3): error TS2305: Module '"../JobsPanel/JobsPanel.styles"' has no exported member 'ModalHeader'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(110,6): error TS2741: Property 'isOpen' is missing in type '{ children: Element; }' but required in type '{ isOpen: boolean; }'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(121,54): error TS2339: Property 'jobId' does not exist on type 'HrJobApplication'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(121,82): error TS2339: Property 'jobId' does not exist on type 'HrJobApplication'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(121,115): error TS2339: Property 'jobId' does not exist on type 'HrJobApplication'.
+src/features/jobs/components/modals/InterviewSchedulingModal.tsx(131,28): error TS7006: Parameter 'date' implicitly has an 'any' type.
+src/features/jobs/components/StatusBadge/index.tsx(2,15): error TS2305: Module '"../../types/jobTypes"' has no exported member 'StatusBadgeProps'.
+src/features/jobs/hooks/useCandidateJobsBoard.ts(5,38): error TS6196: 'HrJobApplication' is declared but never used.
+src/features/jobs/hooks/useCandidateJobsBoard.ts(7,10): error TS2305: Module '"../../../shared/components/Toast"' has no exported member 'showToast'.
+src/features/jobs/hooks/useCandidateJobsBoard.ts(7,21): error TS2305: Module '"../../../shared/components/Toast"' has no exported member 'TOAST_TYPES'.
+src/features/jobs/hooks/useCandidateJobsWorkspace.ts(3,15): error TS2305: Module '"../types/jobTypes"' has no exported member 'CandidateJobsWorkspaceProps'.
+src/features/jobs/hooks/useCandidateJobsWorkspace.ts(3,44): error TS2305: Module '"../types/jobTypes"' has no exported member 'CandidateJobsWorkspaceTab'.
+src/features/jobs/hooks/useHrApplications.ts(4,15): error TS6196: 'HrJobApplication' is declared but never used.
+src/features/jobs/hooks/useHrManageJobs.ts(7,10): error TS2305: Module '"../../../shared/components/Toast"' has no exported member 'showToast'.
+src/features/jobs/hooks/useHrManageJobs.ts(7,21): error TS2305: Module '"../../../shared/components/Toast"' has no exported member 'TOAST_TYPES'.
+src/features/jobs/hooks/useInterviews.ts(4,15): error TS2305: Module '"../types/jobTypes"' has no exported member 'InterviewsPageProps'.
+src/features/jobs/labels/jobLabels.ts(137,5): error TS2820: Type '"applied"' is not assignable to type 'MyApplicationsStatusFilter'. Did you mean '"APPLIED"'?
+src/features/jobs/labels/jobLabels.ts(138,5): error TS2820: Type '"shortlisted"' is not assignable to type 'MyApplicationsStatusFilter'. Did you mean '"SHORTLISTED"'?
+src/features/jobs/labels/jobLabels.ts(139,5): error TS2820: Type '"interview_scheduled"' is not assignable to type 'MyApplicationsStatusFilter'. Did you mean '"INTERVIEW_SCHEDULED"'?
+src/features/jobs/labels/jobLabels.ts(140,5): error TS2820: Type '"hired"' is not assignable to type 'MyApplicationsStatusFilter'. Did you mean '"HIRED"'?
+src/features/jobs/labels/jobLabels.ts(141,5): error TS2820: Type '"rejected"' is not assignable to type 'MyApplicationsStatusFilter'. Did you mean '"REJECTED"'?
+src/features/jobs/pages/InterviewsPage/InterviewsPage.tsx(10,15): error TS2305: Module '"../../types/jobTypes"' has no exported member 'InterviewsPageProps'.
+src/features/profile/components/ProfileCompletionModal/index.tsx(15,55): error TS2307: Cannot find module '../../../auth/types' or its corresponding type declarations.
+src/features/profile/components/ProfileCompletionModal/index.tsx(126,20): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/features/profile/pages/ProfilePanel/ProfilePanel.tsx(18,66): error TS2307: Cannot find module '../../../auth/types' or its corresponding type declarations.
+src/features/profile/pages/ProfilePanel/ProfilePanel.tsx(140,20): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/features/profile/pages/ProfilePanel/ProfilePanel.tsx(215,22): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/shared/ui/Badge.tsx(9,31): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(11,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(11,62): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(11,108): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(13,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(13,61): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(13,111): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(15,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(15,56): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(15,91): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Badge.tsx(19,41): error TS2339: Property 'radius' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(10,31): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(11,41): error TS2339: Property 'radius' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(26,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(27,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(28,38): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(31,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(32,40): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(37,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(38,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(39,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(40,38): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(43,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(44,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(50,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(53,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(54,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(59,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(60,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(61,38): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(64,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(65,35): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Button.tsx(66,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(4,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(5,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(6,41): error TS2339: Property 'radius' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(7,38): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(8,35): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(14,40): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Card.tsx(15,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(5,35): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(5,70): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(6,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(7,41): error TS2339: Property 'radius' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(8,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(9,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(20,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(21,40): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(25,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(33,35): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(33,70): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(34,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(35,41): error TS2339: Property 'radius' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(36,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(37,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(43,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(44,40): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(48,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(56,35): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(56,70): error TS2339: Property 'spacing' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(57,44): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(58,41): error TS2339: Property 'radius' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(59,38): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(60,33): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(68,42): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(69,40): error TS2339: Property 'shadow' does not exist on type 'DefaultTheme'.
+src/shared/ui/Forms.tsx(73,40): error TS2339: Property 'colors' does not exist on type 'DefaultTheme'.

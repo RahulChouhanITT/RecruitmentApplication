@@ -1,0 +1,755 @@
+{
+  "info": {
+    "_postman_id": "5df759ca-3771-4be0-a9fd-0ec0e8702fd0",
+    "name": "RecruitmentApplication API",
+    "description": "Import this collection into Postman. Authentication in this backend is cookie-based, not Bearer-token based. Run Login first and keep the same Postman session/cookie jar for protected endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "userId",
+      "value": "replace-with-user-id"
+    },
+    {
+      "key": "jobId",
+      "value": "replace-with-job-id"
+    },
+    {
+      "key": "applicationId",
+      "value": "replace-with-application-id"
+    },
+    {
+      "key": "interviewId",
+      "value": "replace-with-interview-id"
+    },
+    {
+      "key": "conversationId",
+      "value": "replace-with-conversation-id"
+    },
+    {
+      "key": "participantId",
+      "value": "replace-with-participant-id"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Auth",
+      "description": "Auth endpoints. Login sets an HTTP-only cookie used by the protected routes.",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Chouhan\",\n  \"email\": \"rahul@example.com\",\n  \"password\": \"Rahul@123\",\n  \"role\": \"candidate\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Public endpoint. Role values: hr, candidate, interviewer."
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"password\": \"Rahul@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Public endpoint. Successful login sets the auth cookie in Postman."
+          }
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahul@example.com\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/verify-email",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "verify-email"]
+            }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rahul@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/resend-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "resend-otp"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Protected by auth cookie."
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahul Chouhan\",\n  \"phone\": \"9999999999\",\n  \"currentLocation\": \"Jaipur\",\n  \"skills\": \"React, TypeScript\",\n  \"experienceYears\": 2,\n  \"resumeUrl\": \"https://example.com/resume.pdf\",\n  \"position\": \"Interviewer\",\n  \"experienceLevel\": \"3-5 years\",\n  \"department\": \"Engineering\",\n  \"techStack\": \"Node.js, React\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Complete Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9999999999\",\n  \"resumeUrl\": \"https://example.com/resume.pdf\",\n  \"skills\": \"React, TypeScript\",\n  \"experienceYears\": 2,\n  \"currentLocation\": \"Jaipur\",\n  \"position\": \"HR Manager\",\n  \"experienceLevel\": \"5+ years\",\n  \"department\": \"Human Resources\",\n  \"techStack\": \"ATS, Hiring\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile", "complete"]
+            }
+          }
+        },
+        {
+          "name": "Get Interviewers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/interviewers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "interviewers"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Get Pending Approvals",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/pending-approvals",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "pending-approvals"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Update Approval Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isApproved\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/approvals/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "approvals", "{{userId}}"]
+            },
+            "description": "HR only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Jobs",
+      "item": [
+        {
+          "name": "Get Candidate Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs?search=react&requiredSkills=typescript&experienceLevel=1-3&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "react"
+                },
+                {
+                  "key": "requiredSkills",
+                  "value": "typescript"
+                },
+                {
+                  "key": "experienceLevel",
+                  "value": "1-3"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Candidate only."
+          }
+        },
+        {
+          "name": "Get HR Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/my?search=frontend&isActive=true&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "my"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "frontend"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Get Applied Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/applied/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "applied", "me"]
+            },
+            "description": "Candidate only."
+          }
+        },
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Frontend Developer\",\n  \"description\": \"Build modern React applications.\",\n  \"requiredSkills\": \"React, TypeScript, Redux\",\n  \"experienceLevel\": \"3-7\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Frontend Engineer\",\n  \"description\": \"Build and maintain React applications.\",\n  \"requiredSkills\": \"React, TypeScript, Redux, Testing\",\n  \"experienceLevel\": \"3-7\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/{{jobId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "{{jobId}}"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Get Job Applications",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/{{jobId}}/applications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "{{jobId}}", "applications"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Close Job",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/{{jobId}}/close",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "{{jobId}}", "close"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Activate Job",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/{{jobId}}/activate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "{{jobId}}", "activate"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Apply For Job",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/{{jobId}}/apply",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "{{jobId}}", "apply"]
+            },
+            "description": "Candidate only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Candidate",
+      "item": [
+        {
+          "name": "Upload Resume",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/candidate/resume",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "candidate", "resume"]
+            },
+            "description": "Candidate only. Field name must be `resume`."
+          }
+        },
+        {
+          "name": "Delete Resume",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/candidate/resume",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "candidate", "resume"]
+            },
+            "description": "Candidate only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Applications",
+      "item": [
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SHORTLISTED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{applicationId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "applications", "{{applicationId}}", "status"]
+            },
+            "description": "HR only. Valid states are APPLIED, SHORTLISTED, INTERVIEW_SCHEDULED, HIRED, REJECTED."
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Interviews",
+      "item": [
+        {
+          "name": "Get HR Interviews",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/interviews/all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "interviews", "all"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Schedule Interview",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"applicationId\": \"{{applicationId}}\",\n  \"interviewerId\": \"{{userId}}\",\n  \"interviewDate\": \"2026-03-25\",\n  \"interviewTime\": \"10:00\",\n  \"notes\": \"Bring project discussion points\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/interviews/schedule",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "interviews", "schedule"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Cancel Interview",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/interviews/{{interviewId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "interviews", "{{interviewId}}", "cancel"]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Get Interviewer Availability",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/interviews/availability?interviewerId={{userId}}&date=2026-03-25",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "interviews", "availability"],
+              "query": [
+                {
+                  "key": "interviewerId",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "date",
+                  "value": "2026-03-25"
+                }
+              ]
+            },
+            "description": "HR only."
+          }
+        },
+        {
+          "name": "Get Candidate Interviews",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/interviews/candidate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "interviews", "candidate"]
+            },
+            "description": "Candidate only."
+          }
+        },
+        {
+          "name": "Get Interviewer Interviews",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/interviews/interviewer",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "interviews", "interviewer"]
+            },
+            "description": "Interviewer only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Feedback",
+      "item": [
+        {
+          "name": "Submit Interview Feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"interviewId\": \"{{interviewId}}\",\n  \"rating\": 4,\n  \"comments\": \"Strong communication and problem solving.\",\n  \"recommendation\": \"HIRED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/feedback",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "feedback"]
+            },
+            "description": "Interviewer only."
+          }
+        },
+        {
+          "name": "Get HR Interview Feedback",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/feedback/interview/{{interviewId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "feedback", "interview", "{{interviewId}}"]
+            },
+            "description": "HR only."
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Google OAuth",
+      "item": [
+        {
+          "name": "Get Google OAuth URL",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/google/oauth/url",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "google", "oauth", "url"]
+            }
+          }
+        },
+        {
+          "name": "Google OAuth Callback",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/google/oauth/callback?code=replace-with-google-code",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "google", "oauth", "callback"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "replace-with-google-code"
+                }
+              ]
+            },
+            "description": "Use this only if you are manually exchanging the Google auth code for a refresh token."
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Chats",
+      "item": [
+        {
+          "name": "Get Conversations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/chats/conversations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chats", "conversations"]
+            }
+          }
+        },
+        {
+          "name": "Create Direct Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"participantId\": \"{{participantId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chats/conversations/direct",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chats", "conversations", "direct"]
+            }
+          }
+        },
+        {
+          "name": "Start Candidate HR Conversation",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/api/chats/conversations/start-candidate-hr",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chats", "conversations", "start-candidate-hr"]
+            },
+            "description": "Candidate-only use case in UI, but route is under chat-allowed auth."
+          }
+        },
+        {
+          "name": "Get Conversation Messages",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/chats/conversations/{{conversationId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chats", "conversations", "{{conversationId}}", "messages"]
+            }
+          }
+        },
+        {
+          "name": "Send Conversation Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Hello from Postman\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/chats/conversations/{{conversationId}}/messages",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chats", "conversations", "{{conversationId}}", "messages"]
+            }
+          }
+        },
+        {
+          "name": "Mark Conversation Seen",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{baseUrl}}/api/chats/conversations/{{conversationId}}/seen",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chats", "conversations", "{{conversationId}}", "seen"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
