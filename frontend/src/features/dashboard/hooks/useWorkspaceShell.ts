@@ -1,35 +1,42 @@
-import { useEffect, useMemo, useState } from "react";
-import type { AuthRole } from "../../auth/types/authTypes";
-import type { LeftPanelItemData } from "../components/WorkspaceShell/WorkspaceShell";
+import { useEffect, useMemo, useState } from 'react';
+import type { AuthRole } from '../../auth/types';
+import type { LeftPanelItemData } from '../types/dashboardShellTypes';
 
 const getRoleLabel = (role: AuthRole | undefined): string => {
-  if (role === "hr") {
-    return "HR Workspace";
+  if (role === 'hr') {
+    return 'HR Workspace';
   }
-  if (role === "interviewer") {
-    return "Interviewer Workspace";
+  if (role === 'interviewer') {
+    return 'Interviewer Workspace';
   }
-  return "Candidate Workspace";
+  return 'Candidate Workspace';
 };
 
-export const useWorkspaceShell = (leftPanelItems: LeftPanelItemData[], activeAppRailId?: string) => {
+export const useWorkspaceShell = (
+  leftPanelItems: LeftPanelItemData[],
+  activeAppRailId?: string,
+) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLeftPanelCollapsed, setIsLeftPanelCollapsed] = useState(false);
-  const [leftPanelSearchQuery, setLeftPanelSearchQuery] = useState("");
+  const [leftPanelSearchQuery, setLeftPanelSearchQuery] = useState('');
 
   useEffect(() => {
     const onEsc = (event: KeyboardEvent): void => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         setIsSidebarOpen(false);
       }
     };
 
-    window.addEventListener("keydown", onEsc);
-    return () => window.removeEventListener("keydown", onEsc);
+    window.addEventListener('keydown', onEsc);
+    return () => window.removeEventListener('keydown', onEsc);
   }, []);
 
   useEffect(() => {
-    setLeftPanelSearchQuery("");
+    const timeoutId = window.setTimeout(() => {
+      setLeftPanelSearchQuery('');
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [activeAppRailId]);
 
   const closeSidebar = (): void => {
@@ -59,7 +66,7 @@ export const useWorkspaceShell = (leftPanelItems: LeftPanelItemData[], activeApp
   const shouldCollapseLeftPanel = isLeftPanelCollapsed;
 
   const onToggleSidebar = (): void => {
-    if (typeof window !== "undefined" && window.innerWidth <= 820) {
+    if (typeof window !== 'undefined' && window.innerWidth <= 820) {
       setIsSidebarOpen((prev) => !prev);
       return;
     }

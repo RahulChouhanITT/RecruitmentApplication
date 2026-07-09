@@ -1,5 +1,5 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
+import { Document, Schema, Types, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES } from '../utils/constants/modelConstants';
 
 export interface IInterviewerProfile extends Document {
   userId: Types.ObjectId;
@@ -14,7 +14,7 @@ const interviewerProfileSchema = new Schema<IInterviewerProfile>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
       unique: true,
     },
@@ -36,7 +36,10 @@ const interviewerProfileSchema = new Schema<IInterviewerProfile>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export const InterviewerProfileModel = model<IInterviewerProfile>("InterviewerProfile", interviewerProfileSchema);
+export const InterviewerProfileModel = model<IInterviewerProfile>(
+  'InterviewerProfile',
+  interviewerProfileSchema,
+);

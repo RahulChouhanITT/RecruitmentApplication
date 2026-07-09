@@ -1,5 +1,5 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
+import { Document, Schema, Types, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES } from '../utils/constants/modelConstants';
 
 export interface IChatConversation extends Document {
   participants: Types.ObjectId[];
@@ -14,7 +14,7 @@ const chatConversationSchema = new Schema<IChatConversation>(
     participants: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
         required: true,
       },
     ],
@@ -29,10 +29,13 @@ const chatConversationSchema = new Schema<IChatConversation>(
       default: MODEL_DEFAULT_VALUES.NULL,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 chatConversationSchema.index({ participants: 1 });
 chatConversationSchema.index({ lastMessageAt: -1 });
 
-export const ChatConversationModel = model<IChatConversation>("ChatConversation", chatConversationSchema);
+export const ChatConversationModel = model<IChatConversation>(
+  'ChatConversation',
+  chatConversationSchema,
+);

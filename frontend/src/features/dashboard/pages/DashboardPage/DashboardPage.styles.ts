@@ -1,16 +1,18 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const DashboardContentCard = styled.section`
-  width: min(100%, 1100px);
+export const DashboardContentCard = styled.section<{ $fullBleed?: boolean }>`
+  width: 100%;
+  max-width: ${({ $fullBleed }) => ($fullBleed ? 'none' : '1100px')};
   margin: 0 auto;
-  padding: 0 1rem 1.25rem;
+  padding: ${({ $fullBleed }) => ($fullBleed ? '0 0 1rem' : '0 1rem 1.25rem')};
   display: grid;
   gap: 0.9rem;
   align-content: start;
+  min-height: 100%;
 
   @media (max-width: 900px) {
     width: 100%;
-    padding: 0 0.35rem 1rem;
+    padding: ${({ $fullBleed }) => ($fullBleed ? '0 0 0.85rem' : '0 0.35rem 1rem')};
   }
 `;
 
@@ -37,7 +39,10 @@ export const LogoutButton = styled.button`
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  transition:
+    background-color 0.16s ease,
+    color 0.16s ease,
+    border-color 0.16s ease;
 
   &:hover:not(:disabled) {
     background: #ffffff;

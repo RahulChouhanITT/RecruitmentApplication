@@ -1,9 +1,15 @@
-import { JOBS_EXPERIENCE_OPTIONS } from "../labels/jobLabels";
-import { JOBS_INITIAL_VALUES, JOBS_STATUS_VALUES } from "../constants/jobConstants";
-import type { ApplicationStatus, CreateJobPayload, HrJobApplication, PendingAction, ScheduleInterviewFormValues } from "../types/jobTypes";
+import { JOBS_EXPERIENCE_OPTIONS } from '../labels/jobLabels';
+import { JOBS_INITIAL_VALUES, JOBS_STATUS_VALUES } from '../constants/jobConstants';
+import type {
+  ApplicationStatus,
+  CreateJobPayload,
+  HrJobApplication,
+  PendingAction,
+  ScheduleInterviewFormValues,
+} from '../types/jobTypes';
 
 export const normalizeApplicationStatus = (status: string): ApplicationStatus => {
-  const normalized = status.trim().toUpperCase().replace(/\s+/g, "_");
+  const normalized = status.trim().toUpperCase().replace(/\s+/g, '_');
   if (normalized === JOBS_STATUS_VALUES.SHORTLISTED) {
     return JOBS_STATUS_VALUES.SHORTLISTED;
   }
@@ -32,8 +38,8 @@ export const initialScheduleFormValues: ScheduleInterviewFormValues = {
 export const isValidExperienceLevel = (value: string): boolean =>
   JOBS_EXPERIENCE_OPTIONS.some((option) => option.value === value);
 
-export const normalizeExperienceLevel = (value: string): CreateJobPayload["experienceLevel"] =>
-  isValidExperienceLevel(value) ? (value as CreateJobPayload["experienceLevel"]) : "";
+export const normalizeExperienceLevel = (value: string): CreateJobPayload['experienceLevel'] =>
+  isValidExperienceLevel(value) ? (value as CreateJobPayload['experienceLevel']) : '';
 
 export const formatPostedAt = (isoDate: string): string => {
   const postedTime = new Date(isoDate).getTime();
@@ -42,19 +48,31 @@ export const formatPostedAt = (isoDate: string): string => {
   const days = Math.max(1, Math.floor(diffMs / dayMs));
 
   if (days < 7) {
-    return `${days} day${days > 1 ? "s" : ""} ago`;
+    return `${days} day${days > 1 ? 's' : ''} ago`;
   }
 
   const weeks = Math.floor(days / 7);
   if (weeks < 5) {
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
   }
 
   const months = Math.floor(days / 30);
-  return `${months} month${months > 1 ? "s" : ""} ago`;
+  return `${months} month${months > 1 ? 's' : ''} ago`;
 };
 
-export const createPendingAction = (application: HrJobApplication, status: ApplicationStatus): PendingAction => ({
+export const sortJobs = <T extends { isActive: boolean; createdAt: string }>(jobs: T[]): T[] =>
+  [...jobs].sort((a, b) => {
+    if (a.isActive !== b.isActive) {
+      return a.isActive ? -1 : 1;
+    }
+
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
+export const createPendingAction = (
+  application: HrJobApplication,
+  status: ApplicationStatus,
+): PendingAction => ({
   application,
   status,
 });

@@ -1,6 +1,6 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
-import { JOB_EXPERIENCE_LEVELS } from "../utils/types/jobTypes";
+import { Document, Schema, Types, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES } from '../utils/constants/modelConstants';
+import { JOB_EXPERIENCE_LEVELS } from '../utils/types/jobTypes';
 
 export interface IJob extends Document {
   title: string;
@@ -42,7 +42,7 @@ const jobSchema = new Schema<IJob>(
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     isActive: {
@@ -52,7 +52,7 @@ const jobSchema = new Schema<IJob>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 jobSchema.index({ createdBy: 1, createdAt: -1 });
@@ -60,4 +60,4 @@ jobSchema.index({ isActive: 1, createdAt: -1 });
 jobSchema.index({ title: 1 });
 jobSchema.index({ experienceLevel: 1 });
 
-export const JobModel = model<IJob>("Job", jobSchema);
+export const JobModel = model<IJob>('Job', jobSchema);

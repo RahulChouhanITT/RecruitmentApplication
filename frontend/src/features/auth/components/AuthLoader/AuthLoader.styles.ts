@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 const shimmer = keyframes`
   0% {
@@ -34,8 +34,8 @@ export const LoaderCard = styled.div`
 `;
 
 export const SkeletonLine = styled.div<{ $width?: string; $height?: string }>`
-  width: ${({ $width }) => $width ?? "100%"};
-  height: ${({ $height }) => $height ?? "0.9rem"};
+  width: ${({ $width }) => $width ?? '100%'};
+  height: ${({ $height }) => $height ?? '0.9rem'};
   border-radius: 0.5rem;
   background: ${skeletonBackground};
   background-size: 200% 100%;

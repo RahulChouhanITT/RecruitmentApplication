@@ -1,20 +1,26 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 import {
-  getMessagesForConversation,
-  getOrCreateDirectConversation,
-  listConversationsForUser,
-  markConversationAsSeen,
-  startCandidateConversationWithAnyHr,
-  sendMessageToConversation,
-} from "../services/chatService";
-import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import { sendSuccessResponse } from "../utils";
-import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
-import type { AuthenticatedRequest } from "../utils/types/authTypes";
-import type { DirectConversationRequest, SendMessageRequest } from "../utils/types/chatTypes";
+  getOrCreateDirectConversation as getOrCreateDirectConversationService,
+  listConversationsForUser as listConversationsForUserService,
+  startCandidateConversationWithAnyHr as startCandidateConversationWithAnyHrService,
+} from '../services/chat/chatConversationService';
+import {
+  getMessagesForConversation as getMessagesForConversationService,
+  markConversationAsSeen as markConversationAsSeenService,
+  sendMessageToConversation as sendMessageToConversationService,
+} from '../services/chat/chatMessageService';
+import { dispatchChatRealtime } from '../services/chat/chatRealtimePublisher';
+import { sendSuccessResponse } from '../utils/http/responseHelpers';
+import { getAuthenticatedUserId } from './helpers/requestAuthHelpers';
+import { APPLICATION_CONSTANTS } from '../utils/constants/applicationConstants';
+import { APPLICATION_MESSAGES } from '../utils/messages/applicationMessages';
+import type { AuthenticatedRequest } from '../utils/types/authTypes';
+import type { DirectConversationRequest, SendMessageRequest } from '../utils/types/chatTypes';
 
-export const getConversationsHandler = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  const conversations = await listConversationsForUser(req.authenticatedUserId as string);
+export const getConversations = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+  const authenticatedUserId = getAuthenticatedUserId(req);
+  const conversations = await listConversationsForUserService(authenticatedUserId);
+
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.CHAT.CONVERSATIONS_FETCHED_SUCCESS,
@@ -22,11 +28,17 @@ export const getConversationsHandler = async (req: AuthenticatedRequest, res: Re
   });
 };
 
-export const createDirectConversationHandler = async (
+export const createDirectConversation = async (
   req: AuthenticatedRequest & Request<unknown, unknown, DirectConversationRequest>,
-  res: Response
+  res: Response,
 ): Promise<void> => {
-  const conversation = await getOrCreateDirectConversation(req.authenticatedUserId as string, req.body.participantId);
+  const authenticatedUserId = getAuthenticatedUserId(req);
+  const { participantId } = req.body;
+  const conversation = await getOrCreateDirectConversationService(
+    authenticatedUserId,
+    participantId,
+  );
+
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.CHAT.CONVERSATION_READY,
@@ -34,11 +46,13 @@ export const createDirectConversationHandler = async (
   });
 };
 
-export const startCandidateHrConversationHandler = async (
+export const startCandidateHrConversation = async (
   req: AuthenticatedRequest,
-  res: Response
+  res: Response,
 ): Promise<void> => {
-  const conversation = await startCandidateConversationWithAnyHr(req.authenticatedUserId as string);
+  const authenticatedUserId = getAuthenticatedUserId(req);
+  const conversation = await startCandidateConversationWithAnyHrService(authenticatedUserId);
+
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.CHAT.CONVERSATION_READY,
@@ -46,9 +60,14 @@ export const startCandidateHrConversationHandler = async (
   });
 };
 
-export const getConversationMessagesHandler = async (req: AuthenticatedRequest & Request, res: Response): Promise<void> => {
-  const { conversationId } = req.params as { conversationId: string };
-  const messages = await getMessagesForConversation(conversationId, req.authenticatedUserId as string);
+export const getConversationMessages = async (
+  req: AuthenticatedRequest & Request<{ conversationId: string }>,
+  res: Response,
+): Promise<void> => {
+  const authenticatedUserId = getAuthenticatedUserId(req);
+  const { conversationId } = req.params;
+  const messages = await getMessagesForConversationService(conversationId, authenticatedUserId);
+
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.CHAT.MESSAGES_FETCHED_SUCCESS,
@@ -56,27 +75,36 @@ export const getConversationMessagesHandler = async (req: AuthenticatedRequest &
   });
 };
 
-export const sendConversationMessageHandler = async (
-  req: AuthenticatedRequest & Request,
-  res: Response
+export const sendConversationMessage = async (
+  req: AuthenticatedRequest & Request<{ conversationId: string }, unknown, SendMessageRequest>,
+  res: Response,
 ): Promise<void> => {
-  const { conversationId } = req.params as { conversationId: string };
-  const requestBody = req.body as SendMessageRequest;
-  const sentMessage = await sendMessageToConversation(
+  const authenticatedUserId = getAuthenticatedUserId(req);
+  const { conversationId } = req.params;
+  const { message } = req.body;
+  const sentMessageResult = await sendMessageToConversationService(
     conversationId,
-    req.authenticatedUserId as string,
-    requestBody.message
+    authenticatedUserId,
+    message,
   );
+  await dispatchChatRealtime(sentMessageResult.realtimePayload);
+
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.CREATED,
     message: APPLICATION_MESSAGES.CHAT.MESSAGE_SENT_SUCCESS,
-    data: sentMessage,
+    data: sentMessageResult.data,
   });
 };
 
-export const markConversationSeenHandler = async (req: AuthenticatedRequest & Request, res: Response): Promise<void> => {
-  const { conversationId } = req.params as { conversationId: string };
-  await markConversationAsSeen(conversationId, req.authenticatedUserId as string);
+export const markConversationSeen = async (
+  req: AuthenticatedRequest & Request<{ conversationId: string }>,
+  res: Response,
+): Promise<void> => {
+  const authenticatedUserId = getAuthenticatedUserId(req);
+  const { conversationId } = req.params;
+  const seenResult = await markConversationAsSeenService(conversationId, authenticatedUserId);
+  await dispatchChatRealtime(seenResult.realtimePayload);
+
   sendSuccessResponse(res, {
     statusCode: APPLICATION_CONSTANTS.HTTP_STATUS_CODES.OK,
     message: APPLICATION_MESSAGES.CHAT.CONVERSATION_MARKED_SEEN,

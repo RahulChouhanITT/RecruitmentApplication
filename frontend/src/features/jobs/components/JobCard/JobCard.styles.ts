@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const cardMotion = `
   @keyframes fadeUpJobCard {
@@ -23,7 +23,10 @@ export const Card = styled.article`
   display: grid;
   gap: 0.55rem;
   animation: fadeUpJobCard 220ms ease both;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -47,9 +50,9 @@ export const Title = styled.h4`
 `;
 
 export const StatusPill = styled.span<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#70c2a1" : "#c9d5e8")};
-  color: ${({ $active }) => ($active ? "#16794d" : "#566a86")};
-  background: ${({ $active }) => ($active ? "#ebf8f1" : "#f4f7fc")};
+  border: 1px solid ${({ $active }) => ($active ? '#70c2a1' : '#c9d5e8')};
+  color: ${({ $active }) => ($active ? '#16794d' : '#566a86')};
+  background: ${({ $active }) => ($active ? '#ebf8f1' : '#f4f7fc')};
   border-radius: 999px;
   padding: 0.2rem 0.5rem;
   font-size: 0.72rem;
@@ -87,11 +90,15 @@ export const ActionButton = styled.button`
   letter-spacing: 0.025em;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -2px rgba(0, 0, 0, 0.2);
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.3),
+      0 4px 6px -4px rgba(0, 0, 0, 0.3);
     background: #000000;
   }
 
@@ -108,7 +115,7 @@ export const ActionButton = styled.button`
     transform: none;
   }
 
-  @media(max-width: 640px) {
+  @media (max-width: 640px) {
     width: 100%;
     justify-self: stretch;
     text-align: center;

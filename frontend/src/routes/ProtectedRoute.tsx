@@ -1,11 +1,11 @@
-import { type PropsWithChildren, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { APP_ROUTE_PATHS } from "../utils/constants/routeConstants";
-import { useGetCurrentUserQuery } from "../features/auth/api/authApi";
-import { AUTH_LOADER_MESSAGES } from "../features/auth/labels/authLabels";
-import { setCurrentUser } from "../features/auth/state/authSlice";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { AuthLoader } from "../features/auth/components/AuthLoader/AuthLoader";
+import { type PropsWithChildren, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { APP_ROUTE_PATHS } from '../utils/constants/routeConstants';
+import { useGetCurrentUserQuery } from '../features/auth/api/authApi';
+import { AUTH_LOADER_MESSAGES } from '../features/auth/labels/authLabels';
+import { setCurrentUser } from '../features/auth/state/authSlice';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { AuthLoader } from '../features/auth/components/AuthLoader';
 
 export const ProtectedRoute = ({ children }: PropsWithChildren) => {
   const dispatch = useAppDispatch();
@@ -31,7 +31,7 @@ export const ProtectedRoute = ({ children }: PropsWithChildren) => {
     return <Navigate to={APP_ROUTE_PATHS.AUTH_LOGIN} replace />;
   }
 
-  if (!user.isApproved || !user.isEmailVerified ) {
+  if (!user.isApproved || !user.isEmailVerified) {
     return <Navigate to={APP_ROUTE_PATHS.AUTH_LOGIN} replace />;
   }
 

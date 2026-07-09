@@ -7,29 +7,29 @@ export const PROFILE_FORM_LIMITS = {
 } as const;
 
 export const PROFILE_RESUME_ACCEPTED_MIME_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ] as const;
 
-export const PROFILE_RESUME_ACCEPTED_EXTENSIONS = [".pdf", ".doc", ".docx"] as const;
+export const PROFILE_RESUME_ACCEPTED_EXTENSIONS = ['.pdf', '.doc', '.docx'] as const;
 
 export const PROFILE_INITIAL_VALUES = {
-  EMPTY_STRING: "",
-  AVATAR_FALLBACK: "U",
-  DISPLAY_FALLBACK: "-",
+  EMPTY_STRING: '',
+  AVATAR_FALLBACK: 'U',
+  DISPLAY_FALLBACK: '-',
   COMPLETE_PROFILE_PAYLOAD: {
-    phone: "",
-    resumeUrl: "",
-    skills: "",
+    phone: '',
+    resumeUrl: '',
+    skills: '',
     experienceYears: 0,
-    currentLocation: "",
-    position: "",
-    experienceLevel: "",
-    department: "",
-    techStack: "",
+    currentLocation: '',
+    position: '',
+    experienceLevel: '',
+    department: '',
+    techStack: '',
   },
   UPDATE_PROFILE_PAYLOAD: {
-    name: "",
+    name: '',
   },
 } as const;

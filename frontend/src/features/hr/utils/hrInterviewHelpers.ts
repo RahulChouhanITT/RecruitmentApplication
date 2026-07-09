@@ -1,25 +1,29 @@
-import type { InterviewerOption } from "../../auth/types/authTypes";
-import { HR_INTERVIEW_INITIAL_VALUES } from "../constants/hrConstants";
-import { HR_INTERVIEW_DEFAULT_MESSAGES, HR_INTERVIEW_UI_TEXT } from "../labels/hrLabels";
+import type { InterviewerOption } from '../types/hrTypes';
+import { HR_INTERVIEW_INITIAL_VALUES } from '../constants/hrConstants';
+import {
+  HR_INTERVIEW_DEFAULT_MESSAGES,
+  HR_INTERVIEW_UI_TEXT,
+  HR_INTERVIEW_VALIDATION_MESSAGES,
+} from '../labels/hrLabels';
 import type {
   HrFeedbackStatusFilter,
   HrInterviewActionMenuAnchor,
   HrInterviewScheduleFormValues,
   HrInterviewStatusFilter,
-} from "../types/hrTypes";
-import type { HrInterview } from "../../jobs/types/jobTypes";
+} from '../types/hrTypes';
+import type { HrInterview } from '../../jobs/types/jobTypes';
 
 export const formatFeedbackStatus = (status?: string): string => {
   const normalized = (status ?? HR_INTERVIEW_INITIAL_VALUES.EMPTY_STRING).trim().toUpperCase();
 
-  if (normalized === "NEEDS_REVIEW") {
-    return "Needs Review";
+  if (normalized === 'NEEDS_REVIEW') {
+    return 'Needs Review';
   }
-  if (normalized === "REVIEWED") {
-    return "Reviewed";
+  if (normalized === 'REVIEWED') {
+    return 'Reviewed';
   }
-  if (normalized === "PENDING") {
-    return "Pending";
+  if (normalized === 'PENDING') {
+    return 'Pending';
   }
 
   return HR_INTERVIEW_DEFAULT_MESSAGES.SUBMITTED_ON_FALLBACK;
@@ -27,29 +31,29 @@ export const formatFeedbackStatus = (status?: string): string => {
 
 export const canOpenFeedbackModal = (status?: string): boolean => {
   const normalized = (status ?? HR_INTERVIEW_INITIAL_VALUES.EMPTY_STRING).trim().toUpperCase();
-  return normalized === "NEEDS_REVIEW" || normalized === "REVIEWED";
+  return normalized === 'NEEDS_REVIEW' || normalized === 'REVIEWED';
 };
 
-export const getInterviewTone = (status?: string): "scheduled" | "completed" | "cancelled" => {
+export const getInterviewTone = (status?: string): 'scheduled' | 'completed' | 'cancelled' => {
   const normalized = (status ?? HR_INTERVIEW_INITIAL_VALUES.EMPTY_STRING).trim().toUpperCase();
 
-  if (normalized === "COMPLETED") {
-    return "completed";
+  if (normalized === 'COMPLETED') {
+    return 'completed';
   }
-  if (normalized === "CANCELLED") {
-    return "cancelled";
+  if (normalized === 'CANCELLED') {
+    return 'cancelled';
   }
 
-  return "scheduled";
+  return 'scheduled';
 };
 
 export const getInterviewStatusLabel = (status?: string): string => {
   const tone = getInterviewTone(status);
 
-  if (tone === "completed") {
+  if (tone === 'completed') {
     return HR_INTERVIEW_UI_TEXT.COMPLETED;
   }
-  if (tone === "cancelled") {
+  if (tone === 'cancelled') {
     return HR_INTERVIEW_UI_TEXT.CANCELLED;
   }
 
@@ -67,8 +71,8 @@ export const toInterviewDate = (selectedDateTime: Date | null): string => {
   }
 
   const year = selectedDateTime.getFullYear();
-  const month = String(selectedDateTime.getMonth() + 1).padStart(2, "0");
-  const day = String(selectedDateTime.getDate()).padStart(2, "0");
+  const month = String(selectedDateTime.getMonth() + 1).padStart(2, '0');
+  const day = String(selectedDateTime.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
@@ -77,17 +81,17 @@ export const toInterviewTime = (selectedDateTime: Date | null): string => {
     return HR_INTERVIEW_INITIAL_VALUES.EMPTY_STRING;
   }
 
-  const hours = String(selectedDateTime.getHours()).padStart(2, "0");
-  const minutes = String(selectedDateTime.getMinutes()).padStart(2, "0");
+  const hours = String(selectedDateTime.getHours()).padStart(2, '0');
+  const minutes = String(selectedDateTime.getMinutes()).padStart(2, '0');
   return `${hours}:${minutes}`;
 };
 
 export const findInterviewerIdByName = (
   interviewerName: string,
-  interviewerOptions: InterviewerOption[]
+  interviewerOptions: InterviewerOption[],
 ): string => {
   const matchedInterviewer = interviewerOptions.find(
-    (interviewer) => interviewer.name.trim().toLowerCase() === interviewerName.trim().toLowerCase()
+    (interviewer) => interviewer.name.trim().toLowerCase() === interviewerName.trim().toLowerCase(),
   );
 
   return matchedInterviewer?._id ?? HR_INTERVIEW_INITIAL_VALUES.EMPTY_STRING;
@@ -95,7 +99,7 @@ export const findInterviewerIdByName = (
 
 export const getInterviewActionMenuAnchor = (
   interviewId: string,
-  triggerElement: HTMLButtonElement
+  triggerElement: HTMLButtonElement,
 ): HrInterviewActionMenuAnchor => {
   const triggerRect = triggerElement.getBoundingClientRect();
   const menuWidth = 192;
@@ -103,7 +107,7 @@ export const getInterviewActionMenuAnchor = (
   const viewportPadding = 8;
   const computedLeft = Math.max(
     viewportPadding,
-    Math.min(triggerRect.right - menuWidth, window.innerWidth - menuWidth - viewportPadding)
+    Math.min(triggerRect.right - menuWidth, window.innerWidth - menuWidth - viewportPadding),
   );
   const computedTop = Math.max(viewportPadding, triggerRect.top - menuHeight - 6);
 
@@ -118,25 +122,25 @@ export const filterHrInterviews = (
   interviews: HrInterview[],
   interviewStatusFilter: HrInterviewStatusFilter,
   feedbackStatusFilter: HrFeedbackStatusFilter,
-  searchQuery: string
+  searchQuery: string,
 ): HrInterview[] => {
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
   return interviews.filter((interview) => {
-    const normalizedInterviewStatus = (interview.status ?? "").trim().toUpperCase();
-    const normalizedFeedbackStatus = (interview.feedbackStatus ?? "").trim().toUpperCase();
+    const normalizedInterviewStatus = (interview.status ?? '').trim().toUpperCase();
+    const normalizedFeedbackStatus = (interview.feedbackStatus ?? '').trim().toUpperCase();
 
     const matchesInterviewStatus =
-      interviewStatusFilter === "all" ||
-      (interviewStatusFilter === "scheduled" && normalizedInterviewStatus === "SCHEDULED") ||
-      (interviewStatusFilter === "completed" && normalizedInterviewStatus === "COMPLETED") ||
-      (interviewStatusFilter === "cancelled" && normalizedInterviewStatus === "CANCELLED");
+      interviewStatusFilter === 'all' ||
+      (interviewStatusFilter === 'scheduled' && normalizedInterviewStatus === 'SCHEDULED') ||
+      (interviewStatusFilter === 'completed' && normalizedInterviewStatus === 'COMPLETED') ||
+      (interviewStatusFilter === 'cancelled' && normalizedInterviewStatus === 'CANCELLED');
 
     const matchesFeedbackStatus =
-      feedbackStatusFilter === "all" ||
-      (feedbackStatusFilter === "pending" && normalizedFeedbackStatus === "PENDING") ||
-      (feedbackStatusFilter === "needs_review" && normalizedFeedbackStatus === "NEEDS_REVIEW") ||
-      (feedbackStatusFilter === "reviewed" && normalizedFeedbackStatus === "REVIEWED");
+      feedbackStatusFilter === 'all' ||
+      (feedbackStatusFilter === 'pending' && normalizedFeedbackStatus === 'PENDING') ||
+      (feedbackStatusFilter === 'needs_review' && normalizedFeedbackStatus === 'NEEDS_REVIEW') ||
+      (feedbackStatusFilter === 'reviewed' && normalizedFeedbackStatus === 'REVIEWED');
 
     if (!matchesInterviewStatus || !matchesFeedbackStatus) {
       return false;
@@ -152,7 +156,7 @@ export const filterHrInterviews = (
       interview.interviewerName,
       interview.job.title,
     ]
-      .join(" ")
+      .join(' ')
       .toLowerCase();
 
     return searchable.includes(normalizedQuery);
@@ -160,7 +164,7 @@ export const filterHrInterviews = (
 };
 
 export const validateHrScheduleForm = (
-  scheduleFormValues: HrInterviewScheduleFormValues
+  scheduleFormValues: HrInterviewScheduleFormValues,
 ): Partial<Record<keyof HrInterviewScheduleFormValues, string>> => {
   const nextErrors: Partial<Record<keyof HrInterviewScheduleFormValues, string>> = {};
 
@@ -173,10 +177,4 @@ export const validateHrScheduleForm = (
   }
 
   return nextErrors;
-};
-
-export const getHrErrorMessage = (error: unknown, fallbackMessage: string): string => {
-  return typeof error === "object" && error !== null && "message" in error
-    ? String((error as { message: unknown }).message)
-    : fallbackMessage;
 };

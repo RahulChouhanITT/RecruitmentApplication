@@ -1,4 +1,4 @@
-import type { Response } from "express";
+import type { Response } from 'express';
 
 type SuccessResponseOptions<TData = unknown, TPagination = unknown> = {
   statusCode: number;
@@ -9,7 +9,7 @@ type SuccessResponseOptions<TData = unknown, TPagination = unknown> = {
 
 export const sendSuccessResponse = <TData = unknown, TPagination = unknown>(
   res: Response,
-  options: SuccessResponseOptions<TData, TPagination>
+  options: SuccessResponseOptions<TData, TPagination>,
 ): void => {
   const { statusCode, message, data, pagination } = options;
 

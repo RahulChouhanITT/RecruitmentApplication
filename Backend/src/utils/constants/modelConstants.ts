@@ -1,5 +1,5 @@
 export const MODEL_DEFAULT_VALUES = {
-  EMPTY_STRING: "",
+  EMPTY_STRING: '',
   ZERO: 0,
   FALSE: false,
   TRUE: true,

@@ -1,6 +1,9 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
-import { FEEDBACK_RECOMMENDATIONS, type FeedbackRecommendation } from "../utils/types/feedbackTypes";
+import { Document, Schema, Types, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES } from '../utils/constants/modelConstants';
+import {
+  FEEDBACK_RECOMMENDATIONS,
+  type FeedbackRecommendation,
+} from '../utils/types/feedbackTypes';
 
 export interface IFeedback extends Document {
   interviewId: Types.ObjectId;
@@ -16,7 +19,7 @@ const feedbackSchema = new Schema<IFeedback>(
   {
     interviewId: {
       type: Schema.Types.ObjectId,
-      ref: "Interview",
+      ref: 'Interview',
       required: true,
       unique: true,
     },
@@ -43,7 +46,7 @@ const feedbackSchema = new Schema<IFeedback>(
       default: MODEL_DEFAULT_VALUES.CURRENT_DATE,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const FeedbackModel = model<IFeedback>("Feedback", feedbackSchema);
+export const FeedbackModel = model<IFeedback>('Feedback', feedbackSchema);

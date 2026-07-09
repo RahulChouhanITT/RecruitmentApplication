@@ -1,7 +1,7 @@
-import type { Socket } from "socket.io";
+import type { Socket } from 'socket.io';
 
 export type AuthedSocket = Socket & {
-  data: Socket["data"] & {
+  data: Socket['data'] & {
     userId?: string;
   };
 };

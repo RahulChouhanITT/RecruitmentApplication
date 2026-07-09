@@ -1,26 +1,30 @@
-import bcrypt from "bcryptjs";
-import { Document, Model, Schema, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES, USER_MODEL_CONSTANTS } from "../utils/constants/modelConstants";
-import { MODEL_MESSAGES } from "../utils/messages/modelMessages";
-import { USER_ROLES, type UserRole } from "../utils/types/authTypes";
+import bcrypt from 'bcryptjs';
+import { Document, Model, Schema, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES, USER_MODEL_CONSTANTS } from '../utils/constants/modelConstants';
+import { MODEL_MESSAGES } from '../utils/messages/modelMessages';
+import { AUTH_PROVIDERS, USER_ROLES, type AuthProvider, type UserRole } from '../utils/types/authTypes';
 
 export interface IUser extends Document {
   name: string;
   email: string;
-  passwordHash: string;
+  passwordHash?: string;
   otpCodeHash?: string;
   otpExpiryTime?: Date | null;
   otpAttemptCount?: number;
   role: UserRole;
+  authProvider: AuthProvider;
+  googleId?: string;
+  avatarUrl?: string;
   profileCompleted: boolean;
   isEmailVerified: boolean;
   isApproved: boolean;
+  lastLoginAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-interface IUserModel extends Model<IUser> {}
+type IUserModel = Model<IUser>;
 
 const userSchema = new Schema<IUser, IUserModel>(
   {
@@ -44,7 +48,6 @@ const userSchema = new Schema<IUser, IUserModel>(
     },
     passwordHash: {
       type: String,
-      required: true,
       minlength: 8,
       select: false,
     },
@@ -68,6 +71,22 @@ const userSchema = new Schema<IUser, IUserModel>(
       enum: USER_ROLES,
       required: true,
     },
+    authProvider: {
+      type: String,
+      enum: AUTH_PROVIDERS,
+      default: 'local',
+      required: true,
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      trim: true,
+    },
+    avatarUrl: {
+      type: String,
+      trim: true,
+    },
     profileCompleted: {
       type: Boolean,
       default: MODEL_DEFAULT_VALUES.FALSE,
@@ -80,22 +99,35 @@ const userSchema = new Schema<IUser, IUserModel>(
       type: Boolean,
       default: MODEL_DEFAULT_VALUES.FALSE,
     },
+    lastLoginAt: {
+      type: Date,
+      default: MODEL_DEFAULT_VALUES.NULL,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-userSchema.pre("save", async function onUserSave(): Promise<void> {
-  if (!this.isModified("passwordHash")) {
+userSchema.pre('save', async function onUserSave(): Promise<void> {
+  if (!this.isModified('passwordHash') || !this.passwordHash) {
     return;
   }
 
-  this.passwordHash = await bcrypt.hash(this.passwordHash, USER_MODEL_CONSTANTS.PASSWORD_SALT_ROUNDS);
+  this.passwordHash = await bcrypt.hash(
+    this.passwordHash,
+    USER_MODEL_CONSTANTS.PASSWORD_SALT_ROUNDS,
+  );
 });
 
-userSchema.methods.comparePassword = async function comparePassword(candidatePassword: string): Promise<boolean> {
+userSchema.methods.comparePassword = async function comparePassword(
+  candidatePassword: string,
+): Promise<boolean> {
+  if (!this.passwordHash) {
+    return false;
+  }
+
   return bcrypt.compare(candidatePassword, this.passwordHash);
 };
 
-export const UserModel = model<IUser, IUserModel>("User", userSchema);
+export const UserModel = model<IUser, IUserModel>('User', userSchema);

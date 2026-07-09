@@ -1,27 +1,24 @@
 export const AUTH_BLOCKING_ERROR_MATCHERS = {
-  NOT_VERIFIED: ["verify your email", "email not verified"],
-  NOT_APPROVED: ["not approved"],
+  NOT_VERIFIED: ['verify your email', 'email not verified'],
+  NOT_APPROVED: ['not approved'],
+  GOOGLE_REQUIRED: ['continue with google', 'uses google login'],
 };
 
 export const AUTH_API_ROUTES = {
-  LOGIN: "/api/auth/login",
-  REGISTER: "/api/auth/register",
-  VERIFY_EMAIL: "/api/auth/verify-email",
-  RESEND_OTP: "/api/auth/resend-otp",
-  LOGOUT: "/api/auth/logout",
-  CURRENT_USER: "/api/auth/me",
-  PENDING_APPROVALS: "/api/auth/pending-approvals",
-  INTERVIEWERS: "/api/auth/interviewers",
-  APPROVALS: "/api/auth/approvals",
-  COMPLETE_PROFILE: "/api/auth/profile/complete",
-  PROFILE: "/api/auth/profile",
+  LOGIN: '/api/auth/login',
+  GOOGLE: '/api/auth/google',
+  REGISTER: '/api/auth/register',
+  VERIFY_EMAIL: '/api/auth/verify-email',
+  RESEND_OTP: '/api/auth/resend-otp',
+  LOGOUT: '/api/auth/logout',
+  CURRENT_USER: '/api/auth/me',
 } as const;
 
 export const AUTH_ROUTE_PATHS = {
-  LOGIN: "/auth/login",
-  REGISTER: "/auth/register",
-  VERIFY_EMAIL: "/auth/verify-email",
-  DASHBOARD: "/dashboard",
+  LOGIN: '/auth/login',
+  REGISTER: '/auth/register',
+  VERIFY_EMAIL: '/auth/verify-email',
+  DASHBOARD: '/dashboard',
 } as const;
 
 export const AUTH_FORM_LIMITS = {
@@ -39,25 +36,25 @@ export const AUTH_REGEX = {
 } as const;
 
 export const AUTH_INITIAL_VALUES = {
-  EMPTY_STRING: "",
+  EMPTY_STRING: '',
   LOGIN_FORM: {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   },
   REGISTER_FORM: {
-    role: "candidate",
-    fullName: "",
-    email: "",
-    password: "",
+    role: 'candidate',
+    fullName: '',
+    email: '',
+    password: '',
   },
   LOGIN_MODAL_STATE: {
     open: false,
-    title: "",
-    message: "",
+    title: '',
+    message: '',
   },
   VERIFY_EMAIL: {
-    otp: "",
-    error: "",
-    email: "",
+    otp: '',
+    error: '',
+    email: '',
   },
 } as const;

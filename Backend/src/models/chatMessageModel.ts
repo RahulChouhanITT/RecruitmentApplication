@@ -1,5 +1,5 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { CHAT_MESSAGE_STATUSES, type ChatMessageStatus } from "../utils/types/chatTypes";
+import { Document, Schema, Types, model } from 'mongoose';
+import { CHAT_MESSAGE_STATUSES, type ChatMessageStatus } from '../utils/types/chatTypes';
 
 export interface IChatMessage extends Document {
   conversationId: Types.ObjectId;
@@ -15,13 +15,13 @@ const chatMessageSchema = new Schema<IChatMessage>(
   {
     conversationId: {
       type: Schema.Types.ObjectId,
-      ref: "ChatConversation",
+      ref: 'ChatConversation',
       required: true,
       index: true,
     },
     senderId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
       index: true,
     },
@@ -39,13 +39,13 @@ const chatMessageSchema = new Schema<IChatMessage>(
     seenBy: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 chatMessageSchema.index({ conversationId: 1, createdAt: 1 });
 
-export const ChatMessageModel = model<IChatMessage>("ChatMessage", chatMessageSchema);
+export const ChatMessageModel = model<IChatMessage>('ChatMessage', chatMessageSchema);

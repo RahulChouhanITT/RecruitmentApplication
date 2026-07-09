@@ -1,1 +1,1 @@
-export * from "./applicationError";
+export * from './applicationError';

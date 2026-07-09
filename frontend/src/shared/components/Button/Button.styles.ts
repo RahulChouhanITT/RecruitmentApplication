@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledButton = styled.button`
   width: 100%;
@@ -14,11 +14,15 @@ export const StyledButton = styled.button`
   margin-top: 0.5rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -2px rgba(79, 70, 229, 0.2);
+  box-shadow:
+    0 4px 6px -1px rgba(79, 70, 229, 0.2),
+    0 2px 4px -2px rgba(79, 70, 229, 0.2);
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3), 0 4px 6px -4px rgba(79, 70, 229, 0.3);
+    box-shadow:
+      0 10px 15px -3px rgba(79, 70, 229, 0.3),
+      0 4px 6px -4px rgba(79, 70, 229, 0.3);
     background: linear-gradient(135deg, #4338ca 0%, #2563eb 100%);
   }
 

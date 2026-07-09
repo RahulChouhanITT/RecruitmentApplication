@@ -1,5 +1,5 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { APPLICATION_STATUSES } from "../utils/types/applicationTypes";
+import { Document, Schema, Types, model } from 'mongoose';
+import { APPLICATION_STATUSES } from '../utils/types/applicationTypes';
 
 export interface IApplication extends Document {
   jobId: Types.ObjectId;
@@ -13,12 +13,12 @@ const applicationSchema = new Schema<IApplication>(
   {
     jobId: {
       type: Schema.Types.ObjectId,
-      ref: "Job",
+      ref: 'Job',
       required: true,
     },
     candidateId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     status: {
@@ -29,9 +29,13 @@ const applicationSchema = new Schema<IApplication>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 applicationSchema.index({ jobId: 1, candidateId: 1 }, { unique: true });
 
-export const ApplicationModel = model<IApplication>("Application", applicationSchema, "jobapplications");
+export const ApplicationModel = model<IApplication>(
+  'Application',
+  applicationSchema,
+  'jobapplications',
+);

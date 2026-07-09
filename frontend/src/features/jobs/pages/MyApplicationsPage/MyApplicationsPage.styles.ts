@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const PageWrap = styled.div`
   display: grid;
@@ -63,7 +63,7 @@ export const FilterSelectButton = styled.button`
   }
 
   &::after {
-    content: "";
+    content: '';
     position: absolute;
     right: 0.8rem;
     top: 50%;
@@ -92,20 +92,23 @@ export const FilterOptionList = styled.div`
 `;
 
 export const FilterOptionButton = styled.button<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#111111" : "transparent")};
-  background: ${({ $active }) => ($active ? "#111111" : "transparent")};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#111827")};
+  border: 1px solid ${({ $active }) => ($active ? '#111111' : 'transparent')};
+  background: ${({ $active }) => ($active ? '#111111' : 'transparent')};
+  color: ${({ $active }) => ($active ? '#ffffff' : '#111827')};
   border-radius: 0.6rem;
   padding: 0.48rem 0.7rem;
   text-align: left;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+  transition:
+    background-color 0.16s ease,
+    color 0.16s ease,
+    border-color 0.16s ease;
 
   &:hover {
-    background: ${({ $active }) => ($active ? "#000000" : "#f3f4f6")};
-    border-color: ${({ $active }) => ($active ? "#000000" : "transparent")};
+    background: ${({ $active }) => ($active ? '#000000' : '#f3f4f6')};
+    border-color: ${({ $active }) => ($active ? '#000000' : 'transparent')};
   }
 `;
 

@@ -1,35 +1,13 @@
-import mongoose from "mongoose";
-import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
-import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
+import mongoose from 'mongoose';
+import { env } from './env';
+import { APPLICATION_MESSAGES } from '../utils/messages/applicationMessages';
 
-class DatabaseConnectionManager {
-  private static instance: DatabaseConnectionManager;
-  private isConnected: boolean = CONFIGURATION_CONSTANTS.DEFAULTS.FALSE;
-
-  private constructor() {}
-
-  public static getInstance(): DatabaseConnectionManager {
-    if (!DatabaseConnectionManager.instance) {
-      DatabaseConnectionManager.instance = new DatabaseConnectionManager();
-    }
-
-    return DatabaseConnectionManager.instance;
+export const connectDB = async (): Promise<void> => {
+  try {
+    await mongoose.connect(env.MONGO_URI);
+    process.stdout.write(`${APPLICATION_MESSAGES.DATABASE.CONNECTION_SUCCESS}\n`);
+  } catch (error) {
+    console.error(APPLICATION_MESSAGES.DATABASE.CONNECTION_ERROR);
+    console.error((error as Error).message);
   }
-
-  public async establishDatabaseConnection(): Promise<void> {
-    if (this.isConnected) {
-      return;
-    }
-
-    try {
-      await mongoose.connect(process.env.MONGO_DATABASE_URL as string);
-      this.isConnected = true;
-      console.log(APPLICATION_MESSAGES.DATABASE.CONNECTION_SUCCESS);
-    } catch (error) {
-      console.error(APPLICATION_MESSAGES.DATABASE.CONNECTION_ERROR);
-      console.error((error as Error).message);
-    }
-  }
-}
-
-export const databaseConnectionManager = DatabaseConnectionManager.getInstance();
+};

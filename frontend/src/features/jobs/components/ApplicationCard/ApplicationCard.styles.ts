@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const cardMotion = `
   @keyframes fadeUpApplicationCard {
@@ -24,7 +24,10 @@ export const Card = styled.article`
   gap: 0.5rem;
   position: relative;
   animation: fadeUpApplicationCard 220ms ease both;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
 
   &:hover {
     transform: translateY(-2px);

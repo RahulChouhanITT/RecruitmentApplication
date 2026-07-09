@@ -1,133 +1,190 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import type {
   ApplicationStatus,
+  ApplicationsQueryParams,
   CandidateInterview,
   CreateJobPayload,
   HrInterview,
   HrJobApplication,
   InterviewFeedback,
   InterviewTimeSlot,
+  InterviewsQueryParams,
   InterviewerInterview,
   Job,
   JobApplication,
+  JobsQueryParams,
   UpdateJobPayload,
-} from "../types/jobTypes";
-import type {
-  AuthApiResponse,
-} from "../../auth/types/authTypes";
-import { JOBS_API_ROUTES } from "../constants/jobConstants";
-import { JOBS_DEFAULT_MESSAGES } from "../labels/jobLabels";
-import { createAxiosBaseQuery } from "../../../utils/api/axiosBaseQuery";
-import type { ApiQueryError } from "../../../types/apiTypes";
+} from '../types/jobTypes';
+import { JOBS_API_ROUTES } from '../constants/jobConstants';
+import { JOBS_DEFAULT_MESSAGES } from '../labels/jobLabels';
+import { createAxiosBaseQuery } from '../../../utils/api/axiosBaseQuery';
+import type { ApiQueryError, ApiResponse } from '../../../types/apiTypes';
 
 const axiosBaseQuery = createAxiosBaseQuery(JOBS_DEFAULT_MESSAGES.API_REQUEST_FAILED);
 
+const buildPaginationParams = <T extends Record<string, unknown>>(params?: T | void) => {
+  if (!params) {
+    return undefined;
+  }
+
+  const entries = Object.entries(params).filter(
+    ([, value]) => value !== undefined && value !== null && value !== '',
+  );
+
+  return entries.length > 0 ? Object.fromEntries(entries) : undefined;
+};
+
 export const jobsApi = createApi({
-  reducerPath: "jobsApi",
+  reducerPath: 'jobsApi',
   baseQuery: fakeBaseQuery<ApiQueryError>(),
-  tagTypes: ["Jobs", "AppliedJobs", "JobApplications", "Interviews", "Feedback"],
+  tagTypes: ['Jobs', 'AppliedJobs', 'JobApplications', 'Interviews', 'Feedback'],
   keepUnusedDataFor: 300,
   refetchOnMountOrArgChange: false,
   endpoints: (builder) => ({
-    getHrJobs: builder.query<AuthApiResponse<Job[]>, void>({
-      queryFn: () => axiosBaseQuery<AuthApiResponse<Job[]>>({ url: JOBS_API_ROUTES.HR_JOBS, method: "GET" }),
+    getHrJobs: builder.query<ApiResponse<Job[]>, JobsQueryParams | void>({
+      queryFn: (query) =>
+        axiosBaseQuery<ApiResponse<Job[]>>({
+          url: JOBS_API_ROUTES.HR_JOBS,
+          method: 'GET',
+          params: buildPaginationParams({
+            search: query?.search,
+            isActive:
+              typeof query?.isActive === 'boolean' ? String(query.isActive) : undefined,
+            page: query?.page,
+            limit: query?.limit,
+          }),
+        }),
       providesTags: (result) => [
-        { type: "Jobs", id: "HR_LIST" },
-        ...(result?.data?.data ?? []).map((job) => ({ type: "Jobs" as const, id: job._id })),
+        { type: 'Jobs', id: 'HR_LIST' },
+        ...(result?.data ?? []).map((job) => ({ type: 'Jobs' as const, id: job._id })),
       ],
     }),
-    getCandidateJobs: builder.query<AuthApiResponse<Job[]>, void>({
-      queryFn: () => axiosBaseQuery<AuthApiResponse<Job[]>>({ url: JOBS_API_ROUTES.CANDIDATE_JOBS, method: "GET" }),
+    getCandidateJobs: builder.query<ApiResponse<Job[]>, JobsQueryParams | void>({
+      queryFn: (query) =>
+        axiosBaseQuery<ApiResponse<Job[]>>({
+          url: JOBS_API_ROUTES.CANDIDATE_JOBS,
+          method: 'GET',
+          params: buildPaginationParams({
+            search: query?.search,
+            isActive:
+              typeof query?.isActive === 'boolean' ? String(query.isActive) : undefined,
+            page: query?.page,
+            limit: query?.limit,
+          }),
+        }),
       providesTags: (result) => [
-        { type: "Jobs", id: "CANDIDATE_LIST" },
-        ...(result?.data?.data ?? []).map((job) => ({ type: "Jobs" as const, id: job._id })),
+        { type: 'Jobs', id: 'CANDIDATE_LIST' },
+        ...(result?.data ?? []).map((job) => ({ type: 'Jobs' as const, id: job._id })),
       ],
     }),
-    createJob: builder.mutation<AuthApiResponse<Job>, CreateJobPayload>({
-      queryFn: (payload) => axiosBaseQuery<AuthApiResponse<Job>>({ url: JOBS_API_ROUTES.JOBS, method: "POST", data: payload }),
-      invalidatesTags: [{ type: "Jobs", id: "HR_LIST" }, { type: "Jobs", id: "CANDIDATE_LIST" }],
-    }),
-    updateJob: builder.mutation<AuthApiResponse<Job>, { jobId: string; payload: UpdateJobPayload }>({
-      queryFn: ({ jobId, payload }) =>
-        axiosBaseQuery<AuthApiResponse<Job>>({
-          url: `/api/jobs/${jobId}`,
-          method: "PUT",
+    createJob: builder.mutation<ApiResponse<Job>, CreateJobPayload>({
+      queryFn: (payload) =>
+        axiosBaseQuery<ApiResponse<Job>>({
+          url: JOBS_API_ROUTES.JOBS,
+          method: 'POST',
           data: payload,
         }),
-      invalidatesTags: (_result, _error, { jobId }) => [
-        { type: "Jobs", id: jobId },
-        { type: "Jobs", id: "HR_LIST" },
-        { type: "Jobs", id: "CANDIDATE_LIST" },
+      invalidatesTags: [
+        { type: 'Jobs', id: 'HR_LIST' },
+        { type: 'Jobs', id: 'CANDIDATE_LIST' },
       ],
     }),
-    closeJob: builder.mutation<AuthApiResponse<Job>, { jobId: string }>({
+    updateJob: builder.mutation<ApiResponse<Job>, { jobId: string; payload: UpdateJobPayload }>(
+      {
+        queryFn: ({ jobId, payload }) =>
+          axiosBaseQuery<ApiResponse<Job>>({
+            url: `/api/jobs/${jobId}`,
+            method: 'PUT',
+            data: payload,
+          }),
+        invalidatesTags: (_result, _error, { jobId }) => [
+          { type: 'Jobs', id: jobId },
+          { type: 'Jobs', id: 'HR_LIST' },
+          { type: 'Jobs', id: 'CANDIDATE_LIST' },
+        ],
+      },
+    ),
+    closeJob: builder.mutation<ApiResponse<Job>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<AuthApiResponse<Job>>({
+        axiosBaseQuery<ApiResponse<Job>>({
           url: `/api/jobs/${jobId}/close`,
-          method: "PATCH",
+          method: 'PATCH',
         }),
       invalidatesTags: (_result, _error, { jobId }) => [
-        { type: "Jobs", id: jobId },
-        { type: "Jobs", id: "HR_LIST" },
-        { type: "Jobs", id: "CANDIDATE_LIST" },
+        { type: 'Jobs', id: jobId },
+        { type: 'Jobs', id: 'HR_LIST' },
+        { type: 'Jobs', id: 'CANDIDATE_LIST' },
       ],
     }),
-    activateJob: builder.mutation<AuthApiResponse<Job>, { jobId: string }>({
+    activateJob: builder.mutation<ApiResponse<Job>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<AuthApiResponse<Job>>({
+        axiosBaseQuery<ApiResponse<Job>>({
           url: `/api/jobs/${jobId}/activate`,
-          method: "PATCH",
+          method: 'PATCH',
         }),
       invalidatesTags: (_result, _error, { jobId }) => [
-        { type: "Jobs", id: jobId },
-        { type: "Jobs", id: "HR_LIST" },
-        { type: "Jobs", id: "CANDIDATE_LIST" },
+        { type: 'Jobs', id: jobId },
+        { type: 'Jobs', id: 'HR_LIST' },
+        { type: 'Jobs', id: 'CANDIDATE_LIST' },
       ],
     }),
-    applyForJob: builder.mutation<AuthApiResponse<JobApplication>, { jobId: string }>({
+    applyForJob: builder.mutation<ApiResponse<JobApplication>, { jobId: string }>({
       queryFn: ({ jobId }) =>
-        axiosBaseQuery<AuthApiResponse<JobApplication>>({
+        axiosBaseQuery<ApiResponse<JobApplication>>({
           url: `/api/jobs/${jobId}/apply`,
-          method: "POST",
+          method: 'POST',
         }),
       invalidatesTags: (_result, _error, { jobId }) => [
-        { type: "AppliedJobs", id: "LIST" },
-        { type: "Jobs", id: jobId },
+        { type: 'AppliedJobs', id: 'LIST' },
+        { type: 'Jobs', id: jobId },
       ],
     }),
-    getAppliedJobs: builder.query<AuthApiResponse<JobApplication[]>, void>({
-      queryFn: () =>
-        axiosBaseQuery<AuthApiResponse<JobApplication[]>>({
-          url: "/api/jobs/applied/me",
-          method: "GET",
+    getAppliedJobs: builder.query<ApiResponse<JobApplication[]>, ApplicationsQueryParams | void>({
+      queryFn: (query) =>
+        axiosBaseQuery<ApiResponse<JobApplication[]>>({
+          url: '/api/jobs/applied/me',
+          method: 'GET',
+          params: buildPaginationParams(query),
         }),
       providesTags: (result) => [
-        { type: "AppliedJobs", id: "LIST" },
-        ...(result?.data?.data ?? []).map((application) => ({ type: "AppliedJobs" as const, id: application._id })),
+        { type: 'AppliedJobs', id: 'LIST' },
+        ...(result?.data ?? []).map((application) => ({
+          type: 'AppliedJobs' as const,
+          id: application._id,
+        })),
       ],
     }),
-    getJobApplications: builder.query<AuthApiResponse<HrJobApplication[]>, { jobId: string }>({
-      queryFn: ({ jobId }) =>
-        axiosBaseQuery<AuthApiResponse<HrJobApplication[]>>({
+    getJobApplications: builder.query<
+      ApiResponse<HrJobApplication[]>,
+      { jobId: string } & ApplicationsQueryParams
+    >({
+      queryFn: ({ jobId, ...query }) =>
+        axiosBaseQuery<ApiResponse<HrJobApplication[]>>({
           url: `/api/jobs/${jobId}/applications`,
-          method: "GET",
+          method: 'GET',
+          params: buildPaginationParams(query),
         }),
-      providesTags: (_result, _error, { jobId }) => [{ type: "JobApplications", id: jobId }],
+      providesTags: (_result, _error, { jobId }) => [{ type: 'JobApplications', id: jobId }],
     }),
     updateApplicationStatus: builder.mutation<
-      AuthApiResponse<JobApplication>,
+      ApiResponse<JobApplication>,
       { applicationId: string; status: ApplicationStatus }
     >({
       queryFn: ({ applicationId, status }) =>
-        axiosBaseQuery<AuthApiResponse<JobApplication>>({
+        axiosBaseQuery<ApiResponse<JobApplication>>({
           url: `/api/applications/${applicationId}/status`,
-          method: "PATCH",
-          data: { status },
+          method: 'PATCH',
+          data: { newApplicationStatus: status },
         }),
-      invalidatesTags: [{ type: "JobApplications" }, { type: "Interviews", id: "HR_LIST" }],
+      invalidatesTags: [
+        { type: 'JobApplications' },
+        { type: 'Interviews', id: 'HR_LIST' },
+        { type: 'Interviews', id: 'CANDIDATE_LIST' },
+        { type: 'Interviews', id: 'INTERVIEWER_LIST' },
+      ],
     }),
     scheduleInterview: builder.mutation<
-      AuthApiResponse<HrInterview>,
+      ApiResponse<HrInterview>,
       {
         applicationId: string;
         payload: {
@@ -139,74 +196,100 @@ export const jobsApi = createApi({
       }
     >({
       queryFn: ({ applicationId, payload }) =>
-        axiosBaseQuery<AuthApiResponse<HrInterview>>({
+        axiosBaseQuery<ApiResponse<HrInterview>>({
           url: JOBS_API_ROUTES.INTERVIEW_SCHEDULE,
-          method: "POST",
+          method: 'POST',
           data: { applicationId, ...payload },
         }),
-      invalidatesTags: [{ type: "JobApplications" }, { type: "Interviews", id: "HR_LIST" }],
+      invalidatesTags: [
+        { type: 'JobApplications' },
+        { type: 'Interviews', id: 'HR_LIST' },
+        { type: 'Interviews', id: 'CANDIDATE_LIST' },
+        { type: 'Interviews', id: 'INTERVIEWER_LIST' },
+      ],
     }),
-    cancelInterview: builder.mutation<AuthApiResponse<HrInterview>, { interviewId: string }>({
+    cancelInterview: builder.mutation<ApiResponse<HrInterview>, { interviewId: string }>({
       queryFn: ({ interviewId }) =>
-        axiosBaseQuery<AuthApiResponse<HrInterview>>({
+        axiosBaseQuery<ApiResponse<HrInterview>>({
           url: `${JOBS_API_ROUTES.INTERVIEW_CANCEL}/${interviewId}/cancel`,
-          method: "PATCH",
+          method: 'PATCH',
         }),
-      invalidatesTags: [{ type: "JobApplications" }, { type: "Interviews", id: "HR_LIST" }],
+      invalidatesTags: [{ type: 'JobApplications' }, { type: 'Interviews', id: 'HR_LIST' }],
     }),
     getInterviewerAvailability: builder.query<
-      AuthApiResponse<InterviewTimeSlot[]>,
+      ApiResponse<InterviewTimeSlot[]>,
       { interviewerId: string; date: string }
     >({
       queryFn: ({ interviewerId, date }) =>
-        axiosBaseQuery<AuthApiResponse<InterviewTimeSlot[]>>({
+        axiosBaseQuery<ApiResponse<InterviewTimeSlot[]>>({
           url: `/api/interviews/availability?interviewerId=${encodeURIComponent(interviewerId)}&date=${encodeURIComponent(date)}`,
-          method: "GET",
+          method: 'GET',
         }),
     }),
-    getHrInterviews: builder.query<AuthApiResponse<HrInterview[]>, void>({
-      queryFn: () =>
-        axiosBaseQuery<AuthApiResponse<HrInterview[]>>({
+    getHrInterviews: builder.query<ApiResponse<HrInterview[]>, InterviewsQueryParams | void>({
+      queryFn: (query) =>
+        axiosBaseQuery<ApiResponse<HrInterview[]>>({
           url: JOBS_API_ROUTES.HR_INTERVIEWS,
-          method: "GET",
+          method: 'GET',
+          params: buildPaginationParams(query),
         }),
-      providesTags: [{ type: "Interviews", id: "HR_LIST" }],
+      providesTags: [{ type: 'Interviews', id: 'HR_LIST' }],
     }),
-    getCandidateInterviews: builder.query<AuthApiResponse<CandidateInterview[]>, void>({
-      queryFn: () =>
-        axiosBaseQuery<AuthApiResponse<CandidateInterview[]>>({
+    getCandidateInterviews: builder.query<
+      ApiResponse<CandidateInterview[]>,
+      InterviewsQueryParams | void
+    >({
+      queryFn: (query) =>
+        axiosBaseQuery<ApiResponse<CandidateInterview[]>>({
           url: JOBS_API_ROUTES.CANDIDATE_INTERVIEWS,
-          method: "GET",
+          method: 'GET',
+          params: buildPaginationParams(query),
         }),
-      providesTags: [{ type: "Interviews", id: "CANDIDATE_LIST" }],
+      providesTags: [{ type: 'Interviews', id: 'CANDIDATE_LIST' }],
     }),
-    getInterviewerInterviews: builder.query<AuthApiResponse<InterviewerInterview[]>, void>({
-      queryFn: () =>
-        axiosBaseQuery<AuthApiResponse<InterviewerInterview[]>>({
+    getInterviewerInterviews: builder.query<
+      ApiResponse<InterviewerInterview[]>,
+      InterviewsQueryParams | void
+    >({
+      queryFn: (query) =>
+        axiosBaseQuery<ApiResponse<InterviewerInterview[]>>({
           url: JOBS_API_ROUTES.INTERVIEWER_INTERVIEWS,
-          method: "GET",
+          method: 'GET',
+          params: buildPaginationParams(query),
         }),
-      providesTags: [{ type: "Interviews", id: "INTERVIEWER_LIST" }],
+      providesTags: [{ type: 'Interviews', id: 'INTERVIEWER_LIST' }],
     }),
     submitInterviewFeedback: builder.mutation<
-      AuthApiResponse<InterviewFeedback>,
-      { interviewId: string; rating: number; comments?: string; recommendation: "HIRED" | "REJECTED" }
+      ApiResponse<InterviewFeedback>,
+      {
+        interviewId: string;
+        rating: number;
+        comments?: string;
+        recommendation: 'HIRED' | 'REJECTED';
+      }
     >({
       queryFn: (payload) =>
-        axiosBaseQuery<AuthApiResponse<InterviewFeedback>>({
-          url: "/api/feedback",
-          method: "POST",
+        axiosBaseQuery<ApiResponse<InterviewFeedback>>({
+          url: '/api/feedback',
+          method: 'POST',
           data: payload,
         }),
-      invalidatesTags: [{ type: "Interviews", id: "INTERVIEWER_LIST" }, { type: "Interviews", id: "HR_LIST" }, { type: "Feedback" }],
+      invalidatesTags: [
+        { type: 'Interviews', id: 'INTERVIEWER_LIST' },
+        { type: 'Interviews', id: 'HR_LIST' },
+        { type: 'Feedback' },
+      ],
     }),
-    getHrInterviewFeedback: builder.query<AuthApiResponse<InterviewFeedback>, { interviewId: string }>({
+    getHrInterviewFeedback: builder.query<
+      ApiResponse<InterviewFeedback>,
+      { interviewId: string }
+    >({
       queryFn: ({ interviewId }) =>
-        axiosBaseQuery<AuthApiResponse<InterviewFeedback>>({
+        axiosBaseQuery<ApiResponse<InterviewFeedback>>({
           url: `/api/feedback/interview/${interviewId}`,
-          method: "GET",
+          method: 'GET',
         }),
-      providesTags: (_result, _error, { interviewId }) => [{ type: "Feedback", id: interviewId }],
+      providesTags: (_result, _error, { interviewId }) => [{ type: 'Feedback', id: interviewId }],
     }),
   }),
 });

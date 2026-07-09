@@ -1,8 +1,8 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
+import { Document, Schema, Types, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES } from '../utils/constants/modelConstants';
 
-export const INTERVIEW_STATUSES = ["SCHEDULED", "COMPLETED", "CANCELLED"] as const;
-export const FEEDBACK_STATUSES = ["PENDING", "NEEDS_REVIEW", "REVIEWED"] as const;
+export const INTERVIEW_STATUSES = ['SCHEDULED', 'COMPLETED', 'CANCELLED'] as const;
+export const FEEDBACK_STATUSES = ['PENDING', 'NEEDS_REVIEW', 'REVIEWED'] as const;
 export type InterviewStatus = (typeof INTERVIEW_STATUSES)[number];
 export type FeedbackStatus = (typeof FEEDBACK_STATUSES)[number];
 
@@ -27,23 +27,23 @@ const interviewSchema = new Schema<IInterview>(
   {
     applicationId: {
       type: Schema.Types.ObjectId,
-      ref: "Application",
+      ref: 'Application',
       required: true,
       unique: true,
     },
     jobId: {
       type: Schema.Types.ObjectId,
-      ref: "Job",
+      ref: 'Job',
       required: true,
     },
     candidateId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     interviewerId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       default: MODEL_DEFAULT_VALUES.NULL,
     },
     interviewerName: {
@@ -85,14 +85,14 @@ const interviewSchema = new Schema<IInterview>(
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 interviewSchema.index({ createdBy: 1, interviewDate: 1, interviewTime: 1 });
 interviewSchema.index({ candidateId: 1, interviewDate: 1 });
 
-export const InterviewModel = model<IInterview>("Interview", interviewSchema);
+export const InterviewModel = model<IInterview>('Interview', interviewSchema);

@@ -1,4 +1,4 @@
-export const JOB_EXPERIENCE_LEVELS = ["0", "1-3", "3-7", "7+"] as const;
+export const JOB_EXPERIENCE_LEVELS = ['0', '1-3', '3-7', '7+'] as const;
 export type JobExperienceLevel = (typeof JOB_EXPERIENCE_LEVELS)[number];
 
 export interface CreateJobRequestBody {

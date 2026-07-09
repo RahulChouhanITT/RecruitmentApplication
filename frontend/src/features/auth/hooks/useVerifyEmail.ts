@@ -1,21 +1,31 @@
-import { useEffect, useRef, useState } from "react";
-import type { FormEvent } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector } from "../../../app/hooks";
-import { showToast, TOAST_TYPES } from "../../../utils/toast";
-import { AUTH_FORM_LIMITS, AUTH_INITIAL_VALUES, AUTH_ROUTE_PATHS } from "../constants/authConstants";
-import { AUTH_DEFAULT_MESSAGES, AUTH_VALIDATION_MESSAGES } from "../labels/authLabels";
-import { authService } from "../services/authService";
-import type { VerifyLocationState } from "../types/authTypes";
-import { getAuthErrorMessage } from "../utils/authErrorHandler";
+import { useEffect, useRef, useState } from 'react';
+import type { FormEvent } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../app/hooks';
+import { showToast, TOAST_TYPES } from '../../../utils/toast';
+import { AUTH_INITIAL_VALUES, AUTH_ROUTE_PATHS } from '../constants/authConstants';
+import { AUTH_DEFAULT_MESSAGES } from '../labels/authLabels';
+import { sanitizeVerifyEmailField } from '../utils/authFormSanitizers';
+import { validateVerifyEmailForm } from '../validations';
+import type {
+  AuthFormChangeHandler,
+  AuthFormErrors,
+  VerifyEmailPayload,
+  VerifyLocationState,
+} from '../types/authTypes';
+import { getAuthErrorMessage } from '../handlers';
+import { resendEmailOtp, verifyEmailOtp } from '../usecases';
 
 export const useVerifyEmail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentUser = useAppSelector((state) => state.auth.currentUser);
   const locationState = (location.state as VerifyLocationState) || {};
-  const [otp, setOtp] = useState<string>(AUTH_INITIAL_VALUES.VERIFY_EMAIL.otp);
-  const [otpError, setOtpError] = useState<string>(AUTH_INITIAL_VALUES.VERIFY_EMAIL.error);
+  const [formValues, setFormValues] = useState<VerifyEmailPayload>({
+    email: AUTH_INITIAL_VALUES.VERIFY_EMAIL.email,
+    otp: AUTH_INITIAL_VALUES.VERIFY_EMAIL.otp,
+  });
+  const [errors, setErrors] = useState<AuthFormErrors<VerifyEmailPayload>>({});
   const [isVerifyLoading, setIsVerifyLoading] = useState(false);
   const [isResendLoading, setIsResendLoading] = useState(false);
   const hasAutoSentOtpRef = useRef(false);
@@ -47,7 +57,7 @@ export const useVerifyEmail = () => {
       setIsResendLoading(true);
 
       try {
-        const response = await authService.resendOtp({ email });
+        const response = await resendEmailOtp({ email });
 
         showToast({
           type: TOAST_TYPES.SUCCESS,
@@ -66,17 +76,18 @@ export const useVerifyEmail = () => {
     void autoSendOtp();
   }, [locationState.autoSendOtp, email, navigate, location.pathname]);
 
-  const onChangeOtp = (value: string): void => {
-    const digitsOnly = value.replace(/\D/g, "").slice(0, AUTH_FORM_LIMITS.OTP_LENGTH);
+  const handleChange: AuthFormChangeHandler<VerifyEmailPayload> = (field, value): void => {
+    const sanitizedField = sanitizeVerifyEmailField(field, value);
 
-    setOtp(digitsOnly);
+    setFormValues((previousValue) => ({
+      ...previousValue,
+      [field]: sanitizedField.value,
+    }));
 
-    if (value !== digitsOnly) {
-      setOtpError(AUTH_VALIDATION_MESSAGES.OTP_ONLY_DIGITS);
-      return;
-    }
-
-    setOtpError(AUTH_INITIAL_VALUES.VERIFY_EMAIL.error);
+    setErrors((previousErrors) => ({
+      ...previousErrors,
+      ...sanitizedField.errors,
+    }));
   };
 
   const onVerifyEmail = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -87,25 +98,32 @@ export const useVerifyEmail = () => {
       return;
     }
 
-    if (otp.length !== AUTH_FORM_LIMITS.OTP_LENGTH) {
-      setOtpError(AUTH_VALIDATION_MESSAGES.OTP_INVALID_LENGTH);
+    const nextErrors = validateVerifyEmailForm({
+      email,
+      otp: formValues.otp,
+    });
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       return;
     }
 
     setIsVerifyLoading(true);
 
     try {
-      const response = await authService.verifyEmail({
+      const response = await verifyEmailOtp({
         email,
-        otp,
+        otp: formValues.otp,
       });
 
       showToast({
         type: TOAST_TYPES.SUCCESS,
         message: response.message || AUTH_DEFAULT_MESSAGES.EMAIL_VERIFIED_SUCCESS,
       });
-      setOtp(AUTH_INITIAL_VALUES.VERIFY_EMAIL.otp);
-      setOtpError(AUTH_INITIAL_VALUES.VERIFY_EMAIL.error);
+      setFormValues({
+        email: AUTH_INITIAL_VALUES.VERIFY_EMAIL.email,
+        otp: AUTH_INITIAL_VALUES.VERIFY_EMAIL.otp,
+      });
+      setErrors({});
       navigate(AUTH_ROUTE_PATHS.LOGIN, { replace: true });
     } catch (error) {
       showToast({
@@ -126,14 +144,17 @@ export const useVerifyEmail = () => {
     setIsResendLoading(true);
 
     try {
-      const response = await authService.resendOtp({ email });
+      const response = await resendEmailOtp({ email });
 
       showToast({
         type: TOAST_TYPES.SUCCESS,
         message: response.message || AUTH_DEFAULT_MESSAGES.OTP_RESENT_SUCCESS,
       });
-      setOtp(AUTH_INITIAL_VALUES.VERIFY_EMAIL.otp);
-      setOtpError(AUTH_INITIAL_VALUES.VERIFY_EMAIL.error);
+      setFormValues((previousValue) => ({
+        ...previousValue,
+        otp: AUTH_INITIAL_VALUES.VERIFY_EMAIL.otp,
+      }));
+      setErrors({});
     } catch (error) {
       showToast({
         type: TOAST_TYPES.ERROR,
@@ -146,11 +167,11 @@ export const useVerifyEmail = () => {
 
   return {
     email,
-    otp,
-    otpError,
+    otp: formValues.otp,
+    otpError: errors.otp ?? AUTH_INITIAL_VALUES.VERIFY_EMAIL.error,
     isVerifyLoading,
     isResendLoading,
-    onChangeOtp,
+    handleChange,
     onVerifyEmail,
     onResendOtp,
   };

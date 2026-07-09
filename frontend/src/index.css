@@ -27,7 +27,7 @@ body {
   min-height: 100vh;
   background: var(--bg-app);
   color: var(--text-strong);
-  font-family: "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-family: 'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }

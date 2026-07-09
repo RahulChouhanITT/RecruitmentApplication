@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const ScheduleWrap = styled.div`
   display: grid;
@@ -50,40 +50,15 @@ export const FilterRow = styled.div`
 `;
 
 export const FilterButton = styled.button<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#111111" : "#d1d5db")};
-  background: ${({ $active }) => ($active ? "#111111" : "#ffffff")};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#374151")};
+  border: 1px solid ${({ $active }) => ($active ? '#111111' : '#d1d5db')};
+  background: ${({ $active }) => ($active ? '#111111' : '#ffffff')};
+  color: ${({ $active }) => ($active ? '#ffffff' : '#374151')};
   border-radius: 999px;
   padding: 0.35rem 0.72rem;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
 `;
-
-export const FilterSelect = styled.select`
-  border: 1px solid #d1d5db;
-  background: #ffffff;
-  color: #374151;
-  border-radius: 999px;
-  padding: 0.38rem 2rem 0.38rem 0.8rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  min-height: 2rem;
-  outline: none;
-
-  &:focus {
-    border-color: #111111;
-  }
-
-  option {
-    background: #ffffff;
-    color: #111827;
-    font-weight: 700;
-  }
-`;
-
-
 
 export const InterviewsTableWrap = styled.div`
   border: 1px solid #dbe3ee;
@@ -123,32 +98,36 @@ export const InterviewsTable = styled.table`
 export const FeedbackStatusButton = styled.button<{ $clickable?: boolean }>`
   border: none;
   background: transparent;
-  color: ${({ $clickable }) => ($clickable ? "#1d4ed8" : "#5e718d")};
+  color: ${({ $clickable }) => ($clickable ? '#1d4ed8' : '#5e718d')};
   border-radius: 0;
   padding: 0;
   font-size: 0.74rem;
   font-weight: 600;
   line-height: 1;
   white-space: nowrap;
-  cursor: ${({ $clickable }) => ($clickable ? "pointer" : "default")};
-  text-decoration: ${({ $clickable }) => ($clickable ? "none" : "none")};
-  transition: color 120ms ease, text-decoration-color 120ms ease;
+  cursor: ${({ $clickable }) => ($clickable ? 'pointer' : 'default')};
+  text-decoration: ${({ $clickable }) => ($clickable ? 'none' : 'none')};
+  transition:
+    color 120ms ease,
+    text-decoration-color 120ms ease;
 
   &:hover {
-    color: ${({ $clickable }) => ($clickable ? "#1e40af" : "#5e718d")};
-    text-decoration: ${({ $clickable }) => ($clickable ? "underline" : "none")};
+    color: ${({ $clickable }) => ($clickable ? '#1e40af' : '#5e718d')};
+    text-decoration: ${({ $clickable }) => ($clickable ? 'underline' : 'none')};
   }
 `;
 
-export const StatusBadge = styled.span<{ $tone: "scheduled" | "completed" | "cancelled" }>`
+export const StatusBadge = styled.span<{ $tone: 'scheduled' | 'completed' | 'cancelled' }>`
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
   border: 1px solid
     ${({ $tone }) =>
-      $tone === "completed" ? "#99dbbb" : $tone === "cancelled" ? "#f0b5b5" : "#b7cdf6"};
-  background: ${({ $tone }) => ($tone === "completed" ? "#eaf9f0" : $tone === "cancelled" ? "#fff1f2" : "#eaf1ff")};
-  color: ${({ $tone }) => ($tone === "completed" ? "#137a48" : $tone === "cancelled" ? "#b42318" : "#1d4fa8")};
+      $tone === 'completed' ? '#99dbbb' : $tone === 'cancelled' ? '#f0b5b5' : '#b7cdf6'};
+  background: ${({ $tone }) =>
+    $tone === 'completed' ? '#eaf9f0' : $tone === 'cancelled' ? '#fff1f2' : '#eaf1ff'};
+  color: ${({ $tone }) =>
+    $tone === 'completed' ? '#137a48' : $tone === 'cancelled' ? '#b42318' : '#1d4fa8'};
   font-size: 0.68rem;
   font-weight: 700;
   line-height: 1;
@@ -222,16 +201,21 @@ export const DecisionActions = styled.div`
   gap: 0.5rem;
 `;
 
-export const DecisionButton = styled.button<{ $tone: "green" | "red" }>`
-  border: 1px solid ${({ $tone }) => ($tone === "green" ? "#89d0ae" : "#f2aab1")};
-  background: ${({ $tone }) => ($tone === "green" ? "#f1fbf6" : "#fff3f5")};
-  color: ${({ $tone }) => ($tone === "green" ? "#13764a" : "#b42318")};
+export const DecisionButton = styled.button<{ $tone: 'green' | 'red' }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid ${({ $tone }) => ($tone === 'green' ? '#89d0ae' : '#f2aab1')};
+  background: ${({ $tone }) => ($tone === 'green' ? '#f1fbf6' : '#fff3f5')};
+  color: ${({ $tone }) => ($tone === 'green' ? '#13764a' : '#b42318')};
   border-radius: 999px;
   padding: 0.38rem 0.78rem;
   font-size: 0.76rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 120ms ease, filter 120ms ease;
+  transition:
+    transform 120ms ease,
+    filter 120ms ease;
 
   &:hover:not(:disabled) {
     transform: translateY(-1px);
@@ -310,12 +294,12 @@ export const FloatingMenuDropdown = styled.div`
   box-shadow: 0 20px 40px rgba(16, 28, 48, 0.16);
 `;
 
-export const MenuOption = styled.button<{ $tone?: "default" | "red" }>`
+export const MenuOption = styled.button<{ $tone?: 'default' | 'red' }>`
   width: 100%;
   border: none;
   border-radius: 0.65rem;
   background: transparent;
-  color: ${({ $tone }) => ($tone === "red" ? "#b42318" : "#21334e")};
+  color: ${({ $tone }) => ($tone === 'red' ? '#b42318' : '#21334e')};
   padding: 0.6rem 0.72rem;
   text-align: left;
   font-size: 0.8rem;
@@ -323,7 +307,7 @@ export const MenuOption = styled.button<{ $tone?: "default" | "red" }>`
   cursor: pointer;
 
   &:hover {
-    background: ${({ $tone }) => ($tone === "red" ? "#fff1f2" : "#f8faff")};
+    background: ${({ $tone }) => ($tone === 'red' ? '#fff1f2' : '#f8faff')};
   }
 
   &:disabled {
@@ -429,9 +413,9 @@ export const DurationGroup = styled.div`
 `;
 
 export const DurationButton = styled.button<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#1d4fa8" : "#e5e7eb")};
-  background: ${({ $active }) => ($active ? "#2f6fd6" : "#fff")};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#2d3f5f")};
+  border: 1px solid ${({ $active }) => ($active ? '#1d4fa8' : '#e5e7eb')};
+  background: ${({ $active }) => ($active ? '#2f6fd6' : '#fff')};
+  color: ${({ $active }) => ($active ? '#ffffff' : '#2d3f5f')};
   border-radius: 0.52rem;
   min-height: 2.5rem;
   padding: 0.5rem 0.55rem;
@@ -442,23 +426,6 @@ export const DurationButton = styled.button<{ $active?: boolean }>`
   &:hover {
     border-color: #b8c6dc;
     transform: translateY(-1px);
-  }
-`;
-
-export const ScheduleSelect = styled.select`
-  width: 100%;
-  min-height: 2.55rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  background: #fff;
-  padding: 0.62rem 0.78rem;
-  font-size: 0.9rem;
-  color: #1f2937;
-
-  &:focus {
-    outline: none;
-    border-color: #2f6fd6;
-    box-shadow: 0 0 0 3px rgba(47, 111, 214, 0.14);
   }
 `;
 
@@ -498,6 +465,9 @@ export const ScheduleActions = styled.div`
 `;
 
 export const PrimaryButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   border: 1px solid #1d4fa8;
   background: #1d4fa8;
   color: #ffffff;

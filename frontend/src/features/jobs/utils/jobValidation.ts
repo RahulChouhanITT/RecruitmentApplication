@@ -1,10 +1,10 @@
-import { JOBS_FIELD_LIMITS } from "../constants/jobConstants";
-import { JOBS_DEFAULT_MESSAGES, JOBS_VALIDATION_MESSAGES } from "../labels/jobLabels";
-import type { CreateJobPayload, ScheduleInterviewFormValues } from "../types/jobTypes";
-import { isValidExperienceLevel } from "./jobPanelHelpers";
+import { JOBS_FIELD_LIMITS } from '../constants/jobConstants';
+import { JOBS_DEFAULT_MESSAGES, JOBS_VALIDATION_MESSAGES } from '../labels/jobLabels';
+import type { CreateJobPayload, ScheduleInterviewFormValues } from '../types/jobTypes';
+import { isValidExperienceLevel } from './jobPanelHelpers';
 
 export const validateJobFormValues = (
-  formValues: CreateJobPayload
+  formValues: CreateJobPayload,
 ): Partial<Record<keyof CreateJobPayload, string>> => {
   const nextErrors: Partial<Record<keyof CreateJobPayload, string>> = {};
 
@@ -25,24 +25,33 @@ export const validateJobFormValues = (
   if (!formValues.requiredSkills.trim()) {
     nextErrors.requiredSkills = JOBS_VALIDATION_MESSAGES.REQUIRED_SKILLS_REQUIRED;
   } else if (formValues.requiredSkills.length > JOBS_FIELD_LIMITS.requiredSkills) {
-    nextErrors.requiredSkills = JOBS_VALIDATION_MESSAGES.REQUIRED_SKILLS_MAX_LENGTH(JOBS_FIELD_LIMITS.requiredSkills);
+    nextErrors.requiredSkills = JOBS_VALIDATION_MESSAGES.REQUIRED_SKILLS_MAX_LENGTH(
+      JOBS_FIELD_LIMITS.requiredSkills,
+    );
   }
 
   if (!formValues.description.trim()) {
     nextErrors.description = JOBS_VALIDATION_MESSAGES.DESCRIPTION_REQUIRED;
   } else if (formValues.description.trim().length < 20) {
     nextErrors.description = JOBS_VALIDATION_MESSAGES.DESCRIPTION_MIN_LENGTH;
-  } else if (formValues.description.trim().split(/\s+/).filter(Boolean).length > JOBS_FIELD_LIMITS.descriptionWords) {
-    nextErrors.description = JOBS_VALIDATION_MESSAGES.DESCRIPTION_WORD_LIMIT(JOBS_FIELD_LIMITS.descriptionWords);
+  } else if (
+    formValues.description.trim().split(/\s+/).filter(Boolean).length >
+    JOBS_FIELD_LIMITS.descriptionWords
+  ) {
+    nextErrors.description = JOBS_VALIDATION_MESSAGES.DESCRIPTION_WORD_LIMIT(
+      JOBS_FIELD_LIMITS.descriptionWords,
+    );
   } else if (formValues.description.length > JOBS_FIELD_LIMITS.description) {
-    nextErrors.description = JOBS_VALIDATION_MESSAGES.DESCRIPTION_MAX_LENGTH(JOBS_FIELD_LIMITS.description);
+    nextErrors.description = JOBS_VALIDATION_MESSAGES.DESCRIPTION_MAX_LENGTH(
+      JOBS_FIELD_LIMITS.description,
+    );
   }
 
   return nextErrors;
 };
 
 export const validateScheduleFormValues = (
-  scheduleFormValues: ScheduleInterviewFormValues
+  scheduleFormValues: ScheduleInterviewFormValues,
 ): Partial<Record<keyof ScheduleInterviewFormValues, string>> => {
   const nextErrors: Partial<Record<keyof ScheduleInterviewFormValues, string>> = {};
 
@@ -57,8 +66,11 @@ export const validateScheduleFormValues = (
   return nextErrors;
 };
 
-export const getJobsErrorMessage = (error: unknown, fallback: string = JOBS_DEFAULT_MESSAGES.API_REQUEST_FAILED): string => {
-  if (typeof error === "object" && error !== null && "message" in error) {
+export const getJobsErrorMessage = (
+  error: unknown,
+  fallback: string = JOBS_DEFAULT_MESSAGES.API_REQUEST_FAILED,
+): string => {
+  if (typeof error === 'object' && error !== null && 'message' in error) {
     return String((error as { message: unknown }).message);
   }
 

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const PageWrap = styled.div`
   display: grid;
@@ -53,9 +53,9 @@ export const FiltersRow = styled.div`
 `;
 
 export const FilterButton = styled.button<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#111111" : "#d1d5db")};
-  background: ${({ $active }) => ($active ? "#111111" : "#ffffff")};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#374151")};
+  border: 1px solid ${({ $active }) => ($active ? '#111111' : '#d1d5db')};
+  background: ${({ $active }) => ($active ? '#111111' : '#ffffff')};
+  color: ${({ $active }) => ($active ? '#ffffff' : '#374151')};
   border-radius: 999px;
   padding: 0.35rem 0.72rem;
   font-size: 0.78rem;

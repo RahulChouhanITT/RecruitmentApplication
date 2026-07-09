@@ -1,23 +1,19 @@
-import dotenv from "dotenv";
-import http from "http";
-import path from "path";
-import { databaseConnectionManager } from "./configuration/databaseConnection";
-import { initializeSocketServer } from "./configuration/socketConfiguration";
-import { CONFIGURATION_CONSTANTS } from "./utils/constants/configurationConstants";
-
-dotenv.config({ path: path.resolve(__dirname, CONFIGURATION_CONSTANTS.SERVER.ENV_PATH) });
-
-const port = Number(process.env.APPLICATION_PORT);
+import './configuration/env';
+import http from 'http';
+import { connectDB } from './configuration/databaseConnection';
+import { setupSocket } from './configuration/socketConfiguration';
+import app from './app';
+import './configuration/cloudinaryConfiguration';
+import { CONFIGURATION_CONSTANTS } from './utils/constants/configurationConstants';
+import { env } from './configuration/env';
 
 const startServer = async (): Promise<void> => {
-  const { default: app } = await import("./app");
-  await import("./configuration/cloudinaryConfiguration");
-  await databaseConnectionManager.establishDatabaseConnection();
+  await connectDB();
   const server = http.createServer(app);
-  initializeSocketServer(server);
+  setupSocket(server);
 
-  server.listen(port, () => {
-    console.log(`${CONFIGURATION_CONSTANTS.SERVER.START_MESSAGE_PREFIX}${port}`);
+  server.listen(env.PORT, () => {
+    process.stdout.write(`${CONFIGURATION_CONSTANTS.SERVER.START_MESSAGE_PREFIX}${env.PORT}\n`);
   });
 };
 

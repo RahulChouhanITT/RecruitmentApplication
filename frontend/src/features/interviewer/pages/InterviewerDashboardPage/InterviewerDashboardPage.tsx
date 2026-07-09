@@ -1,4 +1,4 @@
-import { WorkspaceShell } from "../../../dashboard/components/WorkspaceShell/WorkspaceShell";
+import { WorkspaceShell } from '../../../dashboard/components/WorkspaceShell';
 
 export const InterviewerDashboardPage = () => {
   return (

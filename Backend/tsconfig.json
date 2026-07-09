@@ -15,5 +15,7 @@
     "resolveJsonModule": true,
 
     "types": ["node"]
-  }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "coverage", "tests", "**/*.test.ts", "vitest.config.ts"]
 }

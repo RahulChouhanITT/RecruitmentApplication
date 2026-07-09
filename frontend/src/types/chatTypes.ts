@@ -21,7 +21,7 @@ export type ChatMessage = {
   conversationId: string;
   sender: ChatParticipant;
   message: string;
-  status: "SENT" | "DELIVERED" | "SEEN";
+  status: 'SENT' | 'DELIVERED' | 'SEEN';
   createdAt: string;
   updatedAt: string;
 };
@@ -30,4 +30,11 @@ export type ChatApiResponse<T = unknown> = {
   success?: boolean;
   message?: string;
   data?: T;
+};
+
+export type ChatTypingEvent = {
+  conversationId?: string;
+  isTyping?: boolean;
+  userId?: string;
+  userName?: string;
 };

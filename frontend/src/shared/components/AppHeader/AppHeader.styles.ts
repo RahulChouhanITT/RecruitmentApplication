@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const HeaderRoot = styled.header`
   width: 100%;
@@ -52,7 +52,9 @@ export const UserRow = styled.div`
   color: #243b67;
   line-height: 1;
   cursor: pointer;
-  transition: color 140ms ease, transform 140ms ease;
+  transition:
+    color 140ms ease,
+    transform 140ms ease;
 
   &:hover {
     color: #1d4fa8;

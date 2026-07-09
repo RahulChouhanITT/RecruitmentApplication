@@ -1,7 +1,9 @@
-import type { Request } from "express";
+import type { Request } from 'express';
 
-export const USER_ROLES = ["hr", "candidate", "interviewer"] as const;
+export const USER_ROLES = ['hr', 'candidate', 'interviewer'] as const;
 export type UserRole = (typeof USER_ROLES)[number];
+export const AUTH_PROVIDERS = ['local', 'google', 'hybrid'] as const;
+export type AuthProvider = (typeof AUTH_PROVIDERS)[number];
 
 export interface RegisterRequestBody {
   name: string;

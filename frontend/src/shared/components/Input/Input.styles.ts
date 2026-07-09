@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const InputGroup = styled.div`
   margin-bottom: 0rem;
@@ -61,12 +61,12 @@ export const StyledInput = styled.input<{ $hasError?: boolean }>`
   line-height: 1.25;
   font-size: 0.95rem;
   border-radius: 0.375rem;
-  border: 1px solid ${({ $hasError }) => ($hasError ? "red" : "#ddd")};
+  border: 1px solid ${({ $hasError }) => ($hasError ? 'red' : '#ddd')};
   background: #fff;
 
   &:focus {
     outline: none;
-    border-color: ${({ $hasError }) => ($hasError ? "red" : "#4285f4")};
+    border-color: ${({ $hasError }) => ($hasError ? 'red' : '#4285f4')};
   }
 `;
 
@@ -76,5 +76,5 @@ export const ErrorText = styled.p<{ $visible?: boolean }>`
   font-size: 0.8rem;
   margin-top: 0.125rem;
   margin-bottom: 0;
-  visibility: ${({ $visible }) => ($visible ? "visible" : "hidden")};
+  visibility: ${({ $visible }) => ($visible ? 'visible' : 'hidden')};
 `;

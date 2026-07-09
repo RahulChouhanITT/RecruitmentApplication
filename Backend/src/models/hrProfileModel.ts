@@ -1,5 +1,5 @@
-import { Document, Schema, Types, model } from "mongoose";
-import { MODEL_DEFAULT_VALUES } from "../utils/constants/modelConstants";
+import { Document, Schema, Types, model } from 'mongoose';
+import { MODEL_DEFAULT_VALUES } from '../utils/constants/modelConstants';
 
 export interface IHrProfile extends Document {
   userId: Types.ObjectId;
@@ -14,7 +14,7 @@ const hrProfileSchema = new Schema<IHrProfile>(
   {
     userId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
       unique: true,
     },
@@ -36,7 +36,7 @@ const hrProfileSchema = new Schema<IHrProfile>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
-export const HrProfileModel = model<IHrProfile>("HrProfile", hrProfileSchema);
+export const HrProfileModel = model<IHrProfile>('HrProfile', hrProfileSchema);

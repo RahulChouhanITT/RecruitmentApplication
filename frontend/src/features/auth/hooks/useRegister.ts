@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { showToast, TOAST_TYPES } from "../../../utils/toast";
-import { AUTH_ROUTE_PATHS } from "../constants/authConstants";
-import { AUTH_DEFAULT_MESSAGES } from "../labels/authLabels";
-import { authService } from "../services/authService";
-import type { RegisterPayload } from "../types/authTypes";
-import { getAuthErrorMessage } from "../utils/authErrorHandler";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { showToast, TOAST_TYPES } from '../../../utils/toast';
+import { AUTH_ROUTE_PATHS } from '../constants/authConstants';
+import { AUTH_DEFAULT_MESSAGES } from '../labels/authLabels';
+import type { RegisterPayload } from '../types/authTypes';
+import { getAuthErrorMessage } from '../handlers';
+import { registerUser } from '../usecases';
 
 export const useRegister = () => {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ export const useRegister = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await authService.registerCandidate(values);
+      const response = await registerUser(values);
       showToast({
         type: TOAST_TYPES.SUCCESS,
         message: response.message || AUTH_DEFAULT_MESSAGES.REGISTRATION_SUCCESS,

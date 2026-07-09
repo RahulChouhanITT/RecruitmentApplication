@@ -1,13 +1,14 @@
-import jwt from "jsonwebtoken";
-import { APPLICATION_CONSTANTS } from "../constants/applicationConstants";
-import type { AuthenticatedUserPayload } from "../types/authTypes";
+import jwt from 'jsonwebtoken';
+import { env } from '../../configuration/env';
+import { APPLICATION_CONSTANTS } from '../constants/applicationConstants';
+import type { AuthenticatedUserPayload } from '../types/authTypes';
 
 export const generateAuthenticationToken = (userIdentifier: string): string => {
-  return jwt.sign({ userId: userIdentifier }, process.env.JWT_SECRET_KEY as string, {
+  return jwt.sign({ userId: userIdentifier }, env.JWT_SECRET, {
     expiresIn: APPLICATION_CONSTANTS.TOKEN_EXPIRES_IN,
   });
 };
 
 export const verifyAuthenticationToken = (token: string): AuthenticatedUserPayload => {
-  return jwt.verify(token, process.env.JWT_SECRET_KEY as string) as AuthenticatedUserPayload;
+  return jwt.verify(token, env.JWT_SECRET) as AuthenticatedUserPayload;
 };

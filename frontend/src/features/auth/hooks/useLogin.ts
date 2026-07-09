@@ -1,14 +1,18 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../app/hooks";
-import { showToast, TOAST_TYPES } from "../../../utils/toast";
-import { AUTH_BLOCKING_ERROR_MATCHERS, AUTH_INITIAL_VALUES, AUTH_ROUTE_PATHS } from "../constants/authConstants";
-import { AUTH_DEFAULT_MESSAGES, AUTH_UI_TEXT } from "../labels/authLabels";
-import { authService } from "../services/authService";
-import { setCurrentUser } from "../state/authSlice";
-import type { LoginPageModalState, LoginPayload } from "../types/authTypes";
-import { getAuthErrorMessage } from "../utils/authErrorHandler";
-import { includesAnyAuthError } from "../utils/authHelpers";
+import { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../../app/hooks';
+import { showToast, TOAST_TYPES } from '../../../utils/toast';
+import { AUTH_INITIAL_VALUES, AUTH_ROUTE_PATHS } from '../constants/authConstants';
+import { AUTH_DEFAULT_MESSAGES } from '../labels/authLabels';
+import { setCurrentUser } from '../state/authSlice';
+import type { LoginPageModalState, LoginPayload } from '../types/authTypes';
+import {
+  buildLoginBlockingModalState,
+  buildVerifyEmailNavigationState,
+  getAuthErrorMessage,
+  shouldTreatAsInlineAuthError,
+} from '../handlers';
+import { loginUser } from '../usecases';
 
 const initialModalState: LoginPageModalState = AUTH_INITIAL_VALUES.LOGIN_MODAL_STATE;
 
@@ -23,13 +27,9 @@ export const useLogin = () => {
   };
 
   const onPrimaryModalAction = (): void => {
-    if (modalState.primaryAction === "verify_email" && modalState.email) {
-      navigate(AUTH_ROUTE_PATHS.VERIFY_EMAIL, {
-        state: {
-          email: modalState.email,
-          autoSendOtp: true,
-        },
-      });
+    if (modalState.primaryAction === 'verify_email' && modalState.email) {
+      const verifyEmailNavigation = buildVerifyEmailNavigationState(modalState.email);
+      navigate(verifyEmailNavigation.pathname, { state: verifyEmailNavigation.state });
     }
     closeModal();
   };
@@ -38,11 +38,10 @@ export const useLogin = () => {
     setIsSubmitting(true);
 
     try {
-      const loginResponse = await authService.login(values);
-      const meResponse = await authService.getCurrentUser();
+      const { loginResponse, currentUserResponse } = await loginUser(values);
 
-      if (meResponse.data) {
-        dispatch(setCurrentUser(meResponse.data));
+      if (currentUserResponse.data) {
+        dispatch(setCurrentUser(currentUserResponse.data));
       }
 
       showToast({
@@ -52,25 +51,10 @@ export const useLogin = () => {
       navigate(AUTH_ROUTE_PATHS.DASHBOARD);
     } catch (error) {
       const errorMessage = getAuthErrorMessage(error, AUTH_DEFAULT_MESSAGES.LOGIN_FAILED);
+      const blockingModalState = buildLoginBlockingModalState(errorMessage, values.email);
 
-      if (includesAnyAuthError(errorMessage, AUTH_BLOCKING_ERROR_MATCHERS.NOT_VERIFIED)) {
-        setModalState({
-          open: true,
-          title: AUTH_UI_TEXT.VERIFY_EMAIL_PENDING_TITLE,
-          message: AUTH_UI_TEXT.VERIFY_EMAIL_PENDING_MESSAGE,
-          primaryLabel: AUTH_UI_TEXT.VERIFY_EMAIL_PENDING_PRIMARY_LABEL,
-          primaryAction: "verify_email",
-          email: values.email,
-        });
-        return;
-      }
-
-      if (includesAnyAuthError(errorMessage, AUTH_BLOCKING_ERROR_MATCHERS.NOT_APPROVED)) {
-        setModalState({
-          open: true,
-          title: AUTH_UI_TEXT.APPROVAL_PENDING_TITLE,
-          message: AUTH_UI_TEXT.APPROVAL_PENDING_MESSAGE,
-        });
+      if (blockingModalState) {
+        setModalState(blockingModalState);
         return;
       }
 
@@ -83,10 +67,32 @@ export const useLogin = () => {
     }
   };
 
+  const handleExternalAuthError = useCallback((errorMessage: string): void => {
+    const blockingModalState = buildLoginBlockingModalState(errorMessage, '');
+    if (blockingModalState) {
+      setModalState(blockingModalState);
+      return;
+    }
+
+    if (shouldTreatAsInlineAuthError(errorMessage)) {
+      showToast({
+        type: TOAST_TYPES.ERROR,
+        message: errorMessage,
+      });
+      return;
+    }
+
+    showToast({
+      type: TOAST_TYPES.ERROR,
+      message: errorMessage,
+    });
+  }, []);
+
   return {
     isSubmitting,
     modalState,
     closeModal,
+    handleExternalAuthError,
     onPrimaryModalAction,
     submitLogin,
   };

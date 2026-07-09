@@ -1,12 +1,38 @@
-import type { FeedbackStatus, InterviewStatus } from "../../models/interviewModel";
-import { Types } from "mongoose";
-import type { PopulatedCandidate } from "./candidateTypes";
+import type { FeedbackStatus, InterviewStatus } from '../../models/interviewModel';
+import type { IApplication } from '../../models/applicationModel';
+import type { IInterview } from '../../models/interviewModel';
+import type { IJob } from '../../models/jobModel';
+import type { IUser } from '../../models/userModel';
+import { Types } from 'mongoose';
+import type { PopulatedCandidate } from './candidateTypes';
 
-export const APPLICATION_STATUSES = ["APPLIED", "SHORTLISTED", "INTERVIEW_SCHEDULED", "HIRED", "REJECTED"] as const;
+export const APPLICATION_STATUSES = [
+  'APPLIED',
+  'SHORTLISTED',
+  'INTERVIEW_SCHEDULED',
+  'HIRED',
+  'REJECTED',
+] as const;
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
 export type UpdateApplicationStatusBody = {
-  status: string;
+  newApplicationStatus: string;
+};
+
+export type ApplicationListQuery = {
+  search?: string;
+  status?: string;
+  page?: string;
+  limit?: string;
+};
+
+export type InterviewListQuery = {
+  search?: string;
+  view?: string;
+  status?: string;
+  feedbackStatus?: string;
+  page?: string;
+  limit?: string;
 };
 
 export type ScheduleInterviewInput = {
@@ -35,6 +61,28 @@ export type InterviewerUser = {
   role: string;
 };
 
+export type InterviewSchedulingContext = {
+  applicationEntity: IApplication;
+  jobEntity: IJob;
+  candidate: IUser;
+  interviewer: InterviewerUser;
+  interviewDate: string;
+  interviewTime: string;
+  notes: string;
+};
+
+export type InterviewMeetingDetails = {
+  meetingLink: string;
+  startDateTime: string;
+  endDateTime: string;
+};
+
+export type InterviewSchedulingResult = {
+  interviewSchedulingContext: InterviewSchedulingContext;
+  scheduledInterview: IInterview;
+  meetingDetails: InterviewMeetingDetails;
+};
+
 export type PopulatedJob = {
   _id?: Types.ObjectId;
   title?: string;
@@ -44,6 +92,22 @@ export type PopulatedApplication = {
   _id?: Types.ObjectId;
   status?: string;
 } | null;
+
+export type HrJobApplicationWithCandidateLean = {
+  _id: Types.ObjectId;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  candidateId: Types.ObjectId | PopulatedCandidate;
+};
+
+export type CandidateProfileSummary = {
+  userId: Types.ObjectId;
+  skills: string;
+  experienceYears: number;
+  resumeUrl: string;
+  currentLocation: string;
+};
 
 export type HrInterviewLean = {
   _id: Types.ObjectId;
@@ -92,5 +156,5 @@ export type InterviewerInterviewLean = {
   updatedAt: Date;
 };
 
-export type CandidateInterviewResult = "Passed" | "Failed" | "Pending";
-export type InterviewerInterviewResult = "Passed" | "Failed" | "Pending";
+export type CandidateInterviewResult = 'Passed' | 'Failed' | 'Pending';
+export type InterviewerInterviewResult = 'Passed' | 'Failed' | 'Pending';

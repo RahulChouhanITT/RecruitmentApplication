@@ -1,0 +1,34 @@
+{
+  "name": "recruitmentapplication",
+  "version": "1.0.0",
+  "description": "ull-stack Recruitment Management System with multi-round interview tracking and real-time chat using WebSocket.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx --cache",
+    "format": "prettier --write .",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RahulChouhanITT/RecruitmentApplication.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RahulChouhanITT/RecruitmentApplication/issues"
+  },
+  "homepage": "https://github.com/RahulChouhanITT/RecruitmentApplication#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.57.1",
+    "@typescript-eslint/parser": "^8.57.1",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.1"
+  }
+}

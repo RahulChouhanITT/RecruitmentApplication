@@ -1,7 +1,8 @@
-import nodemailer, { type Transporter } from "nodemailer";
-import { APPLICATION_CONSTANTS } from "../utils/constants/applicationConstants";
-import { CONFIGURATION_CONSTANTS } from "../utils/constants/configurationConstants";
-import { APPLICATION_MESSAGES } from "../utils/messages/applicationMessages";
+import nodemailer, { type Transporter } from 'nodemailer';
+import { env } from './env';
+import { APPLICATION_CONSTANTS } from '../utils/constants/applicationConstants';
+import { CONFIGURATION_CONSTANTS } from '../utils/constants/configurationConstants';
+import { APPLICATION_MESSAGES } from '../utils/messages/applicationMessages';
 
 class EmailConfigurationManager {
   private static instance: EmailConfigurationManager;
@@ -21,21 +22,29 @@ class EmailConfigurationManager {
       return this.transporter;
     }
 
-    const host = process.env.SMTP_HOST;
-    const port = Number(process.env.SMTP_PORT);
-    const user = process.env.SMTP_USER;
-    const pass = process.env.SMTP_PASS;
+    const host = env.SMTP_HOST;
+    const port = env.SMTP_PORT;
+    const user = env.SMTP_USER;
+    const pass = env.SMTP_PASS;
 
-    if (!host || Number.isNaN(port) || !user || !pass) {
+    if (!host || port === undefined || !user || !pass) {
       const missingKeys = [
-        !host ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.HOST : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
-        Number.isNaN(port) ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.PORT : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
-        !user ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.USER : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
-        !pass ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.PASS : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
+        !host
+          ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.HOST
+          : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
+        port === undefined
+          ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.PORT
+          : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
+        !user
+          ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.USER
+          : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
+        !pass
+          ? CONFIGURATION_CONSTANTS.EMAIL.ENV_KEYS.PASS
+          : CONFIGURATION_CONSTANTS.DEFAULTS.EMPTY_STRING,
       ].filter(Boolean);
 
       throw new Error(
-        `${APPLICATION_MESSAGES.EMAIL.SMTP_CONFIGURATION_MISSING}: ${missingKeys.join(CONFIGURATION_CONSTANTS.DEFAULTS.COMMA_SEPARATOR)}`
+        `${APPLICATION_MESSAGES.EMAIL.SMTP_CONFIGURATION_MISSING}: ${missingKeys.join(CONFIGURATION_CONSTANTS.DEFAULTS.COMMA_SEPARATOR)}`,
       );
     }
 

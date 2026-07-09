@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { type DefaultTheme } from 'styled-components';
 
 const cardMotion = `
   @keyframes fadeUpPanelCard {
@@ -51,8 +51,6 @@ export const ControlsBar = styled.div`
   }
 `;
 
-
-
 export const ApplicationsGrid = styled.div`
   display: grid;
   gap: 0.75rem;
@@ -61,12 +59,12 @@ export const ApplicationsGrid = styled.div`
 export const SectionTitle = styled.h3`
   margin: 0;
   font-size: 1rem;
-  color: #10203a;
+  color: #000000;
 `;
 
 export const BackButton = styled.button`
-  border: 1px solid #d3dbea;
-  background: #fff;
+  border: 1px solid #d5deec;
+  background: #ffffff;
   color: #2d3f5f;
   border-radius: 999px;
   width: 2rem;
@@ -76,22 +74,25 @@ export const BackButton = styled.button`
   justify-content: center;
   cursor: pointer;
   position: relative;
-  transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease;
+  transition:
+    border-color 0.16s ease,
+    color 0.16s ease,
+    background-color 0.16s ease;
 
   &:hover {
-    border-color: #b9c9e4;
-    color: #1d4fa8;
-    background: #f7faff;
+    border-color: #b8c6dc;
+    color: #000000;
+    background: #f8fafc;
   }
 
   &::after {
-    content: "Back to Jobs";
+    content: 'Back to Jobs';
     position: absolute;
     left: calc(100% + 0.45rem);
     top: 50%;
     transform: translateY(-50%) translateX(-6px);
-    background: #10203a;
-    color: #fff;
+    background: #000000;
+    color: #ffffff;
     border-radius: 0.35rem;
     padding: 0.25rem 0.45rem;
     font-size: 0.7rem;
@@ -100,7 +101,9 @@ export const BackButton = styled.button`
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.15s ease, transform 0.15s ease;
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
   }
 
   &:hover::after,
@@ -112,9 +115,9 @@ export const BackButton = styled.button`
 `;
 
 export const ApplicationsTableWrap = styled.div`
-  border: 1px solid #dbe3ee;
+  border: 1px solid #d5deec;
   border-radius: 0.75rem;
-  background: #fff;
+  background: #ffffff;
   position: relative;
   overflow-x: auto;
   overflow-y: visible;
@@ -129,16 +132,16 @@ export const ApplicationsTable = styled.table`
   td {
     padding: 0.65rem 0.7rem;
     text-align: left;
-    border-bottom: 1px solid #edf1f7;
+    border-bottom: 1px solid #d5deec;
     font-size: 0.8rem;
-    color: #2b3e58;
+    color: #334155;
     vertical-align: top;
   }
 
   th {
     font-size: 0.76rem;
-    color: #5e718d;
-    background: #f8faff;
+    color: #475569;
+    background: #f8fafc;
     font-weight: 700;
     white-space: nowrap;
   }
@@ -153,18 +156,18 @@ export const ApplicationsTable = styled.table`
   }
 
   tbody tr:hover {
-    background: #f8fbff;
+    background: #f8fafc;
   }
 
   tbody tr:hover td:last-child button {
     opacity: 1;
   }
 
-  tbody tr[data-selected="true"] {
-    background: #eef4ff;
+  tbody tr[data-selected='true'] {
+    background: #f8fafc; 
   }
 
-  tbody tr[data-selected="true"] td:last-child button {
+  tbody tr[data-selected='true'] td:last-child button {
     opacity: 1;
   }
 
@@ -177,25 +180,60 @@ export const ApplicationsTable = styled.table`
 
 export const TableStatusText = styled.span`
   font-size: 0.78rem;
-  color: #2b3e58;
+  color: #334155;
   font-weight: 600;
 `;
 
-const statusToneMap = {
-  APPLIED: { text: "#4b5565", bg: "#f3f4f6", border: "#d1d5db", dot: "#6b7280" },
-  SHORTLISTED: { text: "#1d4fa8", bg: "#eaf1ff", border: "#b7cdf6", dot: "#2f6fd6" },
-  INTERVIEW_SCHEDULED: { text: "#6d28d9", bg: "#f3e8ff", border: "#d8b4fe", dot: "#8b5cf6" },
-  HIRED: { text: "#166534", bg: "#eaf9f0", border: "#9edcbc", dot: "#22a35a" },
-  REJECTED: { text: "#b42318", bg: "#fff1f0", border: "#fecaca", dot: "#dc2626" },
-} as const;
+type StatusToneKey = 'APPLIED' | 'SHORTLISTED' | 'INTERVIEW_SCHEDULED' | 'HIRED' | 'REJECTED';
 
-export const StatusBadge = styled.span<{ $status: keyof typeof statusToneMap }>`
+const getStatusTone = (theme: DefaultTheme, status: StatusToneKey) => {
+  switch (status) {
+    case 'APPLIED':
+      return {
+        text: theme.colors.info,
+        bg: theme.colors.infoBackground,
+        border: theme.colors.infoBorder,
+        dot: '#6b7280',
+      };
+    case 'SHORTLISTED':
+      return {
+        text: theme.colors.primary,
+        bg: theme.colors.primaryLight,
+        border: theme.colors.primaryBorder,
+        dot: theme.colors.inputFocus,
+      };
+    case 'INTERVIEW_SCHEDULED':
+      return {
+        text: theme.colors.purple,
+        bg: theme.colors.purpleBackground,
+        border: theme.colors.purpleBorder,
+        dot: theme.colors.purpleBorder,
+      };
+    case 'HIRED':
+      return {
+        text: theme.colors.success,
+        bg: theme.colors.successBackground,
+        border: theme.colors.successBorder,
+        dot: theme.colors.successBorder,
+      };
+    case 'REJECTED':
+    default:
+      return {
+        text: theme.colors.danger,
+        bg: theme.colors.dangerBackground,
+        border: theme.colors.dangerBorder,
+        dot: theme.colors.dangerBorder,
+      };
+  }
+};
+
+export const StatusBadge = styled.span<{ $status: StatusToneKey }>`
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  border: 1px solid ${({ $status }) => statusToneMap[$status].border};
-  background: ${({ $status }) => statusToneMap[$status].bg};
-  color: ${({ $status }) => statusToneMap[$status].text};
+  border: 1px solid ${({ theme, $status }) => getStatusTone(theme, $status).border};
+  background: ${({ theme, $status }) => getStatusTone(theme, $status).bg};
+  color: ${({ theme, $status }) => getStatusTone(theme, $status).text};
   border-radius: 999px;
   padding: 0.18rem 0.52rem;
   font-size: 0.73rem;
@@ -203,11 +241,11 @@ export const StatusBadge = styled.span<{ $status: keyof typeof statusToneMap }>`
   white-space: nowrap;
 `;
 
-export const StatusDot = styled.span<{ $status: keyof typeof statusToneMap }>`
+export const StatusDot = styled.span<{ $status: StatusToneKey }>`
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 999px;
-  background: ${({ $status }) => statusToneMap[$status].dot};
+  background: ${({ theme, $status }) => getStatusTone(theme, $status).dot};
   flex-shrink: 0;
 `;
 
@@ -243,16 +281,20 @@ export const DurationGroup = styled.div`
 `;
 
 export const DurationButton = styled.button<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#1d4fa8" : "#e5e7eb")};
-  background: ${({ $active }) => ($active ? "#2f6fd6" : "#fff")};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#2d3f5f")};
+  border: 1px solid ${({ theme, $active }) => ($active ? theme.colors.primary : '#e5e7eb')};
+  background: ${({ theme, $active }) => ($active ? theme.colors.inputFocus : theme.colors.white)};
+  color: ${({ theme, $active }) => ($active ? theme.colors.white : '#2d3f5f')};
   border-radius: 0.52rem;
   min-height: 2.5rem;
   padding: 0.5rem 0.55rem;
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease, transform 0.16s ease;
+  transition:
+    border-color 0.16s ease,
+    background-color 0.16s ease,
+    color 0.16s ease,
+    transform 0.16s ease;
 
   &:hover {
     border-color: #b8c6dc;
@@ -282,7 +324,7 @@ export const ScheduleModalCard = styled.div`
     min-height: 2.55rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
-    background: #fff;
+    background: #ffffff;
     padding: 0.62rem 0.78rem;
     font-size: 0.9rem;
     color: #1f2937;
@@ -290,7 +332,7 @@ export const ScheduleModalCard = styled.div`
 
   .schedule-picker-wrap input:focus {
     outline: none;
-    border-color: #2f6fd6;
+    border-color: #4285f4;
     box-shadow: 0 0 0 3px rgba(47, 111, 214, 0.14);
   }
 
@@ -302,7 +344,7 @@ export const ScheduleModalCard = styled.div`
 
   select:focus,
   textarea:focus {
-    border-color: #2f6fd6;
+    border-color: #4285f4;
     box-shadow: 0 0 0 3px rgba(47, 111, 214, 0.14);
   }
 
@@ -336,13 +378,16 @@ export const ScheduleSection = styled.div`
   gap: 0.55rem;
 `;
 
-export const StatusOptionButton = styled.button<{ $selected?: boolean; $status: keyof typeof statusToneMap }>`
+export const StatusOptionButton = styled.button<{
+  $selected?: boolean;
+  $status: StatusToneKey;
+}>`
   border: none;
-  background: ${({ $selected }) => ($selected ? "#f3f4f6" : "transparent")};
+  background: ${({ theme, $selected }) => ($selected ? theme.colors.infoBackground : 'transparent')};
   border-radius: 0.45rem;
   padding: 0.42rem 0.55rem;
   font-size: 0.8rem;
-  color: ${({ $status }) => statusToneMap[$status].text};
+  color: ${({ theme, $status }) => getStatusTone(theme, $status).text};
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
@@ -356,14 +401,14 @@ export const StatusOptionButton = styled.button<{ $selected?: boolean; $status: 
   }
 `;
 
-export const SelectedOptionHint = styled.span<{ $status: keyof typeof statusToneMap }>`
+export const SelectedOptionHint = styled.span<{ $status: StatusToneKey }>`
   font-size: 0.74rem;
   font-weight: 700;
-  color: ${({ $status }) => statusToneMap[$status].text};
+  color: ${({ theme, $status }) => getStatusTone(theme, $status).text};
 `;
 
-export const StatusText = styled.span<{ $status: keyof typeof statusToneMap }>`
-  color: ${({ $status }) => statusToneMap[$status].text};
+export const StatusText = styled.span<{ $status: StatusToneKey }>`
+  color: ${({ theme, $status }) => getStatusTone(theme, $status).text};
   font-weight: 700;
   font-size: 0.82rem;
 `;
@@ -389,10 +434,12 @@ export const MenuTrigger = styled.button`
   justify-content: center;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.14s ease, color 0.14s ease;
+  transition:
+    opacity 0.14s ease,
+    color 0.14s ease;
 
   &:hover {
-    color: #1d4fa8;
+    color: #000000;
     opacity: 0.9;
   }
 
@@ -408,9 +455,9 @@ export const MenuDropdown = styled.div`
   right: 0.15rem;
   top: calc(100% + 0.3rem);
   min-width: 10.5rem;
-  border: 1px solid #dbe3ee;
+  border: 1px solid #d5deec;
   border-radius: 0.55rem;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 10px 24px rgba(16, 32, 58, 0.16);
   display: grid;
   z-index: 1500;
@@ -419,28 +466,38 @@ export const MenuDropdown = styled.div`
 export const FloatingMenuDropdown = styled.div`
   position: fixed;
   min-width: 10.5rem;
-  border: 1px solid #dbe3ee;
+  border: 1px solid #d5deec;
   border-radius: 0.55rem;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 10px 24px rgba(16, 32, 58, 0.16);
   display: grid;
   z-index: 6000;
   padding: 0.2rem 0;
 `;
 
-export const MenuOption = styled.button<{ $tone?: "default" | "green" | "red" }>`
+export const MenuOption = styled.button<{ $tone?: 'default' | 'green' | 'red' }>`
   border: none;
   background: transparent;
   padding: 0.5rem 0.75rem;
   text-align: left;
-  color: ${({ $tone }) => ($tone === "green" ? "#166534" : $tone === "red" ? "#b42318" : "#2b3e58")};
+  color: ${({ $tone }) =>
+    $tone === 'green'
+      ? '#16794d'
+      : $tone === 'red'
+        ? '#dc2626'
+        : '#334155'};
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
     background: #f8fafc;
-    color: ${({ $tone }) => ($tone === "green" ? "#166534" : $tone === "red" ? "#b42318" : "#1d4fa8")};
+    color: ${({ $tone }) =>
+      $tone === 'green'
+        ? '#16794d'
+        : $tone === 'red'
+          ? '#dc2626'
+          : '#000000'};
   }
 `;
 
@@ -453,16 +510,16 @@ export const ConfirmMessage = styled.p`
 
 export const StatusSelect = styled.select`
   min-height: 2rem;
-  border: 1px solid #d3dbea;
+  border: 1px solid #d5deec;
   border-radius: 0.45rem;
-  background: #fff;
+  background: #ffffff;
   padding: 0.3rem 0.45rem;
   font-size: 0.76rem;
-  color: #2b3e58;
+  color:#334155;
 
   &:focus {
     outline: none;
-    border-color: #2f6fd6;
+    border-color: #4285f4;
   }
 `;
 
@@ -473,8 +530,8 @@ export const ActionButtons = styled.div`
 `;
 
 export const TinyButton = styled.button`
-  border: 1px solid #d3dbea;
-  background: #fff;
+  border: 1px solid #d5deec;
+  background: #ffffff;
   color: #2d3f5f;
   border-radius: 0.4rem;
   padding: 0.25rem 0.45rem;
@@ -484,7 +541,7 @@ export const TinyButton = styled.button`
 
   &:hover {
     border-color: #aec3e4;
-    color: #1d4fa8;
+    color: #000000;
   }
 
   &:disabled {
@@ -494,9 +551,9 @@ export const TinyButton = styled.button`
 `;
 
 export const FilterButton = styled.button<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#000000" : "#d3dbea")};
-  background: ${({ $active }) => ($active ? "#000000" : "#fff")};
-  color: ${({ $active }) => ($active ? "#ffffff" : "#2d3f5f")};
+  border: 1px solid ${({ $active }) => ($active ? '#000000' : '#d5deec')};
+  background: ${({ $active }) => ($active ? '#000000' : '#ffffff')};
+  color: ${({ theme, $active }) => ($active ? theme.colors.white : '#2d3f5f')};
   border-radius: 999px;
   padding: 0.32rem 0.7rem;
   font-size: 0.78rem;
@@ -505,9 +562,9 @@ export const FilterButton = styled.button<{ $active?: boolean }>`
 `;
 
 export const FilterSelect = styled.select`
-  border: 1px solid #d3dbea;
+  border: 1px solid #d5deec;
   background: #ffffff;
-  color: #2b3e58;
+  color: #2d3f5f;
   border-radius: 999px;
   padding: 0.38rem 2rem 0.38rem 0.8rem;
   font-size: 0.78rem;
@@ -518,16 +575,15 @@ export const FilterSelect = styled.select`
   justify-self: end;
 
   &:focus {
-    border-color: #2f6fd6;
+    border-color: #4285f4;
   }
 
   option {
     background: #ffffff;
-    color: #10203a;
+    color: #000000;
     font-weight: 700;
   }
 `;
-
 
 export const TopBar = styled.div`
   display: flex;
@@ -544,14 +600,17 @@ export const FloatingAddButton = styled.button`
   border-radius: 999px;
   border: 1px solid #000000;
   background: #000000;
-  color: #fff;
+  color: #ffffff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   z-index: 1100;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
   isolation: isolate;
 
   &:hover {
@@ -561,12 +620,12 @@ export const FloatingAddButton = styled.button`
   }
 
   &::after {
-    content: "Create Job";
+    content: 'Create Job';
     position: absolute;
     right: calc(100% + 0.55rem);
     top: 50%;
     transform: translateY(-50%) translateX(6px);
-    background: #10203a;
+    background: #000000;
     color: #ffffff;
     border-radius: 0.35rem;
     padding: 0.3rem 0.5rem;
@@ -576,7 +635,9 @@ export const FloatingAddButton = styled.button`
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.16s ease, transform 0.16s ease;
+    transition:
+      opacity 0.16s ease,
+      transform 0.16s ease;
   }
 
   &:hover::after,
@@ -641,7 +702,7 @@ export const TooltipText = styled.span`
   transform: translateY(4px);
   width: max-content;
   max-width: 12rem;
-  background: #10203a;
+  background: #000000;
   color: #ffffff;
   border-radius: 0.45rem;
   padding: 0.4rem 0.5rem;
@@ -654,14 +715,16 @@ export const TooltipText = styled.span`
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 `;
 
 export const Input = styled.input`
   min-height: 2.5rem;
   border: 1px solid #ddd;
   border-radius: 0.375rem;
-  background: #fff;
+  background: #ffffff;
   padding: 0.625rem 0.75rem;
   font-size: 0.95rem;
 
@@ -675,7 +738,7 @@ export const Select = styled.select`
   min-height: 2.5rem;
   border: 1px solid #ddd;
   border-radius: 0.375rem;
-  background: #fff;
+  background: #ffffff;
   padding: 0.625rem 0.75rem;
   font-size: 0.95rem;
 
@@ -688,7 +751,7 @@ export const Select = styled.select`
 export const Textarea = styled.textarea`
   border: 1px solid #ddd;
   border-radius: 0.375rem;
-  background: #fff;
+  background: #ffffff;
   padding: 0.625rem 0.75rem;
   font-size: 0.95rem;
   min-height: 5.5rem;
@@ -717,15 +780,20 @@ export const Row = styled.div`
 `;
 
 export const Button = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   border: 1px solid #000000;
   background: #000000;
-  color: #fff;
+  color: #ffffff;
   border-radius: 0.5rem;
   padding: 0.45rem 0.8rem;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.16s ease, border-color 0.16s ease;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease;
 
   &:hover:not(:disabled) {
     background: #333333;
@@ -739,8 +807,8 @@ export const Button = styled.button`
 `;
 
 export const GhostButton = styled.button`
-  border: 1px solid #d3dbea;
-  background: #fff;
+  border: 1px solid #d5deec;
+  background: #ffffff;
   color: #2d3f5f;
   border-radius: 0.5rem;
   padding: 0.45rem 0.8rem;
@@ -751,15 +819,18 @@ export const GhostButton = styled.button`
 
 export const JobCard = styled.article`
   ${cardMotion}
-  border: 1px solid #dbe3ee;
+  border: 1px solid #d5deec;
   border-radius: 0.75rem;
-  background: #fff;
+  background: #ffffff;
   padding: 0.9rem;
   display: grid;
   gap: 0.55rem;
   box-shadow: 0 8px 20px rgba(16, 32, 58, 0.07);
   animation: fadeUpPanelCard 220ms ease both;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -788,9 +859,9 @@ export const Title = styled.h4`
 `;
 
 export const StatusPill = styled.span<{ $active?: boolean }>`
-  border: 1px solid ${({ $active }) => ($active ? "#70c2a1" : "#c9d5e8")};
-  color: ${({ $active }) => ($active ? "#16794d" : "#566a86")};
-  background: ${({ $active }) => ($active ? "#ebf8f1" : "#f4f7fc")};
+  border: 1px solid ${({ $active }) => ($active ? '#70c2a1' : '#c9d5e8')};
+  color: ${({ $active }) => ($active ? '#16794d' : '#566a86')};
+  background: ${({ $active }) => ($active ? '#ebf8f1' : '#f4f7fc')};
   border-radius: 999px;
   padding: 0.2rem 0.5rem;
   font-size: 0.72rem;
@@ -814,7 +885,6 @@ export const JobMetaItem = styled.span`
   word-break: break-word;
   overflow-wrap: anywhere;
 `;
-
 
 export const Meta = styled.span`
   color: #5a6c86;
@@ -871,7 +941,7 @@ export const ModalTitle = styled.h3`
   margin: 0;
   font-size: 1rem;
   font-weight: 700;
-  color: #10203a;
+  color: #0f172a;
 `;
 
 export const ModalActions = styled.div`

@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const cardMotion = `
   @keyframes fadeUpInterviewCard {
@@ -23,7 +23,10 @@ export const Card = styled.article`
   display: grid;
   gap: 0.5rem;
   animation: fadeUpInterviewCard 220ms ease both;
-  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -60,9 +63,13 @@ export const Title = styled.h4`
 `;
 
 export const StatusBadge = styled.span<{ $status: string }>`
-  border: 1px solid ${({ $status }) => ($status === "COMPLETED" ? "#9edcbc" : "#b7cdf6")};
-  color: ${({ $status }) => ($status === "COMPLETED" ? "#137a48" : "#1d4fa8")};
-  background: ${({ $status }) => ($status === "COMPLETED" ? "#eaf9f0" : "#eaf1ff")};
+  border: 1px solid
+    ${({ $status }) =>
+      $status === 'COMPLETED' ? '#9edcbc' : $status === 'CANCELLED' ? '#f2b8b5' : '#b7cdf6'};
+  color: ${({ $status }) =>
+    $status === 'COMPLETED' ? '#137a48' : $status === 'CANCELLED' ? '#b42318' : '#1d4fa8'};
+  background: ${({ $status }) =>
+    $status === 'COMPLETED' ? '#eaf9f0' : $status === 'CANCELLED' ? '#fff1f0' : '#eaf1ff'};
   border-radius: 999px;
   padding: 0.2rem 0.5rem;
   font-size: 0.72rem;
@@ -100,7 +107,10 @@ export const JoinButton = styled.a`
   font-size: 0.78rem;
   font-weight: 600;
   text-decoration: none;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 
   &:hover {
     background: #edf3ff;
@@ -123,7 +133,10 @@ export const ActionButton = styled.button`
   font-size: 0.77rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
 
   &:hover {
     background: #edf3ff;
@@ -144,12 +157,12 @@ export const ActionsRow = styled.div`
   margin-top: 0.05rem;
 `;
 
-export const ResultText = styled.span<{ $result: "Passed" | "Failed" | "Pending" }>`
+export const ResultText = styled.span<{ $result: 'Passed' | 'Failed' | 'Pending' }>`
   font-size: 0.8rem;
   font-weight: 700;
   color: ${({ $result }) => {
-    if ($result === "Passed") return "#137a48";
-    if ($result === "Failed") return "#b42318";
-    return "#566a86";
+    if ($result === 'Passed') return '#137a48';
+    if ($result === 'Failed') return '#b42318';
+    return '#566a86';
   }};
 `;

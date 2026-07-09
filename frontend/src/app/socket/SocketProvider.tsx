@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useMemo, useRef, useState, type PropsWithChildren } from "react";
-import { io, type Socket } from "socket.io-client";
-import { useAppSelector } from "../hooks";
-import { API_BASE_URL } from "../../features/dashboard/utils/chatThreadHelpers";
-import { SocketContext } from "./socketContext";
+import { useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
+import { io, type Socket } from 'socket.io-client';
+import { useAppSelector } from '../hooks';
+import { SocketContext } from './socketContext';
+import { API_SOCKET_PATH, getSocketServerUrl } from '../../config/api';
 
 export const SocketProvider = ({ children }: PropsWithChildren) => {
-  const currentUserId = useAppSelector((state) => state.auth.currentUser?._id ?? "");
+  const currentUserId = useAppSelector((state) => state.auth.currentUser?._id ?? '');
   const socketRef = useRef<Socket | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -19,9 +19,10 @@ export const SocketProvider = ({ children }: PropsWithChildren) => {
     }
 
     if (!socketRef.current) {
-      socketRef.current = io(API_BASE_URL, {
+      socketRef.current = io(getSocketServerUrl(), {
         withCredentials: true,
-        transports: ["websocket", "polling"],
+        transports: ['websocket', 'polling'],
+        path: API_SOCKET_PATH,
       });
       setSocket(socketRef.current);
       return;
